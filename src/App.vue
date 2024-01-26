@@ -9,6 +9,8 @@
   <button type="button" class="btn btn-light">Light</button>
   <button type="button" class="btn btn-dark">Dark</button>
   <button type="button" class="btn btn-link">Link</button>
+  <button type="button" class="btn btn-outline-primary">Primary</button>
+  <button type="button" class="btn btn-outline-secondary">Secondary</button>
   <RouterView />
 </template>
 
@@ -21,4 +23,3 @@ export default {
   },
 }
 </script>
-

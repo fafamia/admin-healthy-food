@@ -1,6 +1,11 @@
 @import "bootstrap/scss/functions"; //引入方法
 
+
+
 @import "./variables"; //可透過更改這支檔案自訂義scss
 // @import "bootstrap/scss/variables-dark"; //若網頁有dark模式時，想要自訂義可改這支檔案
 
+
 @import "bootstrap/scss/bootstrap.scss";
+
+@import "./color";
