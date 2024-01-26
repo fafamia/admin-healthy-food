@@ -1,5 +1,7 @@
 
 <template>
+  <router-link to="/">登入</router-link> |
+  <router-link to="/products">商品管理</router-link>
   <button type="button" class="btn btn-primary">Primary</button>
   <button type="button" class="btn btn-secondary">Secondary</button>
   <button type="button" class="btn btn-success">Success</button>
@@ -23,3 +25,7 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+@import "@/assets/scss/main.scss";
+</style>
