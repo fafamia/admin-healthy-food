@@ -42,7 +42,7 @@ export default {
                 { label: '商品管理', iconClass: "fa-solid fa-box-open", items: [{ id: 1, label: '商品總覽', route: '' }, { id: 2, label: '商品分類', route: '' }, { id: 3, label: '商品TAG', route: '' }, { id: 4, label: '商品群組', route: '' }, { id: 5, label: '群組明細', route: '' }] },
                 { label: '訂單管理', iconClass: "fa-solid fa-clipboard-list", items: [{ id: 1, label: '訂單總覽', route: '' }] },
                 { label: '專欄管理', iconClass: "fa-regular fa-pen-to-square", items: [{ id: 1, label: '專欄總覽', route: '' }, { id: 2, label: '專欄分類', route: '' }] },
-                { label: '食譜管理', iconClass: "fa-solid fa-utensils", items: [{ id: 1, label: '食譜總覽', route: '' }, { id: 2, label: '食譜分類', route: '' }, { id: 3, label: '留言管理', route: '' }] },
+                { label: '食譜管理', iconClass: "fa-solid fa-utensils", items: [{ id: 1, label: '食譜總覽', route: '/cookbook' }, { id: 2, label: '食譜分類', route: '/cookbookclass' }, { id: 3, label: '留言管理', route: '/comment' }] },
                 { label: '健康知識問答管理', iconClass: "fa-solid fa-gamepad", items: [{ id: 1, label: '題目總覽', route: '' }, { id: 2, label: '折價券', route: '' }] },
                 { label: '常見問題管理', iconClass: "fa-solid fa-circle-question", items: [{ id: 1, label: '常見問題總覽', route: '' }, { id: 2, label: '常見問題分類', route: '' }] },
 

@@ -1,0 +1,39 @@
+.cookbook{
+    display: flex;
+}
+.bar{
+    height: 100vh;
+}
+.page-link{
+    border-radius: 50%;
+    border: 1px solid $primary;
+    font-weight: bold;
+    background: none;
+    margin-right: 8px;
+}
+.search{
+    background: none;
+    padding: 5px;
+    border: 1px solid $primary;
+    border-radius: 10px;
+}
+table th,table td{
+    background: none!important;
+}
+.cookbook_container{
+    width: 1000px;
+    padding-top:50px ;
+    h1{
+        text-align: center;
+        font-size: 36px;
+        margin-bottom: 30px;
+    }
+    .cookbook_btn{
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+}
+nav{
+    float: right;
+}
