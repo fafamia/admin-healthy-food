@@ -1,0 +1,25 @@
+.prodclass {
+    display: flex;
+
+    // height: 100vh;
+    .prodclassRight {
+        flex-grow: 1;
+        /* 剩餘空間填滿主內容 */
+        padding: 20px 20px 20px 0;
+        margin-left: 300px;
+
+        h1 {
+            text-align: center;
+
+        }
+
+        .prodclassAdd {
+            height: 37px;
+            position: absolute;
+            right: 30px;
+            top: 45px;
+        }
+
+        
+    }
+}
