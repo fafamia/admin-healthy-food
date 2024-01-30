@@ -23,6 +23,11 @@ const router = createRouter({
       name: 'groupdetail',
       component: () => import('../views/GroupDetail.vue')
     },
+    {
+      path: '/order',
+      name: 'order',
+      component: () => import('../views/OrderView.vue')
+    },
   ]
 })
 

@@ -40,7 +40,7 @@ export default {
                 { label: '首頁管理', iconClass: 'fa-solid fa-film', items: [{ id: 1, label: '首頁Banner', route: '' }] },
                 { label: '促銷活動', iconClass: "fa-solid fa-gift", items: [{ id: 1, label: '推薦商品', route: '' }, { id: 2, label: '推薦留言', route: '' }, { id: 3, label: '推薦專欄', route: '' }] },
                 { label: '商品管理', iconClass: "fa-solid fa-box-open", items: [{ id: 1, label: '商品總覽', route: '/products' }, { id: 2, label: '商品分類', route: '/productsclass' }, { id: 3, label: '商品TAG', route: '' }, { id: 4, label: '商品群組', route: '' }, { id: 5, label: '群組明細', route: '/groupdetail' }] },
-                { label: '訂單管理', iconClass: "fa-solid fa-clipboard-list", items: [{ id: 1, label: '訂單總覽', route: '' }] },
+                { label: '訂單管理', iconClass: "fa-solid fa-clipboard-list", items: [{ id: 1, label: '訂單總覽', route: '/order' }] },
                 { label: '專欄管理', iconClass: "fa-regular fa-pen-to-square", items: [{ id: 1, label: '專欄總覽', route: '' }, { id: 2, label: '專欄分類', route: '' }] },
                 { label: '食譜管理', iconClass: "fa-solid fa-utensils", items: [{ id: 1, label: '食譜總覽', route: '' }, { id: 2, label: '食譜分類', route: '' }, { id: 3, label: '留言管理', route: '' }] },
                 { label: '健康知識問答管理', iconClass: "fa-solid fa-gamepad", items: [{ id: 1, label: '題目總覽', route: '' }, { id: 2, label: '折價券', route: '' }] },

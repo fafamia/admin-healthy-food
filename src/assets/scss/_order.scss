@@ -1,0 +1,48 @@
+.order {
+    display: flex;
+
+    // height: 100vh;
+    .orderRight {
+        flex-grow: 1;
+        /* 剩餘空間填滿主內容 */
+        padding: 20px 20px 20px 0;
+        margin-left: 300px;
+
+        h1 {
+            text-align: center;
+
+        }
+
+        .productAdd {
+            height: 37px;
+            position: absolute;
+            right: 30px;
+            top: 45px;
+        }
+
+        tr {
+            vertical-align: center;
+            
+        }
+
+        .ordersee {
+            display: block;
+            margin-top: 5px;
+            width: 77px;
+            font-size: 12px;
+        }
+
+
+
+    }
+
+    .orderRight .pagination {
+        position: fixed;
+        bottom: 5px;
+        right: 20px;
+        
+        .page-link{
+           border-radius: 50%; 
+        }
+    }
+}

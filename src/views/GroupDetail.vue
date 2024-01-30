@@ -23,13 +23,17 @@
                                 <label for="exampleFormControlInput1" class="form-label">群組名稱</label>
                                 <input type="text" class="form-control" id="groupdetailName" value="首頁推薦" readonly>
                             </div>
-                            <label for="form-select">商品TAG編號</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected></option>
-                                <option value="1">#NEW</option>
-                                <option value="2">#HOT</option>
-
+                            <label for="form-select">選擇商品</label>
+                            <select class="form-select" aria-label="Default select example" v-model="selectedProd" multiple>
+                                <option v-for="prod in prods" :key="prod.id" :value="prod.id">{{ prod.name }}</option>
                             </select>
+                            <!-- 顯示選中的商品TAG -->
+                            <div>
+                                選中的商品編號: {{ selectedProd }}
+                            </div>
+                            <label for="exampleFormControlInput3" class="form-label">促銷價格</label>
+                            <input type="number" class="form-control" id="exampleFormControlInput3">
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
@@ -95,6 +99,12 @@ export default {
 
                 // 其他商品數據
             ]),
+            selectedProd: [], // 存儲選中的商品編號
+            prods: [ // 商品數據，你可以根據實際需求替換成動態載入的數據
+                { id: 1001, name: '調理包' },
+                { id: 2001, name: '雞蛋' },
+
+            ],
 
         }
     },
