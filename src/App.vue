@@ -1,6 +1,6 @@
 
 <template>
-  <router-link to="/">登入</router-link> |
+  <!-- <router-link to="/">登入</router-link> |
   <router-link to="/products">商品管理</router-link>
   <button type="button" class="btn btn-primary">Primary</button>
   <button type="button" class="btn btn-secondary">Secondary</button>
@@ -12,7 +12,7 @@
   <button type="button" class="btn btn-dark">Dark</button>
   <button type="button" class="btn btn-link">Link</button>
   <button type="button" class="btn btn-outline-primary">Primary</button>
-  <button type="button" class="btn btn-outline-secondary">Secondary</button>
+  <button type="button" class="btn btn-outline-secondary">Secondary</button> -->
   <RouterView />
 </template>
 
