@@ -40,14 +40,14 @@
 
                 </select>
                 <label for="exampleFormControlInput1" class="form-label">商品名稱</label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" >
+                <input type="text" class="form-control" id="exampleFormControlInput1">
               </div>
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">商品簡介</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
               </div>
               <label for="exampleFormControlInput2" class="form-label">產地</label>
-              <input type="text" class="form-control" id="exampleFormControlInput2" >
+              <input type="text" class="form-control" id="exampleFormControlInput2">
 
               <div class="mb-3">
                 <label for="exampleFormControlTextarea2" class="form-label">食材規格</label>
@@ -58,18 +58,18 @@
                 <textarea class="form-control" id="exampleFormControlTextarea3" rows="3"></textarea>
               </div>
               <label for="exampleFormControlInput3" class="form-label">商品價格</label>
-              <input type="number" class="form-control" id="exampleFormControlInput3" >
+              <input type="number" class="form-control" id="exampleFormControlInput3">
               <div class="mb-3">
                 <label for="formFile" class="form-label">商品照片</label>
                 <input class="form-control" type="file" id="formFile">
               </div>
               <label for="form-select">商品狀態</label>
-                <select class="form-select" aria-label="Default select example">
-                  <option selected></option>
-                  <option value="1">上架</option>
-                  <option value="2">下架</option>
+              <select class="form-select" aria-label="Default select example">
+                <option selected></option>
+                <option value="1">上架</option>
+                <option value="2">下架</option>
 
-                </select>
+              </select>
 
             </div>
             <div class="modal-footer">
@@ -83,7 +83,7 @@
       <table class="table productTable">
         <thead>
           <tr>
-            <th scope="col" >
+            <th scope="col">
               <input type="checkbox" v-model="selectAll" @change="toggleSelect">
             </th>
             <th scope="col">商品編號</th>
@@ -179,18 +179,18 @@ export default {
       this.currentPage = page;
     },
     deleteProd(index) {
-    const confirmed = window.confirm("確定要刪除此商品嗎?");
-    if (confirmed) {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      const actualIndex = startIndex + index;
-      this.products.splice(actualIndex, 1);
-    }
-  },
+      const confirmed = window.confirm("確定要刪除此商品嗎?");
+      if (confirmed) {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const actualIndex = startIndex + index;
+        this.products.splice(actualIndex, 1);
+      }
+    },
 
-    toggleSelect(){
-      if(this.selectAll){
+    toggleSelect() {
+      if (this.selectAll) {
         this.selectedProducts = [...this.products];
-      }else{
+      } else {
         this.selectedProducts = [];
       }
     }

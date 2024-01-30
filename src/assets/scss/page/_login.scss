@@ -1,0 +1,35 @@
+.admin-login {
+    h1 {
+        font-size: 32px;
+    }
+
+    img {
+        width: 100px;
+        height: 113px;
+    }
+}
+
+.account-area,
+.password-area {
+    border: 1px solid #000;
+    border-radius: 5px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+
+    i {
+        font-size: 24px;
+        margin-right: 10px;
+    }
+
+    input {
+        padding-left: 0px;
+        border: none;
+        outline: none;
+        background-color: transparent;
+    }
+}
+
+.login-btn {
+    width: 100%;
+}
