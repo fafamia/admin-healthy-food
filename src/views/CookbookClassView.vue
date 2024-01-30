@@ -32,7 +32,7 @@
           </tr>
         </tbody>
       </table>
-
+      <div class="page">
       <nav aria-label="Page navigation example">
         <ul class="pagination">
           <li class="page-item">
@@ -52,6 +52,7 @@
           </li>
         </ul>
       </nav>
+    </div>
     </div>
   </div>
 </template>
@@ -91,5 +92,5 @@ export default {
 
 
 <style lang="scss">
-@import "@/assets/scss/cookbook.scss";
-@import "@/assets/scss/sidebar.scss";</style>
+@import "@/assets/scss/_cookbook.scss";
+@import "@/assets/scss/_sidebar.scss";</style>

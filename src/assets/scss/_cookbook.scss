@@ -21,6 +21,8 @@ table th,table td{
     background: none!important;
 }
 .cookbook_container{
+    flex-grow: 1;
+    margin-left: 300px;
     width: 1000px;
     padding-top:50px ;
     h1{
@@ -34,6 +36,6 @@ table th,table td{
         margin-bottom: 20px;
     }
 }
-nav{
+.page{
     float: right;
 }

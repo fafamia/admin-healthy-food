@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="sidebar">
         <nav>
             <div class="headline">
                 <button type="button" class="setting btn btn-secondary">
