@@ -4,6 +4,7 @@
         <div class="orderRight">
 
             <h1>訂單總覽</h1>
+            <input type="search" class="search" placeholder="搜尋" v-model="searchQuery" />
 
 
 
@@ -25,7 +26,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(oder, index) in paginatedoders" :key="index">
+                    <tr v-for="(oder, index) in filteredOrders" :key="index">
                         <td>
                             <input type="checkbox" v-model="selectedoders" :value="oder">
                         </td>
@@ -35,11 +36,12 @@
                         <td>{{ oder.oderTime }}</td>
                         <td>{{ oder.orderstatus }}</td>
                         <td>
-                            <button class="btn btn-outline-primary">
+                            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                @click="viewOrderDetail(oder)">
                                 <i class="fa-solid fa-pencil"></i>
                                 修改
                             </button>
-                            <button class="btn btn-outline-primary ordersee" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="viewOrderDetail(oder)">
+                            <button class="btn btn-outline-primary ordersee">
                                 查看詳情
                             </button>
                         </td>
@@ -52,43 +54,44 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">查看訂單明細</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">修改訂單明細</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body" v-if="selectedOrderDetail">
                             <!-- 流水號 -->
                             <label for="exampleFormControlInput1" class="form-label">訂單明細編號:01</label>
                             <br>
-                            <label for="exampleFormControlInput1" class="form-label">訂單編號: {{ selectedOrderDetail.oderNumber }}</label>
+                            <label for="exampleFormControlInput1" class="form-label">訂單編號: {{ selectedOrderDetail.oderNumber
+                            }}</label>
                             <br>
                             <label for="exampleFormControlInput1" class="form-label">會員名稱: 王小名</label>
                             <br>
                             <label for="exampleFormControlInput2" class="form-label">收件人</label>
-              <input type="text" class="form-control" id="exampleFormControlInput2" value="王小名" >
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="王小名">
                             <label for="exampleFormControlInput2" class="form-label">EMAIL</label>
-              <input type="email" class="form-control" id="exampleFormControlInput2" value="aabbcc@test.com" >
+                            <input type="email" class="form-control" id="exampleFormControlInput2" value="aabbcc@test.com">
                             <label for="exampleFormControlInput2" class="form-label">電話</label>
-              <input type="number" class="form-control" id="exampleFormControlInput2" value="0988123456" >
-              <label for="exampleFormControlInput2" class="form-label">地址</label>
-              <input type="text" class="form-control" id="exampleFormControlInput2" value="桃園市中壢區成功路88號" >
-              <label for="form-select">出貨方式</label>
-                <select class="form-select" aria-label="Default select example">
-                  <option value="1" selected>宅配</option>
-                  <option value="2">7-11取貨</option>
+                            <input type="number" class="form-control" id="exampleFormControlInput2" value="0988123456">
+                            <label for="exampleFormControlInput2" class="form-label">地址</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="桃園市中壢區成功路88號">
+                            <label for="form-select">出貨方式</label>
+                            <select class="form-select" aria-label="Default select example">
+                                <option value="1" selected>宅配</option>
+                                <option value="2">7-11取貨</option>
 
-                </select>
-              <label for="form-select">付款狀態</label>
-                <select class="form-select" aria-label="Default select example">
-                  <option value="1" selected>已付款</option>
-                  <option value="2">未付款</option>
+                            </select>
+                            <label for="form-select">付款狀態</label>
+                            <select class="form-select" aria-label="Default select example">
+                                <option value="1" selected>已付款</option>
+                                <option value="2">未付款</option>
 
-                </select>
-              <label for="form-select">訂單狀態</label>
-                <select class="form-select" aria-label="Default select example">
-                  <option value="1" selected>已配送</option>
-                  <option value="2">未配送</option>
+                            </select>
+                            <label for="form-select">訂單狀態</label>
+                            <select class="form-select" aria-label="Default select example">
+                                <option value="1" selected>已配送</option>
+                                <option value="2">未配送</option>
 
-                </select>
+                            </select>
 
                         </div>
                         <div class="modal-footer">
@@ -116,6 +119,7 @@
                     </li>
                 </ul>
             </nav>
+            
 
         </div>
     </div>
@@ -128,12 +132,13 @@ import { ref, computed } from 'vue';
 export default {
     data() {
         return {
+            searchQuery: '',
             selectAll: ref(false),
             selectedoders: ref([]),
             oders: ref([
                 { oderNumber: '231231182410', member: '0001', orderprice: 3000, oderTime: '2023/12/31 18:24:10', orderstatus: '已配送' },
                 { oderNumber: '231231161616', member: '0002', orderprice: 2000, oderTime: '2023/12/31 16:16:16', orderstatus: '未配送' },
-                // 其他商品數據
+            
             ]),
             itemsPerPage: 5,
             currentPage: 1,
@@ -144,13 +149,29 @@ export default {
         SideBar,
     },
     computed: {
+        // paginatedoders() {
+        //     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        //     const endIndex = startIndex + this.itemsPerPage;
+        //     return this.oders.slice(startIndex, endIndex);
+        // },
+        // totalPages() {
+        //     return Math.ceil(this.oders.length / this.itemsPerPage);
+        // },
+        filteredOrders() {
+            const query = this.searchQuery.trim().toLowerCase();
+            if (query === '') {
+                return this.oders;
+            } else {
+                return this.oders.filter(order => order.oderNumber.includes(query));
+            }
+        },
         paginatedoders() {
             const startIndex = (this.currentPage - 1) * this.itemsPerPage;
             const endIndex = startIndex + this.itemsPerPage;
-            return this.oders.slice(startIndex, endIndex);
+            return this.filteredOrders.slice(startIndex, endIndex);
         },
         totalPages() {
-            return Math.ceil(this.oders.length / this.itemsPerPage);
+            return Math.ceil(this.filteredOrders.length / this.itemsPerPage);
         },
     },
     methods: {
@@ -166,8 +187,8 @@ export default {
             }
         },
         viewOrderDetail(order) {
-    this.selectedOrderDetail = { ...order };
-  },
+            this.selectedOrderDetail = { ...order };
+        },
 
     },
 

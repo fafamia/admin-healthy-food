@@ -1,8 +1,8 @@
-.groupdetail {
+.prodgroup {
     display: flex;
 
     // height: 100vh;
-    .groupdetailRight {
+    .prodgroupRight {
         flex-grow: 1;
         /* 剩餘空間填滿主內容 */
         padding: 20px 20px 20px 0;
@@ -12,14 +12,11 @@
             text-align: center;
 
         }
-
-        .groupdetailAdd {
+        .prodgroupAdd {
             height: 37px;
             position: absolute;
             right: 30px;
             top: 30px;
         }
-
-        
     }
 }
