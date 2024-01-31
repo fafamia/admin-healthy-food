@@ -203,6 +203,6 @@ export default {
 
 
 <style lang="scss">
-@import "@/assets/scss/product.scss";
+@import "@/assets/scss/page/product.scss";
 @import "@/assets/scss/sidebar.scss";
 </style>

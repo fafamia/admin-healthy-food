@@ -123,6 +123,6 @@ export default{
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/prodgroup.scss";
+@import "@/assets/scss/page/prodgroup.scss";
 @import "@/assets/scss/sidebar.scss";
 </style>

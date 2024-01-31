@@ -198,6 +198,6 @@ export default {
 
 
 <style lang="scss">
-@import "@/assets/scss/order.scss";
+@import "@/assets/scss/page/order.scss";
 @import "@/assets/scss/sidebar.scss";
 </style>
