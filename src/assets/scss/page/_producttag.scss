@@ -1,0 +1,20 @@
+.TagSideBar{
+    display: flex;
+}
+.productTag{
+    position: relative;
+    &_right{
+        margin-left: 300px;
+        flex-grow: 1;
+    }
+    &_title{
+        text-align: center;
+    }
+    &_add{
+        // margin-left: 300px;
+        // display: inline-block;
+        position: absolute;
+        top: 70px;
+        right: 70px;
+    }
+}

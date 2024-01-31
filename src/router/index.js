@@ -48,6 +48,16 @@ const router = createRouter({
       name: 'prodgroup',
       component: () => import('../views/ProdGroup.vue')
     },
+    {
+      path: '/producttag',
+      name: 'prodtuctag',
+      component: () => import('../views/ProductTag.vue')
+    },
+    {
+      path: '/productfeature',
+      name: 'prodtuctfeature',
+      component: () => import('../views/ProductFeature.vue')
+    },
   ]
 })
 
