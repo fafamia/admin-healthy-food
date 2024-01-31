@@ -78,6 +78,21 @@ const router = createRouter({
       name: 'coupon',
       component: () => import('../views/CouponView.vue')
     },
+    {
+      path: '/banner',
+      name: 'banner',
+      component: () => import('../views/BannerView.vue')
+    },
+    {
+      path: '/banner',
+      name: 'banner',
+      component: () => import('../views/BannerView.vue')
+    },
+    {
+      path: '/master',
+      name: 'master',
+      component: () => import('../views/MasterView.vue')
+    },
   ]
 })
 

@@ -1,0 +1,33 @@
+.admin_master{
+    margin-left: 300px;    
+    padding-top: 50px;
+    text-align: center;
+}
+.admin_master_title{
+    display: block;
+    font-size: 36px;
+    margin-bottom: 30px;
+}
+.admin_master_subtitle{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    .admin_master_subtitle_input{
+        border-radius: 10px;
+        border: 1px solid $primary;
+        margin-right: 5px;
+        padding: 5px;
+        color: $primary;
+    }
+    .admin_master_subtitle_input::placeholder{
+        color: $primary;
+    }
+}
+th, td {
+    vertical-align: middle;
+}
+td{
+    button{
+        margin: 0 5px 0 5px;
+    }
+}
