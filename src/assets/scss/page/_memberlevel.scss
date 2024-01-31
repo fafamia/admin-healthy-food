@@ -1,0 +1,25 @@
+.memberlevel_right {
+    padding: 20px 20px 20px 0;
+
+    h2 {
+        text-align: center;
+    }
+
+    .memberlevel_btn {
+        display: flex;
+        justify-content: end;
+    }
+
+    .page-link {
+        border-radius: 50%;
+        border: 1px solid $primary;
+        font-weight: bold;
+        background: none;
+        margin-right: 8px;
+    }
+
+    .page {
+        display: flex;
+        justify-content: end;
+    }
+}

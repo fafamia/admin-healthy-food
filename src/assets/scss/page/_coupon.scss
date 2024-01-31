@@ -1,0 +1,39 @@
+.coupon_right {
+    padding: 20px 20px 20px 0;
+
+    h2 {
+        text-align: center;
+    }
+
+    .coupon_btn {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .coupon_search {
+        color: #E73F14;
+        border: 1px solid #E73F14;
+        border-radius: 10px;
+        padding: 5px;
+        background-color: transparent;
+        margin-right: 20px;
+        outline: none;
+    }
+
+    ::placeholder {
+        color: #E73F14;
+    }
+
+    .page-link {
+        border-radius: 50%;
+        border: 1px solid $primary;
+        font-weight: bold;
+        background: none;
+        margin-right: 8px;
+    }
+
+    .page {
+        display: flex;
+        justify-content: end;
+    }
+}

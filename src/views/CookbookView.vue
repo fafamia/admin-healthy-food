@@ -1,9 +1,9 @@
 <template>
   <div class="cookbook">
     <div class="bar">
-        <SideBar />
-      </div>
-    
+      <SideBar />
+    </div>
+
     <div class="cookbook_container">
       <h1>食譜總覽</h1>
       <div class="cookbook_btn">
@@ -41,26 +41,26 @@
       </table>
       <div class="page">
         <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous" style="border: none;">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">4</a></li>
-          <li class="page-item"><a class="page-link" href="#">5</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next" style="border: none;">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-            
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous" style="border: none;">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next" style="border: none;">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
     </div>
   </div>
 </template>
@@ -101,4 +101,5 @@ export default {
 
 <style lang="scss">
 @import "@/assets/scss/_cookbook.scss";
-@import "@/assets/scss/_sidebar.scss";</style>
+@import "@/assets/scss/_sidebar.scss";
+</style>
