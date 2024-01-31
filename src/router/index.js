@@ -58,6 +58,26 @@ const router = createRouter({
       name: 'prodtuctfeature',
       component: () => import('../views/ProductFeature.vue')
     },
+    {
+      path: '/member',
+      name: 'member',
+      component: () => import('../views/MemberView.vue')
+    },
+    {
+      path: '/memberlevel',
+      name: 'memberlevel',
+      component: () => import('../views/MemberLevel.vue')
+    },
+    {
+      path: '/game',
+      name: 'game',
+      component: () => import('../views/GameQ.vue')
+    },
+    {
+      path: '/coupon',
+      name: 'coupon',
+      component: () => import('../views/CouponView.vue')
+    },
   ]
 })
 
