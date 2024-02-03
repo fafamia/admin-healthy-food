@@ -39,6 +39,10 @@
                                 <i class="fa-solid fa-trash-can"></i>
                                 刪除
                             </button>
+                            <button class="btn btn-outline-primary">
+                                <i class="fa-solid fa-trash-can"></i>
+                                刪除
+                            </button>
                         </td>
                     </tr>
                 </tbody>

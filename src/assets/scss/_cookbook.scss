@@ -22,7 +22,7 @@ table th,table td{
 }
 .cookbook_container{
     flex-grow: 1;
-    margin-left: 300px;
+    margin-left: 170px;
     width: 1000px;
     padding-top:50px ;
     h1{
@@ -38,4 +38,16 @@ table th,table td{
 }
 .page{
     float: right;
+}
+.modal-body{
+    h5{
+        font-size: 16px;
+    }
+    #setday{
+        margin-left: 10px;
+        padding: 5px 125px;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        
+    }
 }
