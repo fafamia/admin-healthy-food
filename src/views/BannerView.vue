@@ -1,8 +1,8 @@
 <template>
     <SideBar />
     <div class="admin_banner">
-        <h2 class="admin_banner_title">首頁BANNER</h2>
-        <table class="table table-bordered">
+        <h1 class="admin_banner_title">首頁BANNER</h1>
+        <table class="table table-hover table-bordered border-dark">
             <thead>
                 <tr>
                     <th scope="col"><input type="checkbox"></th>

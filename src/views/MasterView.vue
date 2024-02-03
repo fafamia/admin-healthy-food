@@ -1,12 +1,12 @@
 <template>
     <SideBar />
     <div class="admin_master">
-        <h2 class="admin_master_title">管理員</h2>
+        <h1 class="admin_master_title">管理員</h1>
         <div class="member_search_area admin_master_subtitle">
             <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-circle-plus"></i>新增</button>
             <input type="text" class="member_search primary admin_master_subtitle_input" value="" placeholder="搜尋">
         </div>
-        <table class="table table-bordered">
+        <table class="table table-hover table-bordered border-dark">
         <thead>
             <tr>
                 <th scope="col"><input type="checkbox"></th>
