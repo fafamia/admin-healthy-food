@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     fetchData() {
-      fetch(`${import.meta.env.VITE_API_UEL}/AjaxLab/2_Ajax_fetch_books/prod_getAll.php`).then(res => {
+      fetch(`${import.meta.env.VITE_API_URL}/AjaxLab/2_Ajax_fetch_books/prod_getAll.php`).then(res => {
         console.log(res);
       })
     }
