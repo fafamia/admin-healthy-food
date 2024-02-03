@@ -19,7 +19,9 @@
                     <td>標題標題標題</td>
                     <td>@縮圖</td>
                     <td>
-                        <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen"></i>修改</button>
+                        <button type="button" class="btn btn-outline-primary">
+                            <i class="fa-solid fa-pen"></i>修改
+                        </button>
                     </td>
                 </tr>
                 <tr>
@@ -27,7 +29,11 @@
                     <td>02</td>
                     <td>標題標題標題</td>
                     <td>@縮圖</td>
-                    <td><button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen"></i>修改</button></td>
+                    <td>
+                        <button type="button" class="btn btn-outline-primary">
+                            <i class="fa-solid fa-pen"></i>修改
+                        </button>
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row"><input type="checkbox"></th>
