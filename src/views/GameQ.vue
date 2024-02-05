@@ -8,54 +8,63 @@
             <input type="search" class="game_search" placeholder="搜尋" />
         </div>
         <table class="table table-hover table-bordered border-dark">
-            <tr>
-                <th scope="col"><input type="checkbox" /></th>
-                <th scope="col">題目編號</th>
-                <th scope="col">題目名稱</th>
-                <th scope="col">狀態</th>
-                <th scope="col"><button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-trash me-1"></i>
-                        刪除</button></th>
-            </tr>
-            <tr>
-                <td><input type="checkbox" /></td>
-                <td>00001</td>
-                <td>何謂「五蔬果」的建議攝取量？</td>
-                <td>上架</td>
-                <td><button type="button" class="btn btn-outline-primary me-2"><i
-                            class="fa-solid fa-trash me-1"></i>刪除</button>
-                    <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen me-1"></i>修改</button>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" /></td>
-                <td>00002</td>
-                <td>BMI是用來評估什麼身體狀態？</td>
-                <td>上架</td>
-                <td><button type="button" class="btn btn-outline-primary me-2"><i
-                            class="fa-solid fa-trash me-1"></i>刪除</button>
-                    <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen me-1"></i>修改</button>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" /></td>
-                <td>00003</td>
-                <td>為何多喝水對健康有益？</td>
-                <td>下架</td>
-                <td><button type="button" class="btn btn-outline-primary me-2"><i
-                            class="fa-solid fa-trash me-1"></i>刪除</button>
-                    <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen me-1"></i>修改</button>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" /></td>
-                <td>00004</td>
-                <td>下列哪種食物不是蛋白質的良好來源？</td>
-                <td>上架</td>
-                <td><button type="button" class="btn btn-outline-primary me-2"><i
-                            class="fa-solid fa-trash me-1"></i>刪除</button>
-                    <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen me-1"></i>修改</button>
-                </td>
-            </tr>
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" /></th>
+                    <th scope="col">題目編號</th>
+                    <th scope="col">題目名稱</th>
+                    <th scope="col">狀態</th>
+                    <th scope="col"><button type="button" class="btn btn-outline-primary"><i
+                                class="fa-solid fa-trash me-1"></i>
+                            刪除</button></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" /></td>
+                    <td>00001</td>
+                    <td>何謂「五蔬果」的建議攝取量？</td>
+                    <td>上架</td>
+                    <td><button type="button" class="btn btn-outline-primary me-2"><i
+                                class="fa-solid fa-trash me-1"></i>刪除</button>
+                        <button type="button" class="btn btn-outline-primary"><i
+                                class="fa-solid fa-pen me-1"></i>修改</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" /></td>
+                    <td>00002</td>
+                    <td>BMI是用來評估什麼身體狀態？</td>
+                    <td>上架</td>
+                    <td><button type="button" class="btn btn-outline-primary me-2"><i
+                                class="fa-solid fa-trash me-1"></i>刪除</button>
+                        <button type="button" class="btn btn-outline-primary"><i
+                                class="fa-solid fa-pen me-1"></i>修改</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" /></td>
+                    <td>00003</td>
+                    <td>為何多喝水對健康有益？</td>
+                    <td>下架</td>
+                    <td><button type="button" class="btn btn-outline-primary me-2"><i
+                                class="fa-solid fa-trash me-1"></i>刪除</button>
+                        <button type="button" class="btn btn-outline-primary"><i
+                                class="fa-solid fa-pen me-1"></i>修改</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" /></td>
+                    <td>00004</td>
+                    <td>下列哪種食物不是蛋白質的良好來源？</td>
+                    <td>上架</td>
+                    <td><button type="button" class="btn btn-outline-primary me-2"><i
+                                class="fa-solid fa-trash me-1"></i>刪除</button>
+                        <button type="button" class="btn btn-outline-primary"><i
+                                class="fa-solid fa-pen me-1"></i>修改</button>
+                    </td>
+                </tr>
+            </tbody>
         </table>
         <div class="modal fade" id="addGameQ" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable">

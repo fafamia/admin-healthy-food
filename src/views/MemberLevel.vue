@@ -7,59 +7,67 @@
                     class="fa-solid fa-circle-plus me-1"></i>新增</button>
         </div>
         <table class="table table-hover table-bordered border-dark">
-            <tr>
-                <th scope="col"><input type="checkbox" /></th>
-                <th scope="col">等級編號</th>
-                <th scope="col">等級名稱</th>
-                <th scope="col">消費門檻</th>
-                <th scope="col">消費折扣</th>
-                <th scope="col"><button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-trash"></i>
-                        刪除</button></th>
-            </tr>
-            <tr>
-                <td><input type="checkbox" /></td>
-                <td>00001</td>
-                <td>一般會員</td>
-                <td>0-3000</td>
-                <td>0</td>
-                <td><button type="button" class="btn btn-outline-primary me-2"><i
-                            class="fa-solid fa-trash me-1"></i>刪除</button>
-                    <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen me-1"></i>修改</button>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" /></td>
-                <td>00002</td>
-                <td>白金會員</td>
-                <td>3001-8000</td>
-                <td>0</td>
-                <td><button type="button" class="btn btn-outline-primary me-2"><i
-                            class="fa-solid fa-trash me-1"></i>刪除</button>
-                    <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen me-1"></i>修改</button>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" /></td>
-                <td>00003</td>
-                <td>黃金會員</td>
-                <td>8001-16000</td>
-                <td>0.95</td>
-                <td><button type="button" class="btn btn-outline-primary me-2"><i
-                            class="fa-solid fa-trash me-1"></i>刪除</button>
-                    <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen me-1"></i>修改</button>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" /></td>
-                <td>00004</td>
-                <td>鑽石會員</td>
-                <td>>16000</td>
-                <td>0.9</td>
-                <td><button type="button" class="btn btn-outline-primary me-2"><i
-                            class="fa-solid fa-trash me-1"></i>刪除</button>
-                    <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen me-1"></i>修改</button>
-                </td>
-            </tr>
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" /></th>
+                    <th scope="col">等級編號</th>
+                    <th scope="col">等級名稱</th>
+                    <th scope="col">消費門檻</th>
+                    <th scope="col">消費折扣</th>
+                    <th scope="col"><button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-trash"></i>
+                            刪除</button></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" /></td>
+                    <td>00001</td>
+                    <td>一般會員</td>
+                    <td>0-3000</td>
+                    <td>0</td>
+                    <td><button type="button" class="btn btn-outline-primary me-2"><i
+                                class="fa-solid fa-trash me-1"></i>刪除</button>
+                        <button type="button" class="btn btn-outline-primary"><i
+                                class="fa-solid fa-pen me-1"></i>修改</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" /></td>
+                    <td>00002</td>
+                    <td>白金會員</td>
+                    <td>3001-8000</td>
+                    <td>0</td>
+                    <td><button type="button" class="btn btn-outline-primary me-2"><i
+                                class="fa-solid fa-trash me-1"></i>刪除</button>
+                        <button type="button" class="btn btn-outline-primary"><i
+                                class="fa-solid fa-pen me-1"></i>修改</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" /></td>
+                    <td>00003</td>
+                    <td>黃金會員</td>
+                    <td>8001-16000</td>
+                    <td>0.95</td>
+                    <td><button type="button" class="btn btn-outline-primary me-2"><i
+                                class="fa-solid fa-trash me-1"></i>刪除</button>
+                        <button type="button" class="btn btn-outline-primary"><i
+                                class="fa-solid fa-pen me-1"></i>修改</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" /></td>
+                    <td>00004</td>
+                    <td>鑽石會員</td>
+                    <td>>16000</td>
+                    <td>0.9</td>
+                    <td><button type="button" class="btn btn-outline-primary me-2"><i
+                                class="fa-solid fa-trash me-1"></i>刪除</button>
+                        <button type="button" class="btn btn-outline-primary"><i
+                                class="fa-solid fa-pen me-1"></i>修改</button>
+                    </td>
+                </tr>
+            </tbody>
         </table>
         <div class="modal fade" id="addMemberLevel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -101,6 +109,5 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import "@/assets/scss/page/memberlevel.scss";
+<style lang="scss">@import "@/assets/scss/page/memberlevel.scss";
 @import "@/assets/scss/sidebar.scss";</style>
