@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <table class="table productTable">
+            <table class="table table-hover table-bordered border-dark productTable">
                 <thead>
                     <tr>
                         <th scope="col">

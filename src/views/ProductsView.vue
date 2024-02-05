@@ -80,7 +80,7 @@
         </div>
       </div>
 
-      <table class="table productTable">
+      <table class="table table-hover table-bordered border-dark productTable">
         <thead>
           <tr>
             <th scope="col">
@@ -106,12 +106,10 @@
             <td>{{ product.status }}</td>
             <td>
               <button class="btn btn-outline-primary">
-                <i class="fa-solid fa-pencil"></i>
-                修改
+                <i class="fa-solid fa-pencil"></i>修改
               </button>
               <button class="btn btn-outline-primary prodDelete" @click="deleteProd(index)">
-                <i class="fa-solid fa-trash-can"></i>
-                刪除
+                <i class="fa-solid fa-trash-can"></i>刪除
               </button>
             </td>
           </tr>

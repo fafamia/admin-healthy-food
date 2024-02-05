@@ -3,17 +3,15 @@
 }
 .productFeature{
     position: relative;
-    width: 75%;
     &_right{
-        margin-left: 300px;
+        margin-left: 200px;
     }
     &_title{
-        margin-left: 600px;
-        // text-align: center;
+        text-align: center;
     }
     &_add{
         position: absolute;
         top: 100px;
-        left:  300px;
+        right:0;
     }
 }
