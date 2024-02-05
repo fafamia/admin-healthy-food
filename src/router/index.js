@@ -88,6 +88,26 @@ const router = createRouter({
       name: 'master',
       component: () => import('../views/MasterView.vue')
     },
+    {
+      path: '/articles',
+      name: 'articles',
+      component: () => import('../views/ArticleView.vue')
+    },
+    {
+      path: '/articleclass',
+      name: 'articleclass',
+      component: () => import('../views/ArticleClass.vue')
+    },
+    {
+      path: '/faq',
+      name: 'faq',
+      component: () => import('../views/Faq.vue')
+    },
+    {
+      path: '/faqclass',
+      name: 'faqclass',
+      component: () => import('../views/FaqClass.vue')
+    },
   ]
 })
 
