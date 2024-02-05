@@ -6,7 +6,7 @@
         data-bs-target="#staticBackdrop">
         <i class="fa-solid fa-circle-plus"></i>新增
         </button>
-        <input type="search" class="search" placeholder="搜尋" />
+        <input type="search" class="search" placeholder="搜尋" v-model="searchQuery" />
     </div> 
     <div class="articles">  
 
@@ -81,7 +81,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(articles, index) in articles" :key="index">
+          <tr v-for="(articles, index) in filteredArticles" :key="index">
             <td>
               <input type="checkbox" v-model="selectedArticles" :value="articles">
             </td>
@@ -131,6 +131,7 @@ import { ref, computed } from 'vue';
 export default {
   data() {
     return {
+      searchQuery: '',
       selectAll: ref(false),
       selectedArticles: ref([]),
       articles: ref([
@@ -156,6 +157,20 @@ export default {
     },
     totalPages() {
       return Math.ceil(this.articles.length / this.itemsPerPage);
+    },
+
+    //關鍵字搜尋
+    filteredArticles() {
+      const filtered = this.articles.filter((article) => {
+        return (
+          article.articleName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          article.postingTime.includes(this.searchQuery) ||
+          article.articleNumber.includes(this.searchQuery) ||
+          article.status.includes(this.searchQuery)
+          // 添加其他欄位的搜尋條件
+        );
+      });
+      return filtered;
     },
   },
   methods: {

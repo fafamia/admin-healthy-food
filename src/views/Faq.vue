@@ -6,7 +6,7 @@
         data-bs-target="#staticBackdrop">
         <i class="fa-solid fa-circle-plus"></i>新增
         </button>
-        <input type="search" class="search" placeholder="搜尋" />
+        <input type="search" class="search" placeholder="搜尋" v-model="searchQuery" />
       </div> 
     <div class="articles">  
 
@@ -69,7 +69,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(faq, index) in faq" :key="index">
+          <tr v-for="(faq, index) in filteredFaq" :key="index">
             <td>
               <input type="checkbox" v-model="selectedFaq" :value="faq">
             </td>
@@ -118,6 +118,7 @@ import { ref, computed } from 'vue';
 export default {
   data() {
     return {
+      searchQuery: '',
       selectAll: ref(false),
       selectedFaq: ref([]),
       faq: ref([
@@ -138,10 +139,22 @@ export default {
     paginatedFaq() {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
       const endIndex = startIndex + this.itemsPerPage;
-      return this.articles.slice(startIndex, endIndex);
+      return this.faq.slice(startIndex, endIndex);
     },
     totalPages() {
       return Math.ceil(this.faq.length / this.itemsPerPage);
+    },
+    //關鍵字搜尋
+    filteredFaq() {
+      const filtered = this.faq.filter((faq) => {
+        return (
+          faq.faqName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          faq.faqNumber.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          faq.class.toLowerCase().includes(this.searchQuery.toLowerCase())
+          // 添加其他欄位的搜尋條件
+        );
+      });
+      return filtered;
     },
   },
   methods: {
@@ -159,9 +172,9 @@ export default {
 
     toggleSelect() {
       if (this.selectAll) {
-        this.selectedArticles = [...this.articles];
+      this.selectedFaq = [...this.faq];
       } else {
-        this.selectedArticles = [];
+        this.selectedFaq = [];
       }
     }
 
