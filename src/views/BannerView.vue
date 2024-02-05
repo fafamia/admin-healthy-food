@@ -2,10 +2,44 @@
     <SideBar />
     <div class="admin_banner">
         <h1 class="admin_banner_title">首頁BANNER</h1>
+        <button type="button" class="btn btn-outline-primary admin_banner_addbutton" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <i class="fa-solid fa-circle-plus"></i>新增
+        </button>
+
+
+
+
+        <div class="modal fade admin_banner_light_box" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">新增資料</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="form-select">圖片預覽</label>
+                            <div class="admin_banner_upload">
+                                <img ref="previewImage" alt="">
+                            </div>
+                            <span>建議尺寸：300MB</span>
+                            <label for="form-select">Banner標題</label>
+                            <input v-model="newBanner.title" type="text" class="form-control">
+                            <label for="form-select">Banner圖片上傳</label>
+                            <input @change="handleFileUpload" type="file" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
+                        <button @click="saveBanner" class="btn btn-primary">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <table class="table table-hover table-bordered border-dark">
             <thead>
                 <tr>
-                    <th scope="col"><input type="checkbox"></th>
                     <th scope="col">編號</th>
                     <th scope="col">標題</th>
                     <th scope="col">縮圖</th>
@@ -13,48 +47,19 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row"><input type="checkbox"></th>
-                    <td>01</td>
-                    <td>標題標題標題</td>
-                    <td>@縮圖</td>
+                <tr v-for="(banner, index) in banners" :key="index">
+                    <td>{{ banner.carousel_no }}</td>
+                    <td>{{ banner.banner_title }}</td>
                     <td>
-                        <button type="button" class="btn btn-outline-primary">
-                            <i class="fa-solid fa-pen"></i>修改
+                        <div class="admin_banner_preview">
+                            <img :src="getImageUrl(banner.banner_image)" alt="">
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-primary prodDelete" @click="deleteProd(index)">
+                            <i class="fa-solid fa-trash-can"></i>刪除
                         </button>
                     </td>
-                </tr>
-                <tr>
-                    <th scope="row"><input type="checkbox"></th>
-                    <td>02</td>
-                    <td>標題標題標題</td>
-                    <td>@縮圖</td>
-                    <td>
-                        <button type="button" class="btn btn-outline-primary">
-                            <i class="fa-solid fa-pen"></i>修改
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><input type="checkbox"></th>
-                    <td>03</td>
-                    <td>標題標題標題</td>
-                    <td>@縮圖</td>
-                    <td><button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen"></i>修改</button></td>
-                </tr>
-                <tr>
-                    <th scope="row"><input type="checkbox"></th>
-                    <td>04</td>
-                    <td>標題標題標題</td>
-                    <td>@縮圖</td>
-                    <td><button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen"></i>修改</button></td>
-                </tr>
-                <tr>
-                    <th scope="row"><input type="checkbox"></th>
-                    <td>05</td>
-                    <td>標題標題標題</td>
-                    <td>@縮圖</td>
-                    <td><button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-pen"></i>修改</button></td>
                 </tr>
             </tbody>
         </table>
@@ -63,13 +68,64 @@
 
 <script>
 import SideBar from "@/components/SideBar.vue";
+import axios from "axios";
+
 export default {
     data() {
         return {
-        }
+            newBanner: {
+                title: "",
+                image: null,
+            },
+            banners: [],
+        };
     },
     components: {
         SideBar,
+    },
+    created() {
+        this.fetchBanners();
+    },
+    methods: {
+        getImageUrl(paths) {
+            return new URL(`../assets/images/banner/${paths}`, import.meta.url).href;
+        },
+
+        handleFileUpload(event) {
+            const file = event.target.files[0];
+            this.newBanner.image = file;
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.$refs.previewImage.src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        },
+
+        saveBanner() {
+            const formData = new FormData();
+            formData.append('title', this.newBanner.title);
+            formData.append('image', this.newBanner.image);
+            axios.post(`${import.meta.env.VITE_API_URL}/admin_new_banner.php`, formData)
+                .then(response => {
+                    console.log('横幅保存成功：', response.data);
+                    this.newBanner.title = "";
+                    this.newBanner.image = null;
+                    this.$refs.previewImage.src = "";
+                })
+                .catch(error => {
+                    console.error('保存横幅出错：', error);
+                });
+        },
+
+        fetchBanners() {
+            axios.get(`${import.meta.env.VITE_API_URL}/admin_banner_join.php`)
+            .then(response => {
+                this.banners = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching banners:', error);
+            });
+        },
     },
 }
 </script>
