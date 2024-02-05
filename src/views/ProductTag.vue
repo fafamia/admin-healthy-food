@@ -51,9 +51,9 @@
 <script>
 import SideBar from "@/components/SideBar.vue";
 
-export default{
-    data(){
-        return{
+export default {
+    data() {
+        return {
             producttags: [
                 { number: '0001', name: '調理包' },
                 { number: '0002', name: '生鮮食材' },
@@ -69,6 +69,6 @@ export default{
 </script>
 
 <style lang="scss">
-    @import "@/assets/scss/sidebar.scss";
-    @import "@/assets/scss/page/producttag";
+@import "@/assets/scss/sidebar.scss";
+@import "@/assets/scss/page/producttag";
 </style>
