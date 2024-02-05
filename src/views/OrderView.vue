@@ -11,7 +11,7 @@
             <!-- Modal -->
 
 
-            <table class="table productTable">
+            <table class="table table-hover table-bordered border-dark">
                 <thead>
                     <tr>
                         <th scope="col">
@@ -37,11 +37,12 @@
                         <td>{{ oder.orderstatus }}</td>
                         <td>
                             <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                @click="viewOrderDetail(oder)">
+                                @click="changeDetail(oder)">
                                 <i class="fa-solid fa-pencil"></i>
                                 修改
                             </button>
-                            <button class="btn btn-outline-primary ordersee">
+                            <button class="btn btn-outline-primary ordersee" @click="viewOrderDetail(oder)"
+                                data-bs-toggle="modal" data-bs-target="#orderDetailModal">
                                 查看詳情
                             </button>
                         </td>
@@ -58,9 +59,6 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body" v-if="selectedOrderDetail">
-                            <!-- 流水號 -->
-                            <label for="exampleFormControlInput1" class="form-label">訂單明細編號:01</label>
-                            <br>
                             <label for="exampleFormControlInput1" class="form-label">訂單編號: {{ selectedOrderDetail.oderNumber
                             }}</label>
                             <br>
@@ -101,6 +99,53 @@
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">查看訂單詳情</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" v-if="selectedOrderDetail">
+                            <!-- 流水號 -->
+                            <label for="exampleFormControlInput1" class="form-label">訂單明細編號:01</label>
+                            <br>
+                            <label for="exampleFormControlInput1" class="form-label">訂單編號: {{ selectedOrderDetail.oderNumber
+                            }}</label>
+                            <br>
+                            <table class="table table-hover table-bordered border-dark">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">商品編號</th>
+                                        <th scope="col">商品名稱</th>
+                                        <th scope="col">商品數量</th>
+                                        <th scope="col">價格</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr v-for="(orderdetail, index) in orderDetails" :key="index">
+                                        <td>{{ orderdetail.orderDetailNo }}</td>
+                                        <td>{{ orderdetail.orderName }}</td>
+                                        <td>{{ orderdetail.ordercount }}</td>
+                                        <td>{{ orderdetail.oderDetailPrice }}</td>
+
+                                    </tr>
+                                </tbody>
+                                
+                            </table>
+                            <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-primary"
+                                        data-bs-dismiss="modal">回列表</button>
+                                    <button type="button" class="btn btn-primary">儲存</button>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
                     <li class="page-item" @click="currentPage > 1 ? currentPage-- : null">
@@ -119,7 +164,7 @@
                     </li>
                 </ul>
             </nav>
-            
+
 
         </div>
     </div>
@@ -138,7 +183,12 @@ export default {
             oders: ref([
                 { oderNumber: '231231182410', member: '0001', orderprice: 3000, oderTime: '2023/12/31 18:24:10', orderstatus: '已配送' },
                 { oderNumber: '231231161616', member: '0002', orderprice: 2000, oderTime: '2023/12/31 16:16:16', orderstatus: '未配送' },
-            
+
+            ]),
+            orderDetails: ref([
+                { orderDetailNo: '1001', orderName: '南瓜蔬食調理包', ordercount: 1, oderDetailPrice: '170'},
+
+
             ]),
             itemsPerPage: 5,
             currentPage: 1,
@@ -181,12 +231,17 @@ export default {
 
         toggleSelect() {
             if (this.selectAll) {
-                this.selectedoders = [...this.oders];
+                // 只選擇當前頁面的商品
+                this.selectedProducts = [...this.paginatedProducts];
             } else {
-                this.selectedoders = [];
+                this.selectedProducts = [];
             }
         },
         viewOrderDetail(order) {
+            this.selectedOrderDetail = { ...order };
+            $('#orderDetailModal').modal('show');
+        },
+        changeDetail(order) {
             this.selectedOrderDetail = { ...order };
         },
 

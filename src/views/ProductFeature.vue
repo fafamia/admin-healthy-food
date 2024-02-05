@@ -9,7 +9,7 @@
         <button type="button" class="btn btn-outline-primary productFeature_add">
             <i class="fa-solid fa-circle-plus"></i>新增
         </button>
-        <table class="table productFeature_right">
+        <table class="table table-hover table-bordered border-dark productFeature_right">
             <thead>
                 <tr>
                 <th scope="col"><input type="checkbox"></th>
