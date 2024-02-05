@@ -23,16 +23,16 @@ export default {
     RouterLink,
     RouterView
   },
-  created() {
-    this.fetchData()
-  },
-  methods: {
-    fetchData() {
-      fetch(`${import.meta.env.VITE_API_URL}/AjaxLab/2_Ajax_fetch_books/prod_getAll.php`).then(res => {
-        console.log(res);
-      })
-    }
-  }
+  // created() {
+  //   this.fetchData()
+  // },
+  // methods: {
+  //   fetchData() {
+  //     fetch(`${import.meta.env.VITE_API_URL}/AjaxLab/2_Ajax_fetch_books/prod_getAll.php`).then(res => {
+  //       console.log(res);
+  //     })
+  //   }
+  // }
 }
 </script>
 
