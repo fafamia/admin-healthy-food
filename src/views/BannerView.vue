@@ -116,7 +116,6 @@ export default {
                     console.error('保存横幅出错：', error);
                 });
         },
-
         fetchBanners() {
             axios.get(`${import.meta.env.VITE_API_URL}/admin_banner_join.php`)
             .then(response => {
