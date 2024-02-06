@@ -108,6 +108,11 @@ const router = createRouter({
       name: 'faqclass',
       component: () => import('../views/FaqClass.vue')
     },
+    {
+      path: '/articlesuggest',
+      name: 'articlesuggest',
+      component: () => import('../views/ArticleSuggest.vue')
+    },
   ]
 })
 
