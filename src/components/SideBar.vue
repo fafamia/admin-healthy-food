@@ -86,7 +86,7 @@ export default {
                     items: [
                         { id: 1, label: '推薦商品', route: '/productfeature' },
                         { id: 2, label: '推薦留言', route: '' },
-                        { id: 3, label: '推薦專欄', route: '' }
+                        { id: 3, label: '推薦專欄', route: '/articlesuggest' }
                     ]
                 },
                 {
