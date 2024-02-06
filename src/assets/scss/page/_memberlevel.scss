@@ -1,4 +1,8 @@
-.memberlevel_right {
+.memberlevel {
+    margin-left: 200px;
+    padding-top: 50px;
+    text-align: center;
+    flex-grow: 1;
     padding: 20px 20px 20px 0;
 
     h2 {
@@ -10,16 +14,10 @@
         justify-content: end;
     }
 
-    .page-link {
-        border-radius: 50%;
-        border: 1px solid $primary;
-        font-weight: bold;
-        background: none;
-        margin-right: 8px;
-    }
+    .level_pay {
+        input {
+            width: 34.5%;
+        }
 
-    .page {
-        display: flex;
-        justify-content: end;
     }
 }

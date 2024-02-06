@@ -1,0 +1,43 @@
+h1{
+    text-align: center;
+    font-size: 36px;
+    margin-left: 100px;
+    padding-top: 50px;
+}
+
+.article_btn{
+    padding: 0 50px;
+    margin-left: 200px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    .search{
+        background: none;
+        padding: 5px;
+        border: 1px solid $primary;
+        border-radius: 10px;
+    }
+}
+.articleclass_btn{
+    position: absolute;
+    right: 40px;
+    top: 45px;
+}
+.articles{
+    display: flex;
+    margin: auto;
+    padding: 0 50px;
+    margin-left: 200px;
+    button{
+        margin: 0 10px;
+    }
+}
+
+.pagination {
+    position: fixed;
+    bottom: 5px;
+    right: 30px; 
+    .page-link{
+       border-radius: 50%; 
+    }
+}

@@ -80,7 +80,7 @@
         </div>
       </div>
 
-      <table class="table table-hover table-bordered border-dark productTable">
+      <table class="table table-hover table-bordered border-dark">
         <thead>
           <tr>
             <th scope="col">
@@ -187,11 +187,12 @@ export default {
 
     toggleSelect() {
       if (this.selectAll) {
-        this.selectedProducts = [...this.products];
+        // 只選擇當前頁面的商品
+        this.selectedProducts = [...this.paginatedProducts];
       } else {
         this.selectedProducts = [];
       }
-    }
+    },
 
   },
 

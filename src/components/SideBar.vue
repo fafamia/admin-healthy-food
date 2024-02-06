@@ -86,7 +86,7 @@ export default {
                     items: [
                         { id: 1, label: '推薦商品', route: '/productfeature' },
                         { id: 2, label: '推薦留言', route: '' },
-                        { id: 3, label: '推薦專欄', route: '' }
+                        { id: 3, label: '推薦專欄', route: '/articlesuggest' }
                     ]
                 },
                 {
@@ -114,8 +114,8 @@ export default {
                     label: '專欄管理',
                     iconClass: "fa-regular fa-pen-to-square",
                     items: [
-                        { id: 1, label: '專欄總覽', route: '' },
-                        { id: 2, label: '專欄分類', route: '' }
+                        { id: 1, label: '專欄總覽', route: '/articles' },
+                        { id: 2, label: '專欄分類', route: '/articleclass' }
                     ]
                 },
                 {
@@ -142,8 +142,8 @@ export default {
                     label: '常見問題管理',
                     iconClass: "fa-solid fa-circle-question",
                     items: [
-                        { id: 1, label: '常見問題總覽', route: '' },
-                        { id: 2, label: '常見問題分類', route: '' }
+                        { id: 1, label: '常見問題總覽', route: '/faq' },
+                        { id: 2, label: '常見問題分類', route: '/faqclass' }
                     ]
                 },
             ]
