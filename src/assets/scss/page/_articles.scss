@@ -6,8 +6,8 @@ h1{
 }
 
 .article_btn{
-    max-width: 930px;
-    margin-left: 290px;
+    padding: 0 50px;
+    margin-left: 200px;
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
@@ -26,8 +26,8 @@ h1{
 .articles{
     display: flex;
     margin: auto;
-    padding: 0 40px;
-    margin-left: 250px;
+    padding: 0 50px;
+    margin-left: 200px;
     button{
         margin: 0 10px;
     }
