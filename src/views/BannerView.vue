@@ -56,7 +56,9 @@
                         </div>
                     </td>
                     <td>
-                        <button class="btn btn-outline-primary prodDelete">
+                        <button class="btn btn-outline-primary prodDelete"
+                        @click="deleteThisBanner(index)"
+                        >
                             <i class="fa-solid fa-trash-can"></i>刪除
                         </button>
                     </td>
@@ -107,13 +109,13 @@ export default {
             formData.append('image', this.newBanner.image);
             axios.post(`${import.meta.env.VITE_API_URL}/admin_add_banner.php`, formData)
                 .then(response => {
-                    console.log('横幅保存成功：', response.data);
+                    console.log('保存成功');
                     this.newBanner.title = "";
                     this.newBanner.image = null;
                     this.$refs.previewImage.src = "";
                 })
                 .catch(error => {
-                    console.error('保存横幅出错：', error);
+                    console.error('保存出错：', error);
                 }
             );
         },
@@ -126,6 +128,22 @@ export default {
                 console.error('Error fetching banners:', error);
             });
         },
+
+
+        deleteThisBanner(index) {
+            const bannerToDelete = this.banners[index].carousel_no;
+            axios.post(`${import.meta.env.VITE_API_URL}/admin_delete_banner.php`, {
+                banner_index: bannerToDelete
+            })
+            .then(response => {
+                this.banners.splice(index, 1);
+                console.log('删除成功');
+            })
+            .catch(error => {
+                console.error('删除出錯：', error);
+            });
+        }
+
     },
 }
 </script>
