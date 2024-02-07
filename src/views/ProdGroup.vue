@@ -57,10 +57,10 @@
                         <td>
                             <input type="checkbox" v-model="selectedProducts" :value="prodgroup">
                         </td>
-                        <td>{{ prodgroup.prodgroupNumber }}</td>
-                        <td>{{ prodgroup.prodgroupName }}</td>
-                        <td>{{ prodgroup.startime }}</td>
-                        <td>{{ prodgroup.endtime }}</td>
+                        <td>{{ prodgroup.prodgroup_no }}</td>
+                        <td>{{ prodgroup. prodgroup_name }}</td>
+                        <td>{{ prodgroup.prodgroup_start }}</td>
+                        <td>{{ prodgroup.prodgroup_end }}</td>
                         <td>
                             <button class="btn btn-outline-primary">
                                 <i class="fa-solid fa-pencil"></i>
@@ -83,6 +83,7 @@
 <script>
 import SideBar from "@/components/SideBar.vue";
 import { ref } from 'vue';
+import axios from "axios";
 
 export default{
     data() {
@@ -90,12 +91,11 @@ export default{
             selectAll: ref(false),
             selectedProducts: ref([]),
             prodgroups: ref([
-                { prodgroupNumber: '0001', prodgroupName: '首頁推薦'},
-                { prodgroupNumber: '0002', prodgroupName: 'BMI過輕'},
-                { prodgroupNumber: '0003', prodgroupName: '龍年促銷', startime: '2024/01/01', endtime: '2024/01/31' },
-                { prodgroupNumber: '0004', prodgroupName: '食譜食材推薦'},
+                // { prodgroupNumber: '0001', prodgroupName: '首頁推薦'},
+                // { prodgroupNumber: '0002', prodgroupName: 'BMI過輕'},
+                // { prodgroupNumber: '0003', prodgroupName: '龍年促銷', startime: '2024/01/01', endtime: '2024/01/31' },
+                // { prodgroupNumber: '0004', prodgroupName: '食譜食材推薦'},
 
-                // 其他商品數據
             ]),
 
             
@@ -103,6 +103,15 @@ export default{
     },
     components: {
         SideBar,
+    },
+    created(){
+        axios.get(`${import.meta.env.VITE_API_URL}/prodGroupDataGet.php`)
+            .then(response => {
+                this. prodgroups = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching  prodgroups:', error);
+            });
     },
     methods: {
         deleteProd(index) {
