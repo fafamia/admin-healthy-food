@@ -26,22 +26,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(oder, index) in filteredOrders" :key="index">
+                    <tr v-for="(order, index) in paginatedorders" :key="index">
+                        <!-- 商品資訊的顯示 -->
                         <td>
-                            <input type="checkbox" v-model="selectedoders" :value="oder">
+                            <input type="checkbox" v-model="selectedorders" :value="order">
                         </td>
-                        <td>{{ oder.oderNumber }}</td>
-                        <td>{{ oder.member }}</td>
-                        <td>{{ oder.orderprice }}</td>
-                        <td>{{ oder.oderTime }}</td>
-                        <td>{{ oder.orderstatus }}</td>
+                        <td>{{ order.ORD_NO }}</td>
+                        <td>{{ order.USER_NO }}</td>
+                        <td>{{ order.ORD_PAYMENT }}</td>
+                        <td>{{ order.ORD_TIME }}</td>
+                        <td>{{ order.ORD_STATUS }}</td>
                         <td>
                             <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                @click="changeDetail(oder)">
+                                @click="changeDetail(order)">
                                 <i class="fa-solid fa-pencil"></i>
                                 修改
                             </button>
-                            <button class="btn btn-outline-primary ordersee" @click="viewOrderDetail(oder)"
+                            <button class="btn btn-outline-primary ordersee" @click="viewOrderDetail(order)"
                                 data-bs-toggle="modal" data-bs-target="#orderDetailModal">
                                 查看詳情
                             </button>
@@ -59,7 +60,8 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body" v-if="selectedOrderDetail">
-                            <label for="exampleFormControlInput1" class="form-label">訂單編號: {{ selectedOrderDetail.oderNumber
+                            <label for="exampleFormControlInput1" class="form-label">訂單編號: {{
+                                selectedOrderDetail.orderNumber
                             }}</label>
                             <br>
                             <label for="exampleFormControlInput1" class="form-label">會員名稱: 王小名</label>
@@ -112,7 +114,8 @@
                             <!-- 流水號 -->
                             <label for="exampleFormControlInput1" class="form-label">訂單明細編號:01</label>
                             <br>
-                            <label for="exampleFormControlInput1" class="form-label">訂單編號: {{ selectedOrderDetail.oderNumber
+                            <label for="exampleFormControlInput1" class="form-label">訂單編號: {{
+                                selectedOrderDetail.orderNumber
                             }}</label>
                             <br>
                             <table class="table table-hover table-bordered border-dark">
@@ -130,40 +133,46 @@
                                         <td>{{ orderdetail.orderDetailNo }}</td>
                                         <td>{{ orderdetail.orderName }}</td>
                                         <td>{{ orderdetail.ordercount }}</td>
-                                        <td>{{ orderdetail.oderDetailPrice }}</td>
+                                        <td>{{ orderdetail.orderDetailPrice }}</td>
 
                                     </tr>
                                 </tbody>
-                                
+
                             </table>
                             <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-primary"
-                                        data-bs-dismiss="modal">回列表</button>
-                                    <button type="button" class="btn btn-primary">儲存</button>
-                                </div>
+                                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
+                                <button type="button" class="btn btn-primary">儲存</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item" @click="currentPage > 1 ? currentPage-- : null">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&lsaquo;</span>
-                        </a>
-                    </li>
-                    <li v-for="page in totalPages" :key="page" class="page-item"
-                        :class="{ 'active': page === currentPage }">
-                        <a class="page-link" href="#" @click="changePage(page)">{{ page }}</a>
-                    </li>
-                    <li class="page-item" @click="currentPage < totalPages ? currentPage++ : null">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&rsaquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            <tfoot>
+                <tr>
+                    <td colspan="7">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <li class="page-item" @click="currentPage > 1 ? changePage(currentPage - 1) : null">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&lsaquo;</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in totalPages" :key="page" class="page-item"
+                                    :class="{ 'active': page === currentPage }">
+                                    <a class="page-link" href="#" @click="changePage(page)">{{ page }}</a>
+                                </li>
+                                <li class="page-item"
+                                    @click="currentPage < totalPages ? changePage(currentPage + 1) : null">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&rsaquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </td>
+                </tr>
+            </tfoot>
 
 
         </div>
@@ -172,50 +181,52 @@
 
 <script>
 import SideBar from "@/components/SideBar.vue";
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
+import axios from "axios";
 
 export default {
     data() {
         return {
             searchQuery: '',
-            selectAll: ref(false),
-            selectedoders: ref([]),
-            oders: ref([
-                { oderNumber: '231231182410', member: '0001', orderprice: 3000, oderTime: '2023/12/31 18:24:10', orderstatus: '已配送' },
-                { oderNumber: '231231161616', member: '0002', orderprice: 2000, oderTime: '2023/12/31 16:16:16', orderstatus: '未配送' },
+            selectAll: false,
+            selectedorders: [],
+            orders: ref([
+                // { orderNumber: '231231182410', member: '0001', orderprice: 3000, orderTime: '2023/12/31 18:24:10', orderstatus: '已配送' },
+                // { orderNumber: '231231161616', member: '0002', orderprice: 2000, orderTime: '2023/12/31 16:16:16', orderstatus: '未配送' },
 
             ]),
             orderDetails: ref([
-                { orderDetailNo: '1001', orderName: '南瓜蔬食調理包', ordercount: 1, oderDetailPrice: '170'},
+                { orderDetailNo: '1001', orderName: '南瓜蔬食調理包', ordercount: 1, orderDetailPrice: '170' },
 
 
             ]),
             itemsPerPage: 5,
             currentPage: 1,
-            selectedOrderDetail: ref(null),
+            selectedOrderDetail: null,
         };
     },
     components: {
         SideBar,
     },
+    created(){
+        axios.get(`${import.meta.env.VITE_API_URL}/orderDataGet.php`)
+            .then(response => {
+                this. orders = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching  orders:', error);
+            });
+    },
     computed: {
-        // paginatedoders() {
-        //     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-        //     const endIndex = startIndex + this.itemsPerPage;
-        //     return this.oders.slice(startIndex, endIndex);
-        // },
-        // totalPages() {
-        //     return Math.ceil(this.oders.length / this.itemsPerPage);
-        // },
         filteredOrders() {
             const query = this.searchQuery.trim().toLowerCase();
             if (query === '') {
-                return this.oders;
+                return this.orders;
             } else {
-                return this.oders.filter(order => order.oderNumber.includes(query));
+                return this.orders.filter(order => order.orderNumber.includes(query));
             }
         },
-        paginatedoders() {
+        paginatedorders() {
             const startIndex = (this.currentPage - 1) * this.itemsPerPage;
             const endIndex = startIndex + this.itemsPerPage;
             return this.filteredOrders.slice(startIndex, endIndex);
@@ -231,12 +242,19 @@ export default {
 
         toggleSelect() {
             if (this.selectAll) {
-                // 只選擇當前頁面的商品
-                this.selectedProducts = [...this.paginatedProducts];
+                // 如果全選，將所有訂單加入或從 selectedorders 中移除
+                this.paginatedorders.forEach(order => {
+                    if (!this.selectedorders.includes(order)) {
+                        this.selectedorders.push(order);
+                    }
+                });
             } else {
-                this.selectedProducts = [];
+                // 如果取消全選，從 selectedorders 中移除所有訂單
+                this.selectedorders = [];
             }
         },
+
+
         viewOrderDetail(order) {
             this.selectedOrderDetail = { ...order };
             $('#orderDetailModal').modal('show');

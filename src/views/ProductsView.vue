@@ -139,7 +139,7 @@
 
 <script>
 import SideBar from "@/components/SideBar.vue";
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 export default {
   data() {
