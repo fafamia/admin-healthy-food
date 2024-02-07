@@ -23,8 +23,8 @@
                         <td>
                             <input type="checkbox" v-model="selectedProducts" :value="productclass">
                         </td>
-                        <td>{{ productclass.prodclassNumber }}</td>
-                        <td>{{ productclass.category }}</td>
+                        <td>{{ productclass. product_class_no }}</td>
+                        <td>{{ productclass.product_class_name }}</td>
                         <td>
                             <button class="btn btn-outline-primary">
                                 <i class="fa-solid fa-pencil"></i>
@@ -68,6 +68,7 @@
 <script>
 import SideBar from "@/components/SideBar.vue";
 import { ref } from 'vue';
+import axios from "axios";
 
 export default {
     data() {
@@ -75,16 +76,24 @@ export default {
             selectAll: ref(false),
             selectedProducts: ref([]),
             prodclass: ref([
-                { prodclassNumber: '0001', category: '調理包' },
-                { prodclassNumber: '0002', category: '生鮮食材' },
+                // { prodclassNumber: '0001', category: '調理包' },
+                // { prodclassNumber: '0002', category: '生鮮食材' },
 
-                // 其他商品數據
             ]),
 
         }
     },
     components: {
         SideBar,
+    },
+    created(){
+        axios.get(`${import.meta.env.VITE_API_URL}/productClassDataGet.php`)
+            .then(response => {
+                this.prodclass = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching prodclass:', error);
+            });
     },
     methods: {
         deleteProd(index) {
