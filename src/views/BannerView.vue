@@ -56,7 +56,7 @@
                         </div>
                     </td>
                     <td>
-                        <button class="btn btn-outline-primary prodDelete" @click="deleteProd(index)">
+                        <button class="btn btn-outline-primary prodDelete">
                             <i class="fa-solid fa-trash-can"></i>刪除
                         </button>
                     </td>
@@ -101,11 +101,11 @@ export default {
             reader.readAsDataURL(file);
         },
 
-        saveBanner() {
+        saveBanner() {          //新增
             const formData = new FormData();
             formData.append('title', this.newBanner.title);
             formData.append('image', this.newBanner.image);
-            axios.post(`${import.meta.env.VITE_API_URL}/admin_new_banner.php`, formData)
+            axios.post(`${import.meta.env.VITE_API_URL}/admin_add_banner.php`, formData)
                 .then(response => {
                     console.log('横幅保存成功：', response.data);
                     this.newBanner.title = "";
@@ -114,9 +114,10 @@ export default {
                 })
                 .catch(error => {
                     console.error('保存横幅出错：', error);
-                });
+                }
+            );
         },
-        fetchBanners() {
+        fetchBanners() {          //匯入
             axios.get(`${import.meta.env.VITE_API_URL}/admin_banner_join.php`)
             .then(response => {
                 this.banners = response.data;
