@@ -131,18 +131,16 @@ export default {
 
 
         deleteThisBanner(index) {
-            const bannerToDelete = this.banners[index].carousel_no;
-            axios.post(`${import.meta.env.VITE_API_URL}/admin_delete_banner.php`, {
-                banner_index: bannerToDelete
-            })
-            .then(response => {
-                this.banners.splice(index, 1);
-                console.log('删除成功');
-            })
-            .catch(error => {
-                console.error('删除出錯：', error);
-            });
-        }
+    const bannerToDelete = this.banners[index].carousel_no;
+    axios.post(`${import.meta.env.VITE_API_URL}/admin_delete_banner.php`, { bannerToDelete })
+        .then(response => {
+            this.banners.splice(index, 1);
+            console.log('删除成功');
+        })
+        .catch(error => {
+            console.error('删除出錯：', error);
+        });
+}
 
     },
 }
