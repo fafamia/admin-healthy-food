@@ -5,10 +5,6 @@
         <button type="button" class="btn btn-outline-primary admin_banner_addbutton" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             <i class="fa-solid fa-circle-plus"></i>新增
         </button>
-
-
-
-
         <div class="modal fade admin_banner_light_box" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -107,7 +103,7 @@ export default {
             const formData = new FormData();
             formData.append('title', this.newBanner.title);
             formData.append('image', this.newBanner.image);
-            axios.post(`${import.meta.env.VITE_API_URL}/admin_add_banner.php`, formData)
+            axios.post(`${import.meta.env.VITE_API_URL}/banner/admin_add_banner.php`, formData)
                 .then(response => {
                     console.log('保存成功');
                     this.newBanner.title = "";
@@ -120,7 +116,7 @@ export default {
             );
         },
         fetchBanners() {          //匯入
-            axios.get(`${import.meta.env.VITE_API_URL}/admin_banner_join.php`)
+            axios.get(`${import.meta.env.VITE_API_URL}/banner/admin_banner_join.php`)
             .then(response => {
                 this.banners = response.data;
             })
@@ -132,7 +128,7 @@ export default {
 
         deleteThisBanner(index) {
     const bannerToDelete = this.banners[index].carousel_no;
-    axios.post(`${import.meta.env.VITE_API_URL}/admin_delete_banner.php`, { bannerToDelete })
+    axios.post(`${import.meta.env.VITE_API_URL}/banner/admin_delete_banner.php`, { bannerToDelete })
         .then(response => {
             this.banners.splice(index, 1);
             console.log('删除成功');
