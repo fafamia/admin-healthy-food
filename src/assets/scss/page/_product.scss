@@ -1,47 +1,36 @@
 .products {
     display: flex;
-
     // height: 100vh;
-    .productRight {
+    &_right {
         flex-grow: 1;
         /* 剩餘空間填滿主內容 */
         padding: 20px 20px 20px 0;
         margin-left: 200px;
-
-        h1 {
-            text-align: center;
-
-        }
-
-        .productAdd {
-            height: 37px;
-            position: absolute;
-            right: 30px;
-            top: 30px;
-        }
-
         tr {
             vertical-align: center;
-            
         }
-
         .prodDelete {
             display: block;
             margin-top: 5px;
-            // width: 77px;
         }
-
-
-
+        .pagination{
+            float: right;
+            .pageLink{
+                border-radius: 50%;
+                font-weight: bold;
+                margin:0 4px;
+            }
+        }
     }
-
-    .productRight .pagination {
-        position: fixed;
-        bottom: 5px;
-        right: 20px;
-        
-        .page-link{
-            border-radius: 50%; 
-        }
+    &_title{
+        text-align: center;
+    }
+    &_add {
+        position: absolute;
+        right: 30px;
+        top: 30px;
+    }
+    table th,table td{
+        background: none!important;
     }
 }

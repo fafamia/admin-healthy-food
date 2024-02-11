@@ -1,8 +1,6 @@
 <template>
     <div class="sidebar">
-
         <nav>
-
             <!-- <div> -->
             <!-- <div v-for="(dropdown, index) in dropdowns" :key="index" class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" role="button" :id="'dropdownMenuLink' + index"
@@ -34,8 +32,6 @@
                     </div>
                 </li>
             </ul>
-
-
             <div class="footer">
                 <button type="button" class="setting btn btn-secondary">
                     <i class="fa-solid fa-gear"></i>
