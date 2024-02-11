@@ -99,7 +99,7 @@ export default {
             } else {
                 this.selectedProducts = [];
             }
-        }
+        },
     },
 }
 </script>

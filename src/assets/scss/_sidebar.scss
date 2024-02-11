@@ -1,20 +1,15 @@
 .sidebar {
-
     nav {
         position: absolute;
         left: 0;
         background-color: #FFF3E0;
-height: 1600px;
-
+        height: 100vh;
         .dropdown {
             text-align: center;
             margin-top: 10px;
-            
-
             .btn {
                 font-size: 18px;
             }
-
             .dropdownChild {
                 padding: 6px;
 
@@ -22,14 +17,10 @@ height: 1600px;
                     font-size: 16px;
                 }
             }
-
             .dropdownChild:hover {
                 background-color: #ffffffe4;
             }
         }
-
-
-
     }
 }
 
@@ -41,11 +32,9 @@ height: 1600px;
     justify-content: space-around;
     align-items: center;
     margin-top: 30px;
-
     button {
         border: none;
         background-color: transparent;
-
         p {
             font-size: 18px;
         }

@@ -1,16 +1,15 @@
 <template>
   <div class="products">
     <SideBar />
-    <div class="productRight">
-
-      <h1>商品總覽</h1>
-      <button type="button" class="btn btn-outline-primary productAdd" data-bs-toggle="modal"
+    <div class="products_right">
+      <div class="products_title my-5">
+        <h1>商品總覽</h1>
+      </div>
+      <button type="button" class="btn btn-outline-primary products_add" data-bs-toggle="modal"
         data-bs-target="#staticBackdrop">
         <i class="fa-solid fa-circle-plus"></i>新增
       </button>
-
-
-      <!-- Modal -->
+      <!-- 新增彈窗 -->
       <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -79,7 +78,6 @@
           </div>
         </div>
       </div>
-
       <table class="table table-hover table-bordered border-dark productTable">
         <thead>
           <tr>
@@ -95,15 +93,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(product, index) in paginatedProducts" :key="index">
+          <tr v-for="(product, index) in products" :key="product.product_no">
             <td>
               <input type="checkbox" v-model="selectedProducts" :value="product">
             </td>
-            <td>{{ product.productNumber }}</td>
-            <td>{{ product.category }}</td>
-            <td>{{ product.productName }}</td>
-            <td>{{ product.price }}</td>
-            <td>{{ product.status }}</td>
+            <td>{{ product.product_no }}</td>
+            <td>{{ product.product_class_name }}</td>
+            <td>{{ product.product_name }}</td>
+            <td>{{ product.product_price }}</td>
+            <td>{{ getStatus(product.product_status) }}</td>
             <td>
               <button class="btn btn-outline-primary">
                 <i class="fa-solid fa-pencil"></i>修改
@@ -118,27 +116,27 @@
       <nav aria-label="Page navigation example">
         <ul class="pagination">
           <li class="page-item" @click="currentPage > 1 ? currentPage-- : null">
-            <a class="page-link" href="#" aria-label="Previous">
-              <span aria-hidden="true">&lsaquo;</span>
-            </a>
+            <button class="page-link btn btn-outline-primary bg-transparent border-0" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </button>
           </li>
           <li v-for="page in totalPages" :key="page" class="page-item" :class="{ 'active': page === currentPage }">
-            <a class="page-link" href="#" @click="changePage(page)">{{ page }}</a>
+            <button type="button" class="btn btn-outline-primary pageLink" @click="changePage(page)">{{ page }}</button>
           </li>
           <li class="page-item" @click="currentPage < totalPages ? currentPage++ : null">
-            <a class="page-link" href="#" aria-label="Next">
-              <span aria-hidden="true">&rsaquo;</span>
-            </a>
+            <button class="page-link btn-outline-primary bg-transparent border-0" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </button>
           </li>
         </ul>
       </nav>
-
     </div>
   </div>
 </template>
 
 <script>
 import SideBar from "@/components/SideBar.vue";
+import axios from "axios";
 import { ref, computed } from 'vue';
 
 export default {
@@ -146,15 +144,7 @@ export default {
     return {
       selectAll: ref(false),
       selectedProducts: ref([]),
-      products: ref([
-        { productNumber: '0001', category: '調理包', productName: '冷凍餐盒1', price: 300, status: '上架' },
-        { productNumber: '0002', category: '調理包', productName: '冷凍餐盒2', price: 400, status: '上架' },
-        { productNumber: '0003', category: '調理包', productName: '冷凍餐盒2', price: 400, status: '上架' },
-        { productNumber: '0004', category: '調理包', productName: '冷凍餐盒2', price: 400, status: '上架' },
-        { productNumber: '0005', category: '調理包', productName: '冷凍餐盒2', price: 400, status: '上架' },
-        { productNumber: '0006', category: '調理包', productName: '冷凍餐盒2', price: 400, status: '上架' },
-        // 其他商品數據
-      ]),
+      products: ref([]),
       itemsPerPage: 5,
       currentPage: 1,
     };
@@ -171,6 +161,7 @@ export default {
     totalPages() {
       return Math.ceil(this.products.length / this.itemsPerPage);
     },
+
   },
   methods: {
     changePage(page) {
@@ -184,17 +175,32 @@ export default {
         this.products.splice(actualIndex, 1);
       }
     },
-
     toggleSelect() {
       if (this.selectAll) {
         this.selectedProducts = [...this.products];
       } else {
         this.selectedProducts = [];
       }
+    },
+    getStatus(status){
+      switch(status){
+        case 1: return '上架'
+        case 2: return '下架'
+        default: return '未分類'
+      }
     }
-
   },
-
+  created(){
+    axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productDataGet.php`)
+    .then(response => {
+        this.products = response.data.products;
+        console.log(response.data.products);
+        console.log(this.products);
+    })
+    .catch(error => {
+        console.error('Error fetching products:', error);
+    });
+  }
 };
 
 </script>
