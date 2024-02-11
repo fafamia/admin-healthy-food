@@ -27,7 +27,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
-                        <button @click="saveBanner" class="btn btn-primary">儲存</button>
+                        <button @click="saveBanner" data-bs-dismiss="modal" class="btn btn-primary">儲存</button>
                     </div>
                 </div>
             </div>
@@ -52,11 +52,26 @@
                         </div>
                     </td>
                     <td>
-                        <button class="btn btn-outline-primary prodDelete"
-                        @click="deleteThisBanner(index)"
-                        >
+                        <button class="btn btn-outline-primary prodDelete btn btn-primary"  data-bs-toggle="modal"  data-bs-target="#delstaticBackdrop">
                             <i class="fa-solid fa-trash-can"></i>刪除
                         </button>
+                        <div class="modal fade" id="delstaticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">是否確認刪除</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        按下刪除後 連同資料庫資料一並刪除
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                        <button @click="deleteThisBanner(index)" data-bs-dismiss="modal" type="button" class="btn btn-primary">確認刪除</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -109,6 +124,7 @@ export default {
                     this.newBanner.title = "";
                     this.newBanner.image = null;
                     this.$refs.previewImage.src = "";
+                    location.reload()
                 })
                 .catch(error => {
                     console.error('保存出错：', error);
@@ -127,17 +143,17 @@ export default {
 
 
         deleteThisBanner(index) {
-    const bannerToDelete = this.banners[index].carousel_no;
-    axios.post(`${import.meta.env.VITE_API_URL}/banner/admin_delete_banner.php`, { bannerToDelete })
-        .then(response => {
-            this.banners.splice(index, 1);
-            console.log('删除成功');
-        })
-        .catch(error => {
-            console.error('删除出錯：', error);
-        });
-}
-
+            const bannerToDelete = this.banners[index].carousel_no;
+            axios.post(`${import.meta.env.VITE_API_URL}/banner/admin_delete_banner.php`, { bannerToDelete })
+            .then(response => {
+                this.banners.splice(index, 1);
+                console.log('删除成功');
+                this.fetchBanners();
+            })
+            .catch(error => {
+                console.error('删除出錯：', error);
+            });
+        }
     },
 }
 </script>
