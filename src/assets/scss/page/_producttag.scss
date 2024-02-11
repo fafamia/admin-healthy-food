@@ -1,8 +1,9 @@
-.productTag {
+.productTag{
     display: flex;
-
-    // height: 100vh;
-    .productTag_right {
+    //height: 100%;
+    &_right{
+        margin-left: 200px;
+        padding: 20px 20px 20px 0;
         flex-grow: 1;
         /* 剩餘空間填滿主內容 */
         padding: 20px 20px 20px 0;
@@ -22,5 +23,23 @@
 
         
     }
-    
+    &_title{
+        text-align: center;
+    }
+    &_add{
+        position: absolute;
+        top: 70px;
+        right: 70px;
+    }
+    .pagination{
+        float: right;
+        .pageLink{
+            border-radius: 50%;
+            font-weight: bold;
+            margin:0 4px;
+        }
+    }
+    table th,table td{
+        background: none!important;
+    }
 }
