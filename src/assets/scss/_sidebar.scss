@@ -35,11 +35,22 @@
     button {
         border: none;
         background-color: transparent;
+        height: 80px;
         p {
             font-size: 18px;
         }
+        a{
+            display: block;
+            font-size: 18px;
+            height: 39px;
+        }
     }
 }
+// .dropdown-item{
+//     display: block;
+//     font-size: 18px;
+//     height: 40px;
+// }
 
 // .dropdown-toggle {
 //     background-color: #FFF3E0;

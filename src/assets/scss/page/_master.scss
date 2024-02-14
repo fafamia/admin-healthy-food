@@ -39,3 +39,30 @@ i{
 h1{
     margin-top: 30px;
 }
+.addmaster{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 10px;
+}
+.change_master_item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    p{
+        margin: 0;
+        font-size: 20px;
+    }
+}
+.change_master{
+    margin: 30px 0;
+}
+.addAdmin_master{
+    margin-left: 0;
+}
+.addIconAdmin_master{
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}

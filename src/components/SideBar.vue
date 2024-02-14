@@ -37,9 +37,9 @@
                     <i class="fa-solid fa-gear"></i>
                     <p>設定</p>
                 </button>
-                <button type="button" class="logout btn btn-secondary">
+                <button @click="logout" type="button" class="logout btn btn-secondary">
                     <i class="fa-solid fa-right-from-bracket"></i>
-                    <p>登出</p>
+                    <router-link to="/" class="dropdown-item">登出</router-link>
                 </button>
             </div>
         </nav>
@@ -145,7 +145,6 @@ export default {
             ]
         };
     },
-
 }
 </script>
 

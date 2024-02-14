@@ -132,7 +132,7 @@ export default {
             );
         },
         fetchBanners() {          //匯入
-            axios.get(`${import.meta.env.VITE_API_URL}/banner/admin_banner_join.php`)
+            axios.get(`${import.meta.env.VITE_API_URL}/banner/admin_banner_json.php`)
             .then(response => {
                 this.banners = response.data;
             })
