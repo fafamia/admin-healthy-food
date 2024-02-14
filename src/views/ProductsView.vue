@@ -195,8 +195,6 @@ export default {
     axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productDataGet.php`)
     .then(response => {
         this.products = response.data.products;
-        console.log(response.data.products);
-        console.log(this.products);
     })
     .catch(error => {
         console.error('Error fetching products:', error);
