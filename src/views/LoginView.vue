@@ -45,7 +45,8 @@ export default {
             axios.post(`${import.meta.env.VITE_API_URL}/login/admin_login.php`, formData)
             .then(response => {
                 if (response.data.message === "登錄成功") {
-                    this.link = "/products";
+                    // this.link = "/products";
+                    this.$router.push({name:'products'})
                 } else {
                     this.errorMessage = response.data.message;
                 }
