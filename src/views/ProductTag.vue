@@ -169,7 +169,7 @@ export default {
                     }
                 })
                 .catch(error => {
-                    console.error('Error adding productTags:', error);
+                    console.error('Error adding productTag:', error);
                 });
         },
         toggleAll() {
@@ -188,7 +188,7 @@ export default {
                     }
                 })
                 .catch(error => {
-                    console.error('Error deleting productTags:', error);
+                    console.error('Error deleting productTag:', error);
                 })
         },
         deleteSelected() {
