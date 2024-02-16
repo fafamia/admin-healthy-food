@@ -20,16 +20,6 @@
                 return LoadingStore.isLoading;
             }
         },
-        methods:{
-            showLoading(){
-                const LoadingStore = useLoadingStore();
-                LoadingStore.LoadingStore.showLoading();
-            },
-            hideLoading(){
-                const LoadingStore = useLoadingStore();
-                LoadingStore.LoadingStore.hideLoading();
-            }
-        }
     }
 </script>
 <style>
