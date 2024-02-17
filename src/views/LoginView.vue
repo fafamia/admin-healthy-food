@@ -46,7 +46,9 @@ export default {
             .then(response => {
                 if (response.data.message === "登錄成功") {
                     // this.link = "/products";
-                    this.$router.push({name:'products'})
+                    localStorage.setItem('account', this.marster.account);
+                    localStorage.setItem('userToken', 'true');
+                    this.$router.push({name:'products'})                    
                 } else {
                     this.errorMessage = response.data.message;
                 }
