@@ -36,7 +36,7 @@
                                 <i class="fa-solid fa-pencil"></i>
                                 修改
                             </button>
-                            <button type="button"  class="btn btn-outline-primary prodDelete" @click="deleteClassToDB(productclass.product_tag_no, index)">
+                            <button type="button"  class="btn btn-outline-primary prodDelete" @click="deleteClassToDB(productclass.product_class_no, index)">
                                 <i class="fa-solid fa-trash-can"></i>
                                 刪除
                             </button>
@@ -102,11 +102,7 @@ export default {
     data() {
         return {
             selectAll: false,
-            prodclass: [
-                // { prodclassNumber: '0001', category: '調理包' },
-                // { prodclassNumber: '0002', category: '生鮮食材' },
-
-            ],
+            prodclass: [],
             product_class_name: '',
             product_class_no: null,
 
