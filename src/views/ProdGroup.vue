@@ -5,39 +5,9 @@
 
             <h1>商品群組</h1>
             <button type="button" class="btn btn-outline-primary prodgroupAdd" data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop">
+                data-bs-target="#addGroup">
                 <i class="fa-solid fa-circle-plus"></i>新增
             </button>
-
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">新增資料</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <!-- 待思考如何代入商品流水號 -->
-                                <h4>群組編號 0001</h4>
-                                <label for="exampleFormControlInput1" class="form-label">群組名稱</label>
-                                <input type="text" class="form-control" id="groupdetailName">
-                            </div>
-
-                            <label for="exampleFormControlInput3" class="form-label">開始日期</label>
-                            <input type="date" class="form-control" id="exampleFormControlInput3">
-                            <label for="exampleFormControlInput3" class="form-label">結束日期</label>
-                            <input type="date" class="form-control" id="exampleFormControlInput3">
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
-                            <button type="button" class="btn btn-primary">儲存</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <table class="table table-hover table-bordered border-dark productTable">
                 <thead>
@@ -49,24 +19,31 @@
                         <th scope="col">群組名稱</th>
                         <th scope="col">開始日期</th>
                         <th scope="col">結束日期</th>
-                        <th scope="col"></th>
+                        <th scope="col">
+                            <button class="btn btn-outline-primary" @click="deleteSelected">
+                                <i class="fa-solid fa-trash-can"></i>
+                                刪除
+                            </button>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(prodgroup, index) in prodgroups" :key="index">
                         <td>
-                            <input type="checkbox" v-model="selectedProducts" :value="prodgroup">
+                            <input type="checkbox" v-model="prodgroup.checked" :value="prodgroup">
                         </td>
                         <td>{{ prodgroup.prodgroup_no }}</td>
                         <td>{{ prodgroup. prodgroup_name }}</td>
                         <td>{{ prodgroup.prodgroup_start }}</td>
                         <td>{{ prodgroup.prodgroup_end }}</td>
                         <td>
-                            <button class="btn btn-outline-primary">
+                            <button type="button" class="btn btn-outline-primary"
+                            data-bs-toggle="modal"
+                                data-bs-target="#updateGroup" @click="updateGroup(prodgroup)">
                                 <i class="fa-solid fa-pencil"></i>
                                 修改
                             </button>
-                            <button class="btn btn-outline-primary prodDelete" @click="deleteProd(index)">
+                            <button type="button" class="btn btn-outline-primary prodDelete" @click="deleteGroupToDB(prodgroup.prodgroup_no, index)">
                                 <i class="fa-solid fa-trash-can"></i>
                                 刪除
                             </button>
@@ -74,6 +51,67 @@
                     </tr>
                 </tbody>
             </table>
+
+            <div class="modal fade" id="addGroup" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">新增資料</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="addGroupName" class="form-label">群組名稱</label>
+                                <input type="text" class="form-control" id="addGroupName"
+                                v-model="prodgroup_name">
+                            </div>
+
+                            <label for="addGroupStart" class="form-label">開始日期</label>
+                            <input type="date" class="form-control" id="addGroupStart"
+                            v-model="prodgroup_start">
+                            <label for="addGroupEnd" class="form-label">結束日期</label>
+                            <input type="date" class="form-control" id="addGroupEnd"
+                            v-model="prodgroup_end">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
+                            <button type="button" class="btn btn-primary" @click="addGroupToDB">儲存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 修改彈窗 -->
+            <div class="modal fade" id="updateGroup" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">修改資料</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="updateGroupName" class="form-label">群組名稱</label>
+                                <input type="text" class="form-control" id="updateGroupName" v-model="prodgroup_name">
+                                <label for="updateGroupStart" class="form-label">開始日期</label>
+                                <input type="date" class="form-control" id="updateGroupStart" v-model="prodgroup_start">
+                                <label for="updateGroupEnd" class="form-label">結束日期</label>
+                                <input type="date" class="form-control" id="updateGroupEnd" v-model="prodgroup_end">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                                @click="updateGroupToDB">儲存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
         </div>
 
         
@@ -88,15 +126,18 @@ import axios from "axios";
 export default{
     data() {
         return {
-            selectAll: ref(false),
-            selectedProducts: ref([]),
-            prodgroups: ref([
+            selectAll: false,
+            prodgroups: [
                 // { prodgroupNumber: '0001', prodgroupName: '首頁推薦'},
                 // { prodgroupNumber: '0002', prodgroupName: 'BMI過輕'},
                 // { prodgroupNumber: '0003', prodgroupName: '龍年促銷', startime: '2024/01/01', endtime: '2024/01/31' },
                 // { prodgroupNumber: '0004', prodgroupName: '食譜食材推薦'},
 
-            ]),
+            ],
+            prodgroup_name: '',
+            prodgroup_start: '',
+            prodgroup_end: '',
+            prodgroup_no: null,
 
             
         }
@@ -105,20 +146,100 @@ export default{
         SideBar,
     },
     created(){
-        axios.get(`${import.meta.env.VITE_API_URL}/prodGroupDataGet.php`)
+        axios.get(`${import.meta.env.VITE_API_URL}/admin/product/prodGroupDataGet.php`)
             .then(response => {
-                this. prodgroups = response.data;
+                this.prodgroups = response.data.prodgroups;
             })
             .catch(error => {
                 console.error('Error fetching  prodgroups:', error);
             });
     },
     methods: {
-        deleteProd(index) {
-            const confirmed = window.confirm("確定要刪除此商品群組嗎?");
-            if (confirmed) {
-                this.prodgroups.splice(index, 1);
-            }
+        addGroupToDB() {
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/product/productGroupDataAdd.php`, {
+                prodgroup_name: this.prodgroup_name,
+                prodgroup_start: this.prodgroup_start,
+                prodgroup_end: this.prodgroup_end
+            })
+                .then(response => {
+                    if (!response.data.error) {
+                        const newGroup = {
+                            prodgroup_no: response.data.prodgroup_no,
+                            prodgroup_name: this.prodgroup_name,
+                            prodgroup_start: this.prodgroup_start,
+                            prodgroup_end: this.prodgroup_end,
+                        }
+                        this.prodgroups.push(newGroup);
+                        this.prodgroup_name = '';
+                        this.prodgroup_start = '';
+                        this.prodgroup_end = '';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding prodgroups:', error);
+                });
+        },
+        updateGroup(prodgroups) {
+            this.prodgroup_name = prodgroups.prodgroup_name;
+            this.prodgroup_no = prodgroups.prodgroup_no;
+            this.prodgroup_start = prodgroups.prodgroup_start;
+            this.prodgroup_end = prodgroups.prodgroup_end;
+        },
+        updateGroupToDB() {
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/product/productGroupDataUpdate.php`, {
+                prodgroup_name: this.prodgroup_name,
+                prodgroup_no: this.prodgroup_no,
+                prodgroup_start: this.prodgroup_start,
+                prodgroup_end: this.prodgroup_end,
+            })
+                .then(response => {
+                    if (!response.data.error) {
+                        const index = this.prodgroups.findIndex(prodgroups => prodgroups.prodgroup_no === this.prodgroup_no);
+                        if (index !== -1) {
+                            this.prodgroups[index].prodgroup_name = this.prodgroup_name,
+                            this.prodgroups[index].prodgroup_start = this.prodgroup_start,
+                            this.prodgroups[index].prodgroup_end = this.prodgroup_end
+                        }
+                        this.prodgroup_name = '';
+                        this.prodgroup_start = '';
+                        this.prodgroup_end = '';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating prodgroup:', error);
+                })
+        },
+        deleteGroupToDB(productGroupNo, index) {
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/product/productGroupDataDelete.php`, {
+                prodgroup_no: productGroupNo
+            })
+                .then(response => {
+                    const confirmed = window.confirm("確定要刪除此商品群組嗎?");
+                    if (!response.data.error && confirmed) {
+                        this.prodgroups.splice(index, 1)
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting prodgroup:', error);
+                })
+        },
+        deleteSelected() {
+            const confirmed = window.confirm("確定要刪除選取商品群組嗎?");
+            this.prodgroups.forEach((prodgroup) => {
+                if (prodgroup.checked) {
+                    axios.post(`${import.meta.env.VITE_API_URL}/admin/product/productGroupDataDelete.php`, {
+                        prodgroup_no: prodgroup.prodgroup_no
+                    })
+                        .then(response => {
+                            if (response.data && !response.data.error && confirmed) {
+                                this.prodgroups = this.prodgroups.filter(prodgroup => !prodgroup.checked);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error deleting productGroup:', error);
+                        })
+                }
+            })
         },
         toggleSelect() {
             if (this.selectAll) {

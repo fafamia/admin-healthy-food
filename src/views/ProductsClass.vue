@@ -36,7 +36,7 @@
                                 <i class="fa-solid fa-pencil"></i>
                                 修改
                             </button>
-                            <button type="button"  class="btn btn-outline-primary prodDelete" @click="deleteClassToDB(productclass.product_tag_no, index)">
+                            <button type="button"  class="btn btn-outline-primary prodDelete" @click="deleteClassToDB(productclass.product_class_no, index)">
                                 <i class="fa-solid fa-trash-can"></i>
                                 刪除
                             </button>
