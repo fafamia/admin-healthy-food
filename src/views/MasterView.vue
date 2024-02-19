@@ -189,7 +189,7 @@ export default {
                 formData.append('email', this.newMaster.email);
                 formData.append('account', this.newMaster.account);
                 formData.append('password', this.newMaster.password);
-                axios.post(`${import.meta.env.VITE_API_URL}/web_master/admin_add_master.php`, formData)
+                axios.post(`${import.meta.env.VITE_API_URL}/admin/web_master/admin_add_master.php`, formData)
                     .then(response => {
                         console.log(response.data.message);
                         this.errorMessage = response.data.message;
@@ -219,7 +219,7 @@ export default {
 
         deleteThisMaster(index){          //刪除
             const masterToDelete = this.masters[index].master_no;
-            axios.post(`${import.meta.env.VITE_API_URL}/web_master/admin_del_master.php`, { masterToDelete })
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/web_master/admin_del_master.php`, { masterToDelete })
             .then(response => {
                 this.masters.splice(index, 1);
                 console.log('删除成功');
@@ -236,7 +236,7 @@ export default {
             this.editEmail = false;
         },
         fetchMasters() {          //匯入
-            axios.get(`${import.meta.env.VITE_API_URL}/web_master/admin_master_json.php`)
+            axios.get(`${import.meta.env.VITE_API_URL}/admin/web_master/admin_master_json.php`)
             .then(response => {
                 this.masters = response.data;
                 this.displaymasters = this.masters
@@ -268,7 +268,7 @@ export default {
             } else {
                 changeFormData.append('email', this.masters[index].master_email);
             }
-            axios.post(`${import.meta.env.VITE_API_URL}/web_master/admin_change_master.php`, changeFormData)
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/web_master/admin_change_master.php`, changeFormData)
             .then(response => {
                 console.log('保存成功');
                 this.changeMaster.changeName = "";

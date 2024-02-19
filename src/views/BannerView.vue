@@ -118,7 +118,7 @@ export default {
             const formData = new FormData();
             formData.append('title', this.newBanner.title);
             formData.append('image', this.newBanner.image);
-            axios.post(`${import.meta.env.VITE_API_URL}/banner/admin_add_banner.php`, formData)
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/banner/admin_add_banner.php`, formData)
                 .then(response => {
                     console.log('保存成功');
                     this.newBanner.title = "";
@@ -132,7 +132,7 @@ export default {
             );
         },
         fetchBanners() {          //匯入
-            axios.get(`${import.meta.env.VITE_API_URL}/banner/admin_banner_json.php`)
+            axios.get(`${import.meta.env.VITE_API_URL}/admin/banner/admin_banner_json.php`)
             .then(response => {
                 this.banners = response.data;
             })
@@ -144,7 +144,7 @@ export default {
 
         deleteThisBanner(index) {
             const bannerToDelete = this.banners[index].carousel_no;
-            axios.post(`${import.meta.env.VITE_API_URL}/banner/admin_delete_banner.php`, { bannerToDelete })
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/banner/admin_delete_banner.php`, { bannerToDelete })
             .then(response => {
                 this.banners.splice(index, 1);
                 console.log('删除成功');
