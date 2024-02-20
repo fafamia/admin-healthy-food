@@ -34,7 +34,7 @@ export default {
                 psw: ""
             },
             errorMessage: "",
-            link:""
+            link: ""
         };
     },
     methods: {
