@@ -34,7 +34,7 @@ export default {
                 psw: ""
             },
             errorMessage: "",
-            link:""
+            link: ""
         };
     },
     methods: {
@@ -42,21 +42,21 @@ export default {
             const formData = new FormData();
             formData.append('account', this.marster.account);
             formData.append('psw', this.marster.psw);
-            axios.post(`${import.meta.env.VITE_API_URL}/login/admin_login.php`, formData)
-            .then(response => {
-                if (response.data.message === "登錄成功") {
-                    // this.link = "/products";
-                    localStorage.setItem('account', this.marster.account);
-                    localStorage.setItem('userToken', 'true');
-                    this.$router.push({name:'products'})                    
-                } else {
-                    this.errorMessage = response.data.message;
-                }
-            })
-            .catch(error => {
-                this.errorMessage = "發生錯誤。請再試一次。";
-                console.error("登錄錯誤:", error);
-            });
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/login/admin_login.php`, formData)
+                .then(response => {
+                    if (response.data.message === "登錄成功") {
+                        // this.link = "/products";
+                        localStorage.setItem('account', this.marster.account);
+                        localStorage.setItem('userToken', 'true');
+                        this.$router.push({ name: 'products' })
+                    } else {
+                        this.errorMessage = response.data.message;
+                    }
+                })
+                .catch(error => {
+                    this.errorMessage = "發生錯誤。請再試一次。";
+                    console.error("登錄錯誤:", error);
+                });
         }
     }
 }

@@ -47,6 +47,7 @@
                     </tr>
                 </tbody>
             </table>
+            <!-- 頁碼 -->
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
                     <li class="page-item" :class="{'disabled': currentPage === 1}">
@@ -92,7 +93,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">修改資料</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="clearForm"></button>
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
@@ -101,7 +102,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
+                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" @click="clearForm">回列表</button>
                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
                                 @click="updateTagToDB">儲存</button>
                         </div>
@@ -128,6 +129,9 @@ export default {
             currentPage: 1,
         }
     },
+    created() {
+        this.fetchTagData();
+    },
     components: {
         SideBar,
     },
@@ -141,8 +145,9 @@ export default {
             return this.productTags.slice(start,end)
         }
     },
-    created() {
-        axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productTagDataGet.php`)
+    methods: {
+        fetchTagData(){
+            axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productTagDataGet.php`)
             .then(response => {
                 console.log(response.data);
                 this.productTags = response.data.productTags;
@@ -150,20 +155,15 @@ export default {
             .catch(error => {
                 console.error('Error fetching productTags:', error);
             });
-    },
-    methods: {
+        },
         addTagToDB() {
             axios.post(`${import.meta.env.VITE_API_URL}/admin/product/productTagDataAdd.php`, {
                 product_tag_name: this.product_tag_name
             })
                 .then(response => {
                     if (!response.data.error) {
-                        const newTag = {
-                            product_tag_no: response.data.product_tag_no,
-                            product_tag_name: this.product_tag_name
-                        }
-                        this.productTags.push(newTag);
-                        this.product_tag_name = '';
+                        this.fetchTagData();
+                        this.clearForm();
                     }
                 })
                 .catch(error => {
@@ -219,15 +219,19 @@ export default {
                 .then(response => {
                     if (!response.data.error) {
                         const index = this.productTags.findIndex(tag => tag.product_tag_no === this.product_tag_no);
+                        console.log(index);
                         if (index !== -1) {
-                            this.productTags[index].product_tag_name = this.product_tag_name
+                            this.fetchTagData();
+                            this.clearForm();
                         }
-                        this.product_tag_name = '';
                     }
                 })
                 .catch(error => {
                     console.error('Error updating productTags:', error);
                 })
+        },
+        clearForm(){
+            this.product_tag_name = '';
         },
         nextPage(){
             if(this.currentPage < this.totalPages){
