@@ -291,7 +291,7 @@ export default {
         });
       axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productClassDataGet.php`)
         .then(response => {
-          this.productClasses = response.data;
+          this.productClasses = response.data.prodclass;
         })
         .catch(error => {
           console.error('Error fetching productClasses:', error);
