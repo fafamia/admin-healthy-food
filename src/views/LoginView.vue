@@ -42,7 +42,7 @@ export default {
             const formData = new FormData();
             formData.append('account', this.marster.account);
             formData.append('psw', this.marster.psw);
-            axios.post(`${import.meta.env.VITE_API_URL}/login/admin_login.php`, formData)
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/login/admin_login.php`, formData)
             .then(response => {
                 if (response.data.message === "登錄成功") {
                     // this.link = "/products";
