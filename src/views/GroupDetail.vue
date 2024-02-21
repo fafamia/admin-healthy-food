@@ -72,7 +72,7 @@
                             <select class="form-select mb-3" aria-label="Default select example"
                                 v-model="groupDetailForm.prodgroup_name" @change="updateProdgroupNo">
                                 <option v-for="option in prodgroupOptions" :key="option.prodgroup_no"
-                                        :value="option.prodgroup_name">{{ option.prodgroup_name }}</option>
+                                    :value="option.prodgroup_name">{{ option.prodgroup_name }}</option>
                             </select>
                             <label for="form-select">選擇商品</label>
                             <select class="form-select" aria-label="Default select example"
@@ -171,6 +171,7 @@ export default {
             },
             prodgroupOptions: [],
             productOptions: [],
+            props: ['productGroupNo'],
 
 
 
@@ -261,7 +262,7 @@ export default {
             })
                 .then(response => {
                     if (!response.data.error) {
-                        const index = this.groupdetails.findIndex(groupdetails => groupdetails.prodgroup_no === this.prodgroup_no);
+                        const index = this.groupdetails.findIndex(groupdetail => groupdetail.prodgroup_no === this.prodgroup_no);
                         if (index !== -1) {
                             this.groupdetails[index].product_no = this.product_no,
                                 this.groupdetails[index].prodgroup_name = this.prodgroup_name,
@@ -282,6 +283,8 @@ export default {
                 groupdetail.checked = this.selectAll;
             });
         },
+
+
         deleteProdToDB(prodgroupNo, index) {
             axios.post(`${import.meta.env.VITE_API_URL}/admin/product/groupDetailDataDelete.php`, {
                 prodgroup_no: prodgroupNo
@@ -323,5 +326,7 @@ export default {
 }
 </script>
 
-<style lang="scss">@import "@/assets/scss/page/_groupdetail.scss";
-@import "@/assets/scss/sidebar.scss";</style>
+<style lang="scss">
+@import "@/assets/scss/page/_groupdetail.scss";
+@import "@/assets/scss/sidebar.scss";
+</style>
