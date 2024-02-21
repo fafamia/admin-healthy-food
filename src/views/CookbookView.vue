@@ -51,7 +51,7 @@
                 <input class="form-control" type="file" id="formFile">
               </div>
               <label for="time" class="form-label">建立時間：</label>
-              <input style="border: none;" type="text" id="time" v-model="currentTime">
+              <input style="border: none;" type="text" id="time" v-model="currentDateTime">
               <br>
               <label for="form-select">狀態</label>
 
@@ -135,7 +135,8 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
-              <button type="button" class="btn btn-primary" @click="saveRecipe(recipe)" data-bs-dismiss="modal">儲存</button>
+              <button type="button" class="btn btn-primary" @click="saveRecipe(recipe)"
+                data-bs-dismiss="modal">儲存</button>
 
             </div>
           </div>
@@ -146,16 +147,17 @@
       <div class="modal fade" id="deleteBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
-          <div  class="modal-content">
+          <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            
+
             <h5>是否確定刪除？</h5>
-         
+
             <div class="modal-footer">
               <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">取消</button>
-              <button v-if="recipe" type="button" class="btn btn-primary" @click="deleteRecipe(recipe.recipe_no)" data-bs-dismiss="modal">刪除</button>
+              <button v-if="recipe" type="button" class="btn btn-primary" @click="deleteRecipe($recipeNo)"
+                data-bs-dismiss="modal">刪除</button>
 
             </div>
           </div>
@@ -189,8 +191,7 @@
             <td>{{ recipe.recipe_status }}</td>
             <td>
               <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                data-bs-target="#deleteBackdrop"><i
-                  class="fa-solid fa-trash"></i>刪除</button>
+                data-bs-target="#deleteBackdrop"><i class="fa-solid fa-trash"></i>刪除</button>
               <button type="button" class="btn btn-outline-primary" @click="editRecipe(index)" data-bs-toggle="modal"
                 data-bs-target="#editBackdrop"><i class="fa-solid fa-pen"></i>修改</button>
             </td>
@@ -220,9 +221,8 @@
       </div>
 
     </div>
-    
-  </div>
 
+  </div>
 </template>
 
 <script>
@@ -248,13 +248,18 @@ export default {
         recipe_info: '',
         recipe_status: ''
       },
-      currentTime: '',
+      currentDateTime: ''
+
     };
   },
   created() {
     // 在组件创建时调用后端接口获取食谱数据
     this.fetchRecipes();
-    this.updateCurrentTime();
+    this.currentDateTime = this.getCurrentDateTime();
+    setInterval(() => {
+      this.currentDateTime = this.getCurrentDateTime();
+    }, 1000);
+
   },
   computed: {
     recipesFilterByName() {
@@ -265,7 +270,7 @@ export default {
     }
   },
   mounted() {
-    this.currentTime = this.newRecipe.recipe_creation_time;
+
   },
   methods: {
     toggleSelectAll() {
@@ -285,9 +290,7 @@ export default {
       }
     },
     deleteRecipe(recipeNo) {
-      alert(recipeNo)
-      console.log(recipeNo)
-      axios.delete(`http://localhost/healthy-food-php/admin/cookbook/delete_recipe.php?recipe_no=${recipeNo}`)
+      axios.delete(`${import.meta.env.VITE_API_URL}/admin/cookbook/delete_recipe.php?recipe_no=${recipeNo}`)
         .then(response => {
           console.log(response.data);
         })
@@ -321,7 +324,8 @@ export default {
     fetchRecipeOne(id) {
       // php
       let self = this; // 存储 Vue 实例的引用
-      return axios.get(`http://localhost/healthy-food-php/admin/cookbook/admin_cookbook.php?recipe_id=${id}`)
+
+      return axios.get(`${import.meta.env.VITE_API_URL}/admin/cookbook/admin_cookbook.php?recipe_id=${id}`)
 
         .then(function (response) {
           console.log('Response data:', response.data);
@@ -337,7 +341,7 @@ export default {
 
 
     fetchRecipes() {
-      axios.get('http://localhost/healthy-food-php/admin/cookbook/admin_cookbook.php')
+      axios.get(`${import.meta.env.VITE_API_URL}/admin/cookbook/admin_cookbook.php`)
         .then(response => {
           // 将从后端获取到的数据更新到组件的数据中
           this.recipes = response.data;
@@ -348,14 +352,14 @@ export default {
     },
     // 在编辑食谱后保存数据到数据库
     saveRecipe() {
-      axios.post('http://localhost/healthy-food-php/admin/cookbook/edit_recipe.php', {
+      axios.post(`${import.meta.env.VITE_API_URL}/admin/cookbook/edit_recipe.php`, {
         recipe_no: this.recipe.recipe_no,
         recipe_name: this.recipe.recipe_name,
         recipe_people: this.recipe.recipe_people,
         recipe_time: this.recipe.recipe_time,
         recipe_ingredient: this.recipe.recipe_ingredient,
         recipe_info: this.recipe.recipe_info,
-        recipe_status:this.recipe.recipe_status
+        recipe_status: this.recipe.recipe_status
       })
         .then(response => {
           console.log(response.data);
@@ -371,22 +375,23 @@ export default {
           this.showEditModal = false;
         })
         .catch(error => {
-          console.error('Error editing recipe:', error);
+          console.error('Error saving recipe:', error);
         });
     },
 
+
     addRecipe() {
-      axios.post('http://localhost/healthy-food-php/admin/cookbook/save_recipe.php', {
+      axios.post(`${import.meta.env.VITE_API_URL}/admin/cookbook/save_recipe.php`, {
         recipe_name: this.newRecipe.recipe_name,
         recipe_people: this.newRecipe.recipe_people,
         recipe_time: this.newRecipe.recipe_time,
         recipe_ingredient: this.newRecipe.recipe_ingredient,
         recipe_info: this.newRecipe.recipe_info,
-        recipe_status:this.newRecipe.recipe_status
+        recipe_status: this.newRecipe.recipe_status
       })
         .then(response => {
           console.log(response.data);
-          this.fetchRecipes(); 
+          this.fetchRecipes();
           // 如果成功保存，关闭模态框或者做其他操作
           this.showEditModal = false; // 关闭编辑模态框
         })
@@ -394,14 +399,13 @@ export default {
           console.error('Error saving recipe:', error);
         });
     },
+    getCurrentDateTime() {
+      return new Date().toLocaleString();
+    }
 
-    updateCurrentTime() {
-      // 获取当前时间，并将其格式化为您想要的形式
-      this.currentTime = new Date().toLocaleString();
-      // 每秒更新一次时间
-      setTimeout(this.updateCurrentTime, 1000);
-    },
-    
+
+
+
 
 
 
@@ -420,5 +424,7 @@ export default {
 </script>
 
 
-<style lang="scss">@import "@/assets/scss/_cookbook.scss";
-@import "@/assets/scss/_sidebar.scss";</style>
+<style lang="scss">
+@import "@/assets/scss/_cookbook.scss";
+@import "@/assets/scss/_sidebar.scss";
+</style>
