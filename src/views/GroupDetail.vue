@@ -235,6 +235,7 @@ export default {
                             prodgroup_name: '',
                             prodgroup_sale_price: ''
                         };
+                        this.fetchData();
                         console.log(response.data);
                     }
 
