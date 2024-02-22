@@ -36,7 +36,7 @@
             <td>{{ product.product_class_name }}</td>
             <td>{{ product.product_name }}</td>
             <td>{{ product.product_price }}</td>
-            <td>{{ product.product_status }}</td>
+            <td>{{ productStatus[product.product_status] }}</td>
             <td class="d-flex">
               <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updateProd"
                 @click="updateProd(product.product_no)">
