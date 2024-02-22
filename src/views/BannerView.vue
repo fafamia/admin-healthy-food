@@ -52,10 +52,10 @@
                         </div>
                     </td>
                     <td>
-                        <button class="btn btn-outline-primary prodDelete btn btn-primary"  data-bs-toggle="modal"  data-bs-target="#delstaticBackdrop">
+                        <button class="btn btn-outline-primary prodDelete btn btn-primary"  data-bs-toggle="modal"  :data-bs-target="'#delstaticBackdrop' + index">
                             <i class="fa-solid fa-trash-can"></i>刪除
                         </button>
-                        <div class="modal fade" id="delstaticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal fade" :id="'delstaticBackdrop' + index" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -124,7 +124,7 @@ export default {
                     this.newBanner.title = "";
                     this.newBanner.image = null;
                     this.$refs.previewImage.src = "";
-                    location.reload()
+                    this.fetchBanners();
                 })
                 .catch(error => {
                     console.error('保存出错：', error);
