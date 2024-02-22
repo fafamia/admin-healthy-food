@@ -115,7 +115,7 @@ export default {
     SideBar,
   },
   created() {
-  axios.get(`${import.meta.env.VITE_API_URL}/faq/faqClassGet.php`)
+  axios.get(`${import.meta.env.VITE_API_URL}/admin/faq/faqClassGet.php`)
     .then(response => {
       this.faqclass = response.data.faqclass;
     })
@@ -126,7 +126,7 @@ export default {
 
   methods: {
         addClassToDB() {
-            axios.post(`${import.meta.env.VITE_API_URL}/faq/faqClassAdd.php`, {
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/faq/faqClassAdd.php`, {
               question_class: this.faq_class_name
             })
                 .then(response => {
@@ -149,7 +149,7 @@ export default {
             this.question_no = faqclass.question_no;
         },
         updateClassToDB() {
-          axios.post(`${import.meta.env.VITE_API_URL}/faq/faqClassUpdate.php`, {
+          axios.post(`${import.meta.env.VITE_API_URL}/admin/faq/faqClassUpdate.php`, {
               question_class: this.question_class,
               question_no: this.question_no
           })
@@ -167,7 +167,7 @@ export default {
           });
         },
         deleteClassToDB(faqClassNo, index) {
-            axios.post(`${import.meta.env.VITE_API_URL}/faq/faqClassDelete.php`, {
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/faq/faqClassDelete.php`, {
               question_no: faqClassNo
             })
                 .then(response => {
