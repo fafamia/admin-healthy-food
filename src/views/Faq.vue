@@ -150,9 +150,9 @@ export default {
         { label: '食材問題', value: 3 },
       ],
       faq_class_mapping: {
-        1: "付款問題",
-        2: "運送問題",
-        3: "食材問題",
+         1: "付款問題",
+         2: "運送問題",
+         3: "食材問題",
       },
     };
   },
@@ -200,26 +200,31 @@ export default {
       }
     },
 
-        saveFaq() {          //新增
-        console.log('Current FAQ Class:', this.currentFaq.faq_class);
-        const formData = new FormData();
-        formData.append('question_class', this.currentFaq.faq_class);  // 修正此處
-        formData.append('question', this.currentFaq.question);
-        formData.append('ans', this.currentFaq.ans);
-        formData.append('key', this.currentFaq.key);
-        axios.post(`${import.meta.env.VITE_API_URL}/faq/save_faq.php`, formData)
-            .then(response => {
-                console.log('保存成功');
-                this.currentFaq.question_class = "";  // 修正此處
-                this.currentFaq.question = "";
-                this.currentFaq.ans = "";
-                this.currentFaq.key = "";
-                this.fetchFaq();
-            })
-            .catch(error => {
-                console.error('保存出错：', error);
-            }
-        );
+    saveFaq() {
+      console.log('Current FAQ Class:', this.currentFaq.faq_class);
+
+      // 映射選擇的 faq_class 到對應的值
+      const mappedFaqClass = this.faq_class_mapping[this.currentFaq.faq_class];
+
+      const formData = new FormData();
+      formData.append('question_class', mappedFaqClass);
+      formData.append('question', this.currentFaq.question);
+      formData.append('ans', this.currentFaq.ans);
+      formData.append('key', this.currentFaq.key);
+
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/faq/save_faq.php`, formData)
+        .then((response) => {
+          console.log('保存成功');
+          this.currentFaq.faq_class = '';
+          this.currentFaq.question = '';
+          this.currentFaq.ans = '';
+          this.currentFaq.key = '';
+          this.fetchFaq();
+        })
+        .catch((error) => {
+          console.error('保存出错：', error);
+        });
     },
 
     fetchFaq() {  //匯入
@@ -245,11 +250,8 @@ export default {
                 console.error('删除出錯：', error);
             });
         },
-
-  },
-
-  
-};
+    },
+  };
 </script>
 
 <style lang="scss">
