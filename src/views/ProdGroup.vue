@@ -33,17 +33,17 @@
                             <input type="checkbox" v-model="prodgroup.checked" :value="prodgroup">
                         </td>
                         <td>{{ prodgroup.prodgroup_no }}</td>
-                        <td>{{ prodgroup. prodgroup_name }}</td>
+                        <td>{{ prodgroup.prodgroup_name }}</td>
                         <td>{{ prodgroup.prodgroup_start }}</td>
                         <td>{{ prodgroup.prodgroup_end }}</td>
                         <td>
-                            <button type="button" class="btn btn-outline-primary"
-                            data-bs-toggle="modal"
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                                 data-bs-target="#updateGroup" @click="updateGroup(prodgroup)">
                                 <i class="fa-solid fa-pencil"></i>
                                 修改
                             </button>
-                            <button type="button" class="btn btn-outline-primary prodDelete" @click="deleteGroupToDB(prodgroup.prodgroup_no, index)">
+                            <button type="button" class="btn btn-outline-primary prodDelete"
+                                @click="deleteGroupToDB(prodgroup.prodgroup_no, index)">
                                 <i class="fa-solid fa-trash-can"></i>
                                 刪除
                             </button>
@@ -53,7 +53,7 @@
             </table>
 
             <div class="modal fade" id="addGroup" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-aria-hidden="true">
+                aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -63,16 +63,13 @@ aria-hidden="true">
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label for="addGroupName" class="form-label">群組名稱</label>
-                                <input type="text" class="form-control" id="addGroupName"
-                                v-model="prodgroup_name">
+                                <input type="text" class="form-control" id="addGroupName" v-model="prodgroup_name">
                             </div>
 
                             <label for="addGroupStart" class="form-label">開始日期</label>
-                            <input type="date" class="form-control" id="addGroupStart"
-                            v-model="prodgroup_start">
+                            <input type="date" class="form-control" id="addGroupStart" v-model="prodgroup_start">
                             <label for="addGroupEnd" class="form-label">結束日期</label>
-                            <input type="date" class="form-control" id="addGroupEnd"
-                            v-model="prodgroup_end">
+                            <input type="date" class="form-control" id="addGroupEnd" v-model="prodgroup_end">
 
                         </div>
                         <div class="modal-footer">
@@ -111,10 +108,10 @@ aria-hidden="true">
                 </div>
             </div>
 
-            
+
         </div>
 
-        
+
     </div>
 </template>
 
@@ -123,7 +120,7 @@ import SideBar from "@/components/SideBar.vue";
 import { ref } from 'vue';
 import axios from "axios";
 
-export default{
+export default {
     data() {
         return {
             selectAll: false,
@@ -139,13 +136,13 @@ export default{
             prodgroup_end: '',
             prodgroup_no: null,
 
-            
+
         }
     },
     components: {
         SideBar,
     },
-    created(){
+    created() {
         axios.get(`${import.meta.env.VITE_API_URL}/admin/product/prodGroupDataGet.php`)
             .then(response => {
                 this.prodgroups = response.data.prodgroups;
@@ -197,8 +194,8 @@ export default{
                         const index = this.prodgroups.findIndex(prodgroups => prodgroups.prodgroup_no === this.prodgroup_no);
                         if (index !== -1) {
                             this.prodgroups[index].prodgroup_name = this.prodgroup_name,
-                            this.prodgroups[index].prodgroup_start = this.prodgroup_start,
-                            this.prodgroups[index].prodgroup_end = this.prodgroup_end
+                                this.prodgroups[index].prodgroup_start = this.prodgroup_start,
+                                this.prodgroups[index].prodgroup_end = this.prodgroup_end
                         }
                         this.prodgroup_name = '';
                         this.prodgroup_start = '';
@@ -209,20 +206,22 @@ export default{
                     console.error('Error updating prodgroup:', error);
                 })
         },
-        deleteGroupToDB(productGroupNo, index) {
-            axios.post(`${import.meta.env.VITE_API_URL}/admin/product/productGroupDataDelete.php`, {
-                prodgroup_no: productGroupNo
-            })
-                .then(response => {
-                    const confirmed = window.confirm("確定要刪除此商品群組嗎?");
-                    if (!response.data.error && confirmed) {
-                        this.prodgroups.splice(index, 1)
+        async deleteGroupToDB(productGroupNo, index) {
+            const confirmed = window.confirm("確定要刪除此商品群組嗎?");
+            if (!confirmed) return;
+
+            try {
+                await axios.delete(`${import.meta.env.VITE_API_URL}/admin/product/productGroupDataDelete.php`, {
+                    data: {
+                        prodgroup_no: productGroupNo
                     }
-                })
-                .catch(error => {
-                    console.error('Error deleting prodgroup:', error);
-                })
+                });
+                this.prodgroups.splice(index, 1); // 從前端數據中刪除已刪除的群組
+            } catch (error) {
+                console.error('刪除商品群組出錯:', error);
+            }
         },
+
         deleteSelected() {
             const confirmed = window.confirm("確定要刪除選取商品群組嗎?");
             this.prodgroups.forEach((prodgroup) => {

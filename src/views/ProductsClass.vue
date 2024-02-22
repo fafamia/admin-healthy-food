@@ -114,7 +114,7 @@ export default {
     created() {
         axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productClassDataGet.php`)
             .then(response => {
-                this.prodclass = response.data;
+                this.prodclass = response.data.prodclass;
             })
             .catch(error => {
                 console.error('Error fetching prodclass:', error);

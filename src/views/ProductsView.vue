@@ -8,7 +8,7 @@
       <button type="button" class="btn btn-outline-primary products_add" data-bs-toggle="modal" data-bs-target="#addprod">
         <i class="fa-solid fa-circle-plus"></i>新增
       </button>
-      <table class="table table-hover table-bordered border-dark">
+      <table class="table table-hover table-bordered border-dark table-sm">
         <thead>
           <tr>
             <th scope="col">
@@ -25,11 +25,10 @@
                 刪除
               </button>
             </th>
-
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(product, index) in products" :key="product.product_no">
+          <tr v-for="(product, index) in paginatedProds" :key="product.product_no">
             <td>
               <input type="checkbox" v-model="product.checked">
             </td>
@@ -37,9 +36,10 @@
             <td>{{ product.product_class_name }}</td>
             <td>{{ product.product_name }}</td>
             <td>{{ product.product_price }}</td>
-            <td>{{ getStatus(product.product_status) }}</td>
-            <td>
-              <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updateProd" @click="updateProd(product.product_no)">
+            <td>{{ product.product_status }}</td>
+            <td class="d-flex">
+              <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updateProd"
+                @click="updateProd(product.product_no)">
                 <i class="fa-solid fa-pencil"></i>修改
               </button>
               <button class="btn btn-outline-primary prodDelete" @click="deleteProdToDB(product.product_no, index)">
@@ -49,8 +49,28 @@
           </tr>
         </tbody>
       </table>
+      <!-- 頁碼 -->
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item" :class="{ 'disabled': currentPage === 1 }">
+            <button class="page-link btn btn-outline-primary bg-transparent border-0" aria-label="Previous"
+              @click="prevPage">
+              <span aria-hidden="true">&laquo;</span>
+            </button>
+          </li>
+          <li v-for="page in totalPages" class="page-item" :key="page">
+            <button type="button" class="btn btn-outline-primary pageLink" @click="goToPage(page)">{{ page }}</button>
+          </li>
+          <li class="page-item" :class="{ 'disabled': currentPage === totalPages }">
+            <button class="page-link btn-outline-primary bg-transparent border-0" aria-label="Next" @click="nextPage">
+              <span aria-hidden="true">&raquo;</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
       <!-- 新增彈窗 -->
-      <div class="modal fade" id="addprod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+      <div class="modal fade" id="addprod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -58,50 +78,62 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <label for="prodName " class="form-label">商品編號</label>
-              <input type="text" class="form-control mb-3" id="prodName" v-model="prodForm.product_no">
+              <label for="product_no" class="form-label">商品編號</label>
+              <input type="text" class="form-control mb-3" id="product_no" name="product_no"
+                v-model="prodForm.product_no">
 
-              <label for="form-select">商品分類</label>
-              <select class="form-select mb-3" aria-label="Default select example" v-model="prodForm.product_class_no">
+              <label for="product_class_no">商品分類</label>
+              <select class="form-select mb-3" aria-label="Default select example" id="product_class_no"
+                name="product_class_no" v-model="prodForm.product_class_no">
                 <option value="" selected></option>
                 <option v-for="prodclass in productClasses" :key="prodclass.product_class_no"
                   :value="prodclass.product_class_no">{{ prodclass.product_class_name }}</option>
               </select>
 
-              <label for="form-select">商品TAG編號</label>
-              <select class="form-select mb-3" aria-label="Default select example" v-model="prodForm.product_tag_no">
+              <label for="product_tag_no">商品TAG編號</label>
+              <select class="form-select mb-3" aria-label="Default select example" id="product_tag_no"
+                name="product_tag_no" v-model="prodForm.product_tag_no">
                 <option value="" selected></option>
                 <option v-for="tag in productTags" :key="tag.product_tag_no" :value="tag.product_tag_no">{{
                   tag.product_tag_name }}</option>
               </select>
 
-              <label for="prodName" class="form-label">商品名稱</label>
-              <input type="text" class="form-control mb-3" id="prodName" v-model="prodForm.product_name">
+              <label for="product_name" class="form-label">商品名稱</label>
+              <input type="text" class="form-control mb-3" id="product_name" name="product_name"
+                v-model="prodForm.product_name">
 
-              <label for="ProdInfo" class="form-label">商品簡介</label>
-              <textarea class="form-control mb-3" id="ProdInfo" rows="3" v-model="prodForm.product_info"></textarea>
+              <label for="product_info" class="form-label">商品簡介</label>
+              <textarea class="form-control mb-3" id="product_info" name="product_info" rows="3"
+                v-model="prodForm.product_info"></textarea>
 
-              <label for="ProdLoc" class="form-label">產地</label>
-              <input type="text" class="form-control mb-3" id="ProdLoc" v-model="prodForm.product_loc">
+              <label for="product_loc" class="form-label">產地</label>
+              <input type="text" class="form-control mb-3" id="product_loc" name="product_loc"
+                v-model="prodForm.product_loc">
 
-              <label for="prodStandard" class="form-label">食材規格</label>
-              <textarea class="form-control mb-3" id="prodStandard" rows="3"
+              <label for="product_standard" class="form-label">食材規格</label>
+              <textarea class="form-control mb-3" id="product_standard" name="product_standard" rows="3"
                 v-model="prodForm.product_standard"></textarea>
               <div class="mb-3">
               </div>
-              <label for="prodContent" class="form-label">營養標示</label>
-              <textarea class="form-control mb-3" id="prodContent" rows="3" v-model="prodForm.product_content"></textarea>
+              <label for="product_content" class="form-label">營養標示</label>
+              <textarea class="form-control mb-3" id="product_content" name="product_content" rows="3"
+                v-model="prodForm.product_content"></textarea>
 
-              <label for="prodPrice" class="form-label">商品價格</label>
-              <input type="number" class="form-control mb-3" id="prodPrice" v-model="prodForm.product_price">
+              <label for="product_price" class="form-label">商品價格</label>
+              <input type="number" class="form-control mb-3" id="product_price" name="product_price"
+                v-model="prodForm.product_price">
               <div class="mb-3">
               </div>
-              <label for="prodImgUpload" class="form-label">商品照片</label>
-              <input class="form-control mb-3" type="file" id="prodImgUpload" name="prodImgUpload" @change="fileChange">
+              <label for="product_img" class="form-label">商品照片</label>
+              <input :key="changeKey" class="form-control mb-3" type="file" id="product_img" name="product_img"
+                @change="fileChange">
 
-              <label for="form-select">商品狀態</label>
-              <select class="form-select mb-3" aria-label="Default select example">
-                <option :value="getStatus(product_status)"></option>
+              <label for="product_status">商品狀態</label>
+              <select class="form-select mb-3" aria-label="Default select example" id="product_status"
+                name="product_status" v-model="prodForm.product_status"
+                @change="prodForm.product_status = Number($event.target.value)">
+                <option value="" selected></option>
+                <option v-for="(status, index) in productStatus" :key="index" :value="index">{{ status }}</option>
               </select>
             </div>
             <div class="modal-footer">
@@ -112,84 +144,82 @@
         </div>
       </div>
       <!-- 修改彈窗 -->
-      <div class="modal fade" id="updateProd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+      <div class="modal fade" id="updateProd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">修改資料</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                @click="clearForm"></button>
             </div>
             <div class="modal-body">
-              <label for="prodName " class="form-label">商品編號</label>
-              <input type="text" class="form-control mb-3" id="prodName" v-model="prodForm.product_no">
+              <label for="product_no" class="form-label">商品編號</label>
+              <input type="text" class="form-control mb-3" id="product_no" name="product_no"
+                v-model="prodForm.product_no">
 
-              <label for="form-select">商品分類</label>
-              <select class="form-select mb-3" aria-label="Default select example" v-model="prodForm.product_class_no">
+              <label for="product_class_no">商品分類</label>
+              <select class="form-select mb-3" aria-label="Default select example" id="product_class_no"
+                name="product_class_no" v-model="prodForm.product_class_no">
                 <option value="" selected></option>
                 <option v-for="prodclass in productClasses" :key="prodclass.product_class_no"
                   :value="prodclass.product_class_no">{{ prodclass.product_class_name }}</option>
               </select>
 
-              <label for="form-select">商品TAG編號</label>
-              <select class="form-select mb-3" aria-label="Default select example" v-model="prodForm.product_tag_no">
+              <label for="product_tag_no">商品TAG編號</label>
+              <select class="form-select mb-3" aria-label="Default select example" id="product_tag_no"
+                name="product_tag_no" v-model="prodForm.product_tag_no">
                 <option value="" selected></option>
                 <option v-for="tag in productTags" :key="tag.product_tag_no" :value="tag.product_tag_no">{{
                   tag.product_tag_name }}</option>
               </select>
 
-              <label for="prodName" class="form-label">商品名稱</label>
-              <input type="text" class="form-control mb-3" id="prodName" v-model="prodForm.product_name">
+              <label for="product_name" class="form-label">商品名稱</label>
+              <input type="text" class="form-control mb-3" id="product_name" name="product_name"
+                v-model="prodForm.product_name">
 
-              <label for="ProdInfo" class="form-label">商品簡介</label>
-              <textarea class="form-control mb-3" id="ProdInfo" rows="3" v-model="prodForm.product_info"></textarea>
+              <label for="product_info" class="form-label">商品簡介</label>
+              <textarea class="form-control mb-3" rows="3" id="product_info" name="product_info"
+                v-model="prodForm.product_info"></textarea>
 
-              <label for="ProdLoc" class="form-label">產地</label>
-              <input type="text" class="form-control mb-3" id="ProdLoc" v-model="prodForm.product_loc">
+              <label for="product_loc" class="form-label">產地</label>
+              <input type="text" class="form-control mb-3" id="product_loc" name="product_loc"
+                v-model="prodForm.product_loc">
 
-              <label for="prodStandard" class="form-label">食材規格</label>
-              <textarea class="form-control mb-3" id="prodStandard" rows="3"
+              <label for="product_standard" class="form-label">食材規格</label>
+              <textarea class="form-control mb-3" rows="3" id="product_standard" name="product_standard"
                 v-model="prodForm.product_standard"></textarea>
               <div class="mb-3">
               </div>
-              <label for="prodContent" class="form-label">營養標示</label>
-              <textarea class="form-control mb-3" id="prodContent" rows="3" v-model="prodForm.product_content"></textarea>
+              <label for="product_content" class="form-label">營養標示</label>
+              <textarea class="form-control mb-3" id="product_content" name="product_content" rows="3"
+                v-model="prodForm.product_content"></textarea>
 
-              <label for="prodPrice" class="form-label">商品價格</label>
-              <input type="number" class="form-control mb-3" id="prodPrice" v-model="prodForm.product_price">
+              <label for="product_price" class="form-label">商品價格</label>
+              <input type="number" class="form-control mb-3" id="product_price" name="product_price"
+                v-model="prodForm.product_price">
               <div class="mb-3">
               </div>
-              <label for="prodImgUpload" class="form-label">商品照片</label>
-              <input class="form-control mb-3" type="file" id="prodImgUpload" name="prodImgUpload" @change="fileChange">
-
-              <label for="form-select">商品狀態</label>
-              <select class="form-select mb-3" aria-label="Default select example">
-                <option :value="getStatus(product_status)"></option>
+              <label for="product_img" class="form-label">商品照片</label>{{ prodForm.product_img.name || prodForm.product_img
+              }}
+              <input :key="changeKey" class="form-control mb-3" type="file" id="product_img" name="product_img"
+                @change="fileChange">
+              <label for="product_status">商品狀態</label>
+              <select class="form-select mb-3" aria-label="Default select example" id="product_status"
+                name="product_status" v-model="prodForm.product_status"
+                @change="prodForm.product_status = Number($event.target.value)">
+                <option value="" selected></option>
+                <option v-for="(status, index) in productStatus" :key="index" :value="index">{{ status }}</option>
               </select>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="addProdToDB">儲存</button>
+              <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
+                @click="clearForm">回列表</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="updateProdToDB">儲存</button>
             </div>
           </div>
         </div>
       </div>
-      <!-- <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item" @click="currentPage > 1 ? currentPage-- : null">
-            <button class="page-link btn btn-outline-primary bg-transparent border-0" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-            </button>
-          </li>
-          <li v-for="page in totalPages" :key="page" class="page-item" :class="{ 'active': page === currentPage }">
-            <button type="button" class="btn btn-outline-primary pageLink" @click="changePage(page)">{{ page }}</button>
-          </li>
-          <li class="page-item" @click="currentPage < totalPages ? currentPage++ : null">
-            <button class="page-link btn-outline-primary bg-transparent border-0" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </button>
-          </li>
-        </ul>
-      </nav> -->
     </div>
   </div>
 </template>
@@ -197,11 +227,11 @@
 <script>
 import SideBar from "@/components/SideBar.vue";
 import axios from "axios";
-import { toHandlers } from "vue";
 
 export default {
   data() {
     return {
+      changeKey: 0,
       prodForm: {
         product_no: '',
         product_class_no: '',
@@ -212,44 +242,63 @@ export default {
         product_standard: '',
         product_content: '',
         product_price: '',
-        product_image: '',
-        product_status: '',
+        product_img: '',
+        product_status: 0,
       },
       products: [],
       productTags: [],
       productClasses: [],
+      productStatus: {
+        1: '上架',
+        2: '下架',
+      },
       selectAll: false,
-      product_no:null,
-      //itemsPerPage: 5,
-      //currentPage: 1,
+      productsPerPage: 6,
+      currentPage: 1,
     };
+  },
+  created() {
+    this.fetchProductData();
   },
   components: {
     SideBar,
   },
   computed: {
-    // paginatedProducts() {
-    //   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    //   const endIndex = startIndex + this.itemsPerPage;
-    //   return this.products.slice(startIndex, endIndex);
-    // },
-    // totalPages() {
-    //   return Math.ceil(this.products.length / this.itemsPerPage);
-    // },
+    totalPages() {
+      return Math.ceil(this.products.length / this.productsPerPage);
+    },
+    paginatedProds() {
+      const start = (this.currentPage - 1) * this.productsPerPage;
+      const end = start + this.productsPerPage;
+      return this.products.slice(start, end)
+    }
   },
   methods: {
-    // changePage(page) {
-    //   this.currentPage = page;
-    // },
-    getStatus(status) {
-      switch (status) {
-        case 1: return '上架'
-        case 2: return '下架'
-        default: return '未分類'
-      }
+    fetchProductData() {
+      axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productDataGet.php`)
+        .then(response => {
+          this.products = response.data.products;
+        })
+        .catch(error => {
+          console.error('Error fetching products:', error);
+        });
+      axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productTagDataGet.php`)
+        .then(response => {
+          this.productTags = response.data.productTags;
+        })
+        .catch(error => {
+          console.error('Error fetching productTags:', error);
+        });
+      axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productClassDataGet.php`)
+        .then(response => {
+          this.productClasses = response.data.prodclass;
+        })
+        .catch(error => {
+          console.error('Error fetching productClasses:', error);
+        });
     },
     fileChange(e) {
-      this.prodForm.product_image = e.target.files[0];
+      this.prodForm.product_img = e.target.files[0];
     },
     addProdToDB() {
       const addProdForm = new FormData();
@@ -263,20 +312,8 @@ export default {
       })
         .then(response => {
           if (!response.data.error) {
-            this.products.push(this.prodForm);
-            this.prodForm = {
-              product_no: '',
-              product_class_name: '',
-              product_tag_name: '',
-              product_name: '',
-              product_info: '',
-              product_loc: '',
-              product_standard: '',
-              product_content: '',
-              product_price: '',
-              product_image: '',
-              product_status: '',
-            };
+            this.fetchProductData();
+            this.clearForm();
           }
         })
         .catch(error => {
@@ -324,37 +361,70 @@ export default {
         }
       })
     },
-    updateProd(productNo){
-      console.log(productNo);
-    }
-  },
-  created() {
-    axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productDataGet.php`)
-      .then(response => {
-        this.products = response.data.products;
-      })
-      .catch(error => {
-        console.error('Error fetching products:', error);
-      });
-    axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productTagDataGet.php`)
-      .then(response => {
-        this.productTags = response.data.productTags;
-      })
-      .catch(error => {
-        console.error('Error fetching productTags:', error);
-      });
-    axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productClassDataGet.php`)
-      .then(response => {
-        this.productClasses = response.data;
-      })
-      .catch(error => {
-        console.error('Error fetching productClasses:', error);
-      });
+    updateProd(productNo) {
+      const product = this.products.find(p => p.product_no === productNo);
+      if (product) {
+        this.prodForm = { ...product };
+      }
+    },
+    updateProdToDB() {
+      const updateProdForm = new FormData();
+      for (const [key, value] of Object.entries(this.prodForm)) {
+        updateProdForm.append(key, value);
+      }
+      axios.post(`${import.meta.env.VITE_API_URL}/admin/product/productDataUpdate.php`,
+        updateProdForm,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(response => {
+          if (!response.data.error) {
+            const index = this.products.findIndex(product => product.product_no === this.prodForm.product_no);
+            if (index !== -1) {
+              this.fetchProductData();
+              this.clearForm();
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error adding product:', error);
+        });
+    },
+    clearForm() {
+      this.prodForm = {
+        product_class_name: '',
+        product_tag_name: '',
+        product_name: '',
+        product_info: '',
+        product_loc: '',
+        product_standard: '',
+        product_content: '',
+        product_price: '',
+        product_img: '',
+        product_status: '',
+      };
+      this.changeKey += 1
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage += 1;
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage -= 1;
+      }
+    },
+    goToPage(pageNumber) {
+      if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+        this.currentPage = pageNumber;
+      }
+    },
   }
 };
 </script>
 
-<style lang="scss">
-@import "@/assets/scss/page/product.scss";
-@import "@/assets/scss/sidebar.scss";
-</style>
+<style lang="scss">@import "@/assets/scss/page/product.scss";
+@import "@/assets/scss/sidebar.scss";</style>
