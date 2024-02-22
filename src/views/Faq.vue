@@ -87,7 +87,7 @@
             </td>
             <td>{{ faq.faq_no }}</td>
             <td>{{ faq.question }}</td>
-            <td>{{ faq_class_mapping[faq.faq_class] }}</td>
+            <td>{{ faqClasses.find(item => item.value === faq.faq_class)?.label }}</td>
             <td>
               <button class="btn btn-outline-primary" @click="editFaq(index)">
                 <i class="fa-solid fa-pencil"></i>
@@ -139,7 +139,7 @@ export default {
       currentPage: 1,
       currentFaq: {
         faq_no: '',
-        faq_class: '',
+        question_class: '',
         ans: '',
         question: '',
         key: '',
@@ -150,11 +150,14 @@ export default {
         { label: '食材問題', value: 3 },
       ],
       faq_class_mapping: {
-        1: "付款問題",
-        2: "運送問題",
-        3: "食材問題",
+         1: "付款問題",
+         2: "運送問題",
+         3: "食材問題",
       },
     };
+  },
+  created(){
+    this.fetchFaq();
   },
   components: {
     SideBar,
@@ -168,21 +171,6 @@ export default {
     totalPages() {
       return Math.ceil(this.faq.length / this.itemsPerPage);
     },
-    //關鍵字搜尋
-    // filteredFaq() {
-    //   if (!this.faq) {
-    //     return [];
-    //   }
-
-    //   const filtered = this.faq.filter((faq) => {
-    //     return (
-    //       faq.faq_no.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-    //       faq.question.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-    //       faq.faq_class.toLowerCase().includes(this.searchQuery.toLowerCase())
-    //     );
-    //   });
-    //   return filtered;
-    // },
   },
   methods: {
     changePage(page) {
@@ -191,86 +179,79 @@ export default {
     deleteProd(index) {
       const confirmed = window.confirm("確定要刪除此商品嗎?");
       if (confirmed) {
-        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-        const actualIndex = startIndex + index;
-        this.faq.splice(actualIndex, 1);
+        const faqToDelete = this.faq[index].faq_no;
+        axios.post(`${import.meta.env.VITE_API_URL}/faq/delete_faq.php`, { faqToDelete })
+          .then(response => {
+            this.faq.splice(index, 1);
+            console.log('删除成功');
+            this.fetchFaq();
+          })
+          .catch(error => {
+            console.error('删除出錯：', error);
+          });
       }
     },
 
     toggleSelect() {
       if (this.selectAll) {
-      this.selectedFaq = [...this.faq];
+        this.selectedFaq = [...this.faq];
       } else {
         this.selectedFaq = [];
       }
     },
 
-    //連接php
-    fetchDataFromBackend() {
-  axios.get(`${import.meta.env.VITE_API_URL}/admin_faq.php`)
-    .then(response => {
-      console.log(response.data);
-      // 使用 $set 确保 this.faq 是响应式的数组
-      this.faq = response.data.map(faq => {
-        return {
-          ...faq,
-          faq_class: faq.faq_class === '付款問題' ? 1 : faq.faq_class,
-          // 其他欄位照需求處理
-        };
-      });
-    })
-    .catch(error => {
-      console.error('Error fetching data from backend:', error);
-    });
-},
-
     saveFaq() {
-      if (!this.currentFaq.faq_no) {
-        // 新增
-        const newFaq = {
-          ...this.currentFaq,
-          faq_no: this.faq.length + 1, // 可以自行調整如何生成新的流水號
-        };
-        this.faq.push(newFaq);
-      } else {
-        // 修改
-        const index = this.faq.findIndex((item) => item.faq_no === this.currentFaq.faq_no);
-        if (index !== -1) {
-          this.$set(this.faq, index, { ...this.currentFaq });
-        }
-      }
-      // 清空 currentFaq
-      this.currentFaq = {
-        faq_no: "",
-        faq_class: "",
-        ans: "",
-        question: "",
-        key: "",
-      };
-      // 關閉 Modal
-      $("#staticBackdrop").modal("hide");
+      console.log('Current FAQ Class:', this.currentFaq.faq_class);
+
+      // 映射選擇的 faq_class 到對應的值
+      const mappedFaqClass = this.faq_class_mapping[this.currentFaq.faq_class];
+
+      const formData = new FormData();
+      formData.append('question_class', mappedFaqClass);
+      formData.append('question', this.currentFaq.question);
+      formData.append('ans', this.currentFaq.ans);
+      formData.append('key', this.currentFaq.key);
+
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/faq/save_faq.php`, formData)
+        .then((response) => {
+          console.log('保存成功');
+          this.currentFaq.faq_class = '';
+          this.currentFaq.question = '';
+          this.currentFaq.ans = '';
+          this.currentFaq.key = '';
+          this.fetchFaq();
+        })
+        .catch((error) => {
+          console.error('保存出错：', error);
+        });
     },
 
-    // 編輯 FAQ
-    editFaq(index) {
-      this.currentFaq = { ...this.faq[index] };
-      $('#staticBackdrop').modal('show');
+    fetchFaq() {  //匯入
+      axios.get(`${import.meta.env.VITE_API_URL}/faq/admin_faq.php`)
+            .then(response => {
+              console.log('保存成功');
+                this.faq = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching faq:', error);
+            });
     },
 
-  },
-
-  mounted() {
-    this.fetchDataFromBackend();  // Call the method on component mount
-    axios.get('/healthy-food-php/admin_faq')
-    .then(response => {
-      this.faq = response.data;
-    })
-    .catch(error => {
-      console.error('Error fetching data from backend:', error);
-    });
-  },
-
-};
+    deleteThisFaq(index) {
+            const faqToDelete = this.faq[index].faq_no;
+            axios.post(`${import.meta.env.VITE_API_URL}/faq/delete_faq.php`, { faqToDelete })
+            .then(response => {
+                this.faq.splice(index, 1);
+                console.log('删除成功');
+                this.fetchFaq();
+            })
+            .catch(error => {
+                console.error('删除出錯：', error);
+            });
+        },
+    },
+  };
 </script>
 
 <style lang="scss">
