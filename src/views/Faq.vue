@@ -180,7 +180,7 @@ export default {
       const confirmed = window.confirm("確定要刪除此商品嗎?");
       if (confirmed) {
         const faqToDelete = this.faq[index].faq_no;
-        axios.post(`${import.meta.env.VITE_API_URL}/faq/delete_faq.php`, { faqToDelete })
+        axios.post(`${import.meta.env.VITE_API_URL}/admin/faq/delete_faq.php`, { faqToDelete })
           .then(response => {
             this.faq.splice(index, 1);
             console.log('删除成功');
@@ -213,7 +213,7 @@ export default {
       formData.append('key', this.currentFaq.key);
 
       axios
-        .post(`${import.meta.env.VITE_API_URL}/faq/save_faq.php`, formData)
+        .post(`${import.meta.env.VITE_API_URL}/admin/faq/save_faq.php`, formData)
         .then((response) => {
           console.log('保存成功');
           this.currentFaq.faq_class = '';
@@ -228,7 +228,7 @@ export default {
     },
 
     fetchFaq() {  //匯入
-      axios.get(`${import.meta.env.VITE_API_URL}/faq/admin_faq.php`)
+      axios.get(`${import.meta.env.VITE_API_URL}/admin/faq/admin_faq.php`)
             .then(response => {
               console.log('保存成功');
                 this.faq = response.data;
@@ -240,7 +240,7 @@ export default {
 
     deleteThisFaq(index) {
             const faqToDelete = this.faq[index].faq_no;
-            axios.post(`${import.meta.env.VITE_API_URL}/faq/delete_faq.php`, { faqToDelete })
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/faq/delete_faq.php`, { faqToDelete })
             .then(response => {
                 this.faq.splice(index, 1);
                 console.log('删除成功');
