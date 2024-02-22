@@ -79,8 +79,7 @@
             </div>
             <div class="modal-body">
               <label for="product_no" class="form-label">商品編號</label>
-              <input type="text" class="form-control mb-3" id="product_no" name="product_no"
-                v-model="prodForm.product_no">
+              <p>{{ prodForm.product_no }}</p>
 
               <label for="product_class_no">商品分類</label>
               <select class="form-select mb-3" aria-label="Default select example" id="product_class_no"
@@ -155,8 +154,7 @@
             </div>
             <div class="modal-body">
               <label for="product_no" class="form-label">商品編號</label>
-              <input type="text" class="form-control mb-3" id="product_no" name="product_no"
-                v-model="prodForm.product_no">
+              <p>{{ prodForm.product_no }}</p>
 
               <label for="product_class_no">商品分類</label>
               <select class="form-select mb-3" aria-label="Default select example" id="product_class_no"
@@ -200,10 +198,9 @@
                 v-model="prodForm.product_price">
               <div class="mb-3">
               </div>
-              <label for="product_img" class="form-label">商品照片</label>{{ prodForm.product_img.name || prodForm.product_img
-              }}
-              <input :key="changeKey" class="form-control mb-3" type="file" id="product_img" name="product_img"
-                @change="fileChange">
+              <label for="product_img" class="form-label">商品照片</label>{{ prodForm.product_img.name || prodForm.product_img}}
+              <input :key="changeKey" class="form-control mb-3" type="file" id="product_img" name="product_img" @change="fileChange">
+                <input type="hidden" name="image" v-model="prodForm.product_img">
               <label for="product_status">商品狀態</label>
               <select class="form-select mb-3" aria-label="Default select example" id="product_status"
                 name="product_status" v-model="prodForm.product_status"
@@ -249,8 +246,8 @@ export default {
       productTags: [],
       productClasses: [],
       productStatus: {
-        1: '上架',
-        2: '下架',
+        0: '上架',
+        1: '下架',
       },
       selectAll: false,
       productsPerPage: 6,
@@ -321,7 +318,7 @@ export default {
         });
     },
     toggleAll() {
-      this.products.forEach(product => {
+      this.paginatedProds.forEach(product => {
         product.checked = this.selectAll;
       });
     },
@@ -370,7 +367,11 @@ export default {
     updateProdToDB() {
       const updateProdForm = new FormData();
       for (const [key, value] of Object.entries(this.prodForm)) {
-        updateProdForm.append(key, value);
+        if (key == 'product_img' && typeof value === 'string'){
+          updateProdForm.append('image',value)
+        }else{
+          updateProdForm.append(key, value);
+        }
       }
       axios.post(`${import.meta.env.VITE_API_URL}/admin/product/productDataUpdate.php`,
         updateProdForm,
