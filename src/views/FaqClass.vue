@@ -30,9 +30,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- 修改彈窗 -->
-            <div class="modal fade" id="updateClass" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      </div>
+      <!-- 修改彈窗 -->
+      <div class="modal fade" id="updateClass" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+      </div>
 
       <table class="table articlesTable table-bordered border-dark" >
         <thead>
@@ -109,6 +109,7 @@ export default {
       question_no: null,
       itemsPerPage: 5,
       currentPage: 1,
+      faq_class_name: '',
     };
   },
   components: {
