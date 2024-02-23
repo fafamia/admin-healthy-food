@@ -48,7 +48,7 @@
               </div>
               <div class="mb-3">
                 <label for="formFile" class="form-label">封面照片</label>
-                <input class="form-control" type="file" id="formFile">
+                <input class="form-control" type="file" id="formFile" @change="handleFileUpload">
               </div>
               <label for="time" class="form-label">建立時間：</label>
               <input style="border: none;" type="text" id="time" v-model="currentDateTime">
@@ -119,7 +119,7 @@
               <div class="mb-3">
                 <label for="formFile" class="form-label">封面照片</label>
                 <br>
-                <img :src="recipe.recipe_img" alt="封面照片" class="img-thumbnail" style="max-width: 200px;">
+                <img :src="getImageUrl(recipe.recipe_img)" alt="封面照片" class="img-thumbnail" style="max-width: 200px;">
                 <input class="form-control" type="file" id="formFile">
               </div>
               <h5>建立時間 {{ recipe.recipe_creation_time }}</h5>
@@ -156,7 +156,7 @@
 
             <div class="modal-footer">
               <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">取消</button>
-              <button v-if="recipe" type="button" class="btn btn-primary" @click="deleteRecipe($recipeNo)"
+              <button v-if="recipe" type="button" class="btn btn-primary" @click="deleteRecipe(recipe.recipe_no)"
                 data-bs-dismiss="modal">刪除</button>
 
             </div>
@@ -246,9 +246,11 @@ export default {
         recipe_time: '',
         recipe_ingredient: '',
         recipe_info: '',
-        recipe_status: ''
+        recipe_status: '',
+        recipe_img: null
       },
-      currentDateTime: ''
+      currentDateTime: '',
+      selectedFile: null
 
     };
   },
@@ -381,27 +383,46 @@ export default {
 
 
     addRecipe() {
-      axios.post(`${import.meta.env.VITE_API_URL}/admin/cookbook/save_recipe.php`, {
-        recipe_name: this.newRecipe.recipe_name,
-        recipe_people: this.newRecipe.recipe_people,
-        recipe_time: this.newRecipe.recipe_time,
-        recipe_ingredient: this.newRecipe.recipe_ingredient,
-        recipe_info: this.newRecipe.recipe_info,
-        recipe_status: this.newRecipe.recipe_status
-      })
-        .then(response => {
-          console.log(response.data);
-          this.fetchRecipes();
-          // 如果成功保存，关闭模态框或者做其他操作
-          this.showEditModal = false; // 关闭编辑模态框
-        })
-        .catch(error => {
-          console.error('Error saving recipe:', error);
-        });
-    },
+  const formData = new FormData();
+  formData.append('recipe_name', this.newRecipe.recipe_name);
+  formData.append('recipe_people', this.newRecipe.recipe_people);
+  formData.append('recipe_time', this.newRecipe.recipe_time);
+  formData.append('recipe_ingredient', this.newRecipe.recipe_ingredient);
+  formData.append('recipe_info', this.newRecipe.recipe_info);
+  formData.append('recipe_status', this.newRecipe.recipe_status);
+  formData.append('recipe_img', this.newRecipe.recipe_img); 
+  axios.post(`${import.meta.env.VITE_API_URL}/admin/cookbook/add_recipe.php`, formData)
+    .then(response => {
+      console.log('保存成功');
+      this.newRecipe.recipe_name = "";
+      this.newRecipe.recipe_people = "";
+      this.newRecipe.recipe_time = "";
+      this.newRecipe.recipe_ingredient = "";
+      this.newRecipe.recipe_info = "";
+      this.newRecipe.recipe_status = "";
+      this.newRecipe.recipe_img = null;
+      this.fetchRecipes();
+      this.showEditModal = false;
+    })
+    .catch(error => {
+      console.error('保存出错：', error);
+    });
+},
+
     getCurrentDateTime() {
       return new Date().toLocaleString();
-    }
+    },
+    handleFileUpload(event) {
+      const file = event.target.files[0];
+      this.newRecipe.recipe_img = file; 
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+    },
+
+    getImageUrl(paths) {
+      return new URL(`../assets/images/cookbook/${paths}`, import.meta.url).href;
+    },
+
 
 
 
