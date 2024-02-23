@@ -52,8 +52,8 @@
                 </tbody>
             </table>
 
-            <div class="modal fade" id="addGroup" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-hidden="true">
+            <div class="modal fade" id="addGroup" v-show="isModalShown" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-hidden="true" >
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -124,17 +124,13 @@ export default {
     data() {
         return {
             selectAll: false,
-            prodgroups: [
-                // { prodgroupNumber: '0001', prodgroupName: '首頁推薦'},
-                // { prodgroupNumber: '0002', prodgroupName: 'BMI過輕'},
-                // { prodgroupNumber: '0003', prodgroupName: '龍年促銷', startime: '2024/01/01', endtime: '2024/01/31' },
-                // { prodgroupNumber: '0004', prodgroupName: '食譜食材推薦'},
-
-            ],
+            prodgroups: [],
             prodgroup_name: '',
             prodgroup_start: '',
             prodgroup_end: '',
             prodgroup_no: null,
+            isModalShown: true,
+
 
 
         }
@@ -167,14 +163,20 @@ export default {
                             prodgroup_end: this.prodgroup_end,
                         }
                         this.prodgroups.push(newGroup);
-                        this.prodgroup_name = '';
-                        this.prodgroup_start = '';
-                        this.prodgroup_end = '';
+                        this.clear();
+                        // 儲存完畢後，設置 isModalShown 為 false 以關閉彈窗
+                        this.isModalShown = false;
+                        // 手動移除背景灰色效果
+      const modalBackdrop = document.querySelector('.modal-backdrop');
+      if (modalBackdrop) {
+        modalBackdrop.remove();
+      }
                     }
                 })
                 .catch(error => {
                     console.error('Error adding prodgroups:', error);
                 });
+
         },
         updateGroup(prodgroups) {
             this.prodgroup_name = prodgroups.prodgroup_name;
@@ -182,6 +184,7 @@ export default {
             this.prodgroup_start = prodgroups.prodgroup_start;
             this.prodgroup_end = prodgroups.prodgroup_end;
         },
+        
         updateGroupToDB() {
             axios.post(`${import.meta.env.VITE_API_URL}/admin/product/productGroupDataUpdate.php`, {
                 prodgroup_name: this.prodgroup_name,
@@ -197,15 +200,20 @@ export default {
                                 this.prodgroups[index].prodgroup_start = this.prodgroup_start,
                                 this.prodgroups[index].prodgroup_end = this.prodgroup_end
                         }
-                        this.prodgroup_name = '';
-                        this.prodgroup_start = '';
-                        this.prodgroup_end = '';
+                        this.clear();
                     }
                 })
                 .catch(error => {
                     console.error('Error updating prodgroup:', error);
                 })
+
+
         },
+        clear() {
+    this.prodgroup_name = '';
+    this.prodgroup_start = '';
+    this.prodgroup_end = '';
+},
         async deleteGroupToDB(productGroupNo, index) {
             const confirmed = window.confirm("確定要刪除此商品群組嗎?");
             if (!confirmed) return;
