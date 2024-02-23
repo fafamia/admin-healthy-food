@@ -1,9 +1,8 @@
-.sidebar {
-    nav {
+    .sidebar_nav {
         position: absolute;
         left: 0;
         background-color: #FFF3E0;
-        height: 100vh;
+        height: 1000px;
         .dropdown {
             text-align: center;
             margin-top: 10px;
@@ -22,7 +21,6 @@
             }
         }
     }
-}
 
 .footer {
     background-color: $secondary;
