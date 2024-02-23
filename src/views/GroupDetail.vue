@@ -4,7 +4,6 @@
         <div class="groupdetailRight">
             <div class="filterList">
                 <select @change="filterList">
-                    <option value="">所有群組</option>
                     <option v-for="option in prodgroupOptions" :key="option.prodgroup_no" :value="option.prodgroup_name">{{
                         option.prodgroup_name }}</option>
                 </select>
@@ -70,7 +69,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(groupdetail, index) in paginatedGroupdetail" :key="index">
+                    <tr v-for="(groupdetail, index) in filteredGroupdetails" :key="index">
                         <td>{{ groupdetail.prodgroup_no }}</td>
                         <td>{{ groupdetail.prodgroup_name }}</td>
                         <td>{{ groupdetail.product_name }}</td>
@@ -136,7 +135,7 @@ export default {
             prodgroupOptions: [],
             productOptions: [],
             props: ['productGroupNo'],
-            display: [],
+            filteredGroupdetails: [], // 新增篩選後的數據變量
             isModalShown: true,
             groupDetailPage: 6,
             currentPage: 1,
@@ -159,18 +158,24 @@ export default {
         paginatedGroupdetail() {
             const start = (this.currentPage - 1) * this.groupDetailPage;
             const end = start + this.groupDetailPage;
-            return this.groupdetails.slice(start, end)
+            return this.filteredGroupdetails.slice(start, end)
         }
 
     },
     methods: {
         filterList(e) {
-            const filterType = e.target.value;
+    let filterType = e.target.value;
 
-            if (!filterType || filterType === '') {
-                this.display = this.groupdetails;
-            }
-        },
+    // 如果未選擇或選擇了空白選項，將 filterType 賦值為第一個群組名稱
+    if (!filterType) {
+        filterType = this.prodgroupOptions[0].prodgroup_name; // 假設 prodgroupOptions 是一個包含群組名稱的陣列
+    }
+
+    // 根據 filterType 過濾出符合條件的群組明細數據
+    this.filteredGroupdetails = this.groupdetails.filter(groupdetail => groupdetail.prodgroup_name === filterType);
+    this.currentPage = 1;
+},
+
 
         async fetchData() {
             try {
@@ -198,12 +203,15 @@ export default {
         addGroupDetailToDB() {
     // 創建 FormData 對象
     const addgroupDetailForm = new FormData();
-    // 將其餘數據添加到 FormData 對象中
-    addgroupDetailForm.append('prodgroup_details_no', this.prodgroup_details_no);
-    addgroupDetailForm.append('prodgroup_no', this.prodgroup_no);
-    addgroupDetailForm.append('prodgroup_name', this.prodgroup_name);
-    addgroupDetailForm.append('prodgroup_sale_price', this.prodgroup_sale_price);
-
+    // 將選擇的多個商品編號以逗號分隔並添加到 FormData 對象中
+    const productNamesString = this.groupDetailForm.product_name.join(',');
+    addgroupDetailForm.append('product_names', productNamesString);
+    // 遍歷 groupDetailForm 對象的鍵值對，並將每個鍵值對添加到 FormData 對象中
+    for (const [key, value] of Object.entries(this.groupDetailForm)) {
+        if (key !== 'product_name') {
+            addgroupDetailForm.append(key, value);
+        }
+    }
     // 發送 POST 請求到後端
     axios.post(`${import.meta.env.VITE_API_URL}/admin/product/groupDetailDataAdd.php`, addgroupDetailForm, {
         headers: {
@@ -214,25 +222,22 @@ export default {
         if (!response.data.error) {
             const newGroupDetail = response.data; // 從伺服器返回新商品細節
             this.groupdetails.push(newGroupDetail); // 將新商品細節添加到 groupdetails 陣列中
-
             // 清空表單字段
-            this.prodgroup_no = '';
-            this.prodgroup_name = '';
-            this.prodgroup_sale_price = '';
-
+            this.groupDetailForm = {
+                prodgroup_no: '',
+                product_name: [],
+                prodgroup_name: '',
+                prodgroup_sale_price: ''
+            };
             // 在此處執行其他操作，例如刷新數據列表
-            this.isModalShown = false;
-            // 手動移除背景灰色效果
-            const modalBackdrop = document.querySelector('.modal-backdrop');
-            if (modalBackdrop) {
-                modalBackdrop.remove();
-            }
+            console.log(response.data);
         }
     })
     .catch(error => {
-        console.error('添加群組詳細信息時出錯：', error);
+        console.error('Error adding groupdetails:', error);
     });
 },
+
 
 
         toggleAll() {
