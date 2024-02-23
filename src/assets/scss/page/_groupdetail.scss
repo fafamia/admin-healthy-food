@@ -24,5 +24,14 @@
     }
     table th,table td{
         background: none!important;
+
+    }
+    .gd_pagenumber{
+        position: absolute;
+        right: 0;
+
+        .gd_btn{
+            border-radius: 50%;
+        }
     }
 }

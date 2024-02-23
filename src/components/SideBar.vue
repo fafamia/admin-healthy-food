@@ -1,6 +1,6 @@
 <template>
     <div class="sidebar">
-        <nav>
+        <nav class="sidebar_nav">
             <!-- <div> -->
             <!-- <div v-for="(dropdown, index) in dropdowns" :key="index" class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" role="button" :id="'dropdownMenuLink' + index"
