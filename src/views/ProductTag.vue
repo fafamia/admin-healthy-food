@@ -149,7 +149,6 @@ export default {
         fetchTagData(){
             axios.get(`${import.meta.env.VITE_API_URL}/admin/product/productTagDataGet.php`)
             .then(response => {
-                console.log(response.data);
                 this.productTags = response.data.productTags;
             })
             .catch(error => {
@@ -171,7 +170,7 @@ export default {
                 });
         },
         toggleAll() {
-            this.productTags.forEach(tag => {
+            this.paginatedTags.forEach(tag => {
                 tag.checked = this.selectAll;
             });
         },
