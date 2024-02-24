@@ -130,7 +130,7 @@
               <label for="product_status">商品狀態</label>
               <select class="form-select mb-3" aria-label="Default select example" id="product_status"
                 name="product_status" v-model="prodForm.product_status"
-                @change="prodForm.product_status = Number($event.target.value)">
+                @change="prodForm.product_status = $event.target.value">
                 <option value="" selected></option>
                 <option v-for="(status, index) in productStatus" :key="index" :value="index">{{ status }}</option>
               </select>
@@ -204,7 +204,7 @@
               <label for="product_status">商品狀態</label>
               <select class="form-select mb-3" aria-label="Default select example" id="product_status"
                 name="product_status" v-model="prodForm.product_status"
-                @change="prodForm.product_status = Number($event.target.value)">
+                @change="prodForm.product_status = $event.target.value">
                 <option value="" selected></option>
                 <option v-for="(status, index) in productStatus" :key="index" :value="index">{{ status }}</option>
               </select>
@@ -246,8 +246,8 @@ export default {
       productTags: [],
       productClasses: [],
       productStatus: {
-        0: '上架',
-        1: '下架',
+        '0': '上架',
+        '1': '下架',
       },
       selectAll: false,
       productsPerPage: 6,
