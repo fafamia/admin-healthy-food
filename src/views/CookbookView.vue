@@ -120,7 +120,7 @@
                 <label for="formFile" class="form-label">封面照片</label>
                 <br>
                 <img :src="getImageUrl(recipe.recipe_img)" alt="封面照片" class="img-thumbnail" style="max-width: 200px;">
-                <input class="form-control" type="file" id="formFile">
+                <input class="form-control" type="file" id="formFile" name="recipe_img">
               </div>
               <h5>建立時間 {{ recipe.recipe_creation_time }}</h5>
 
@@ -156,8 +156,7 @@
 
             <div class="modal-footer">
               <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">取消</button>
-              <button v-if="recipe" type="button" class="btn btn-primary" @click="deleteRecipe(recipe.recipe_no)"
-                data-bs-dismiss="modal">刪除</button>
+              <button type="button" class="btn btn-primary" @click="deleteRecipe" data-bs-dismiss="modal">刪除</button>
 
             </div>
           </div>
@@ -188,10 +187,11 @@
             <td>{{ recipe.recipe_no }}</td>
             <td>{{ recipe.recipe_name }}</td>
             <td>{{ recipe.recipe_creation_time }}</td>
-            <td>{{ recipe.recipe_status }}</td>
+            <td>{{ recipe.recipe_status ===0?'上架' :'下架'}}</td>
             <td>
               <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                data-bs-target="#deleteBackdrop"><i class="fa-solid fa-trash"></i>刪除</button>
+                data-bs-target="#deleteBackdrop" @click="handleOpenDelete(recipe)"><i
+                  class="fa-solid fa-trash"></i>刪除</button>
               <button type="button" class="btn btn-outline-primary" @click="editRecipe(index)" data-bs-toggle="modal"
                 data-bs-target="#editBackdrop"><i class="fa-solid fa-pen"></i>修改</button>
             </td>
@@ -250,8 +250,8 @@ export default {
         recipe_img: null
       },
       currentDateTime: '',
-      selectedFile: null
-
+      selectedFile: null,
+      deleteRecipeNo: -1,
     };
   },
   created() {
@@ -291,10 +291,14 @@ export default {
         this.selectAll = this.items.every(item => item.checked);
       }
     },
-    deleteRecipe(recipeNo) {
-      axios.delete(`${import.meta.env.VITE_API_URL}/admin/cookbook/delete_recipe.php?recipe_no=${recipeNo}`)
+    handleOpenDelete(recipe) {
+      this.deleteRecipeNo = recipe.recipe_no
+    },
+    deleteRecipe() {
+      axios.get(`${import.meta.env.VITE_API_URL}/admin/cookbook/delete_recipe.php?recipe_no=${+this.deleteRecipeNo}`)
         .then(response => {
           console.log(response.data);
+          this.fetchRecipes();
         })
         .catch(error => {
           console.error('Error deleting recipe:', error);
@@ -383,44 +387,48 @@ export default {
 
 
     addRecipe() {
-  const formData = new FormData();
-  formData.append('recipe_name', this.newRecipe.recipe_name);
-  formData.append('recipe_people', this.newRecipe.recipe_people);
-  formData.append('recipe_time', this.newRecipe.recipe_time);
-  formData.append('recipe_ingredient', this.newRecipe.recipe_ingredient);
-  formData.append('recipe_info', this.newRecipe.recipe_info);
-  formData.append('recipe_status', this.newRecipe.recipe_status);
-  formData.append('recipe_img', this.newRecipe.recipe_img); 
-  axios.post(`${import.meta.env.VITE_API_URL}/admin/cookbook/add_recipe.php`, formData)
-    .then(response => {
-      console.log('保存成功');
-      this.newRecipe.recipe_name = "";
-      this.newRecipe.recipe_people = "";
-      this.newRecipe.recipe_time = "";
-      this.newRecipe.recipe_ingredient = "";
-      this.newRecipe.recipe_info = "";
-      this.newRecipe.recipe_status = "";
-      this.newRecipe.recipe_img = null;
-      this.fetchRecipes();
-      this.showEditModal = false;
-    })
-    .catch(error => {
-      console.error('保存出错：', error);
-    });
-},
+      const formData = new FormData();
+      formData.append('recipe_name', this.newRecipe.recipe_name);
+      formData.append('recipe_people', this.newRecipe.recipe_people);
+      formData.append('recipe_time', this.newRecipe.recipe_time);
+      formData.append('recipe_ingredient', this.newRecipe.recipe_ingredient);
+      formData.append('recipe_info', this.newRecipe.recipe_info);
+      formData.append('recipe_status', this.newRecipe.recipe_status);
+      formData.append('recipe_img', this.newRecipe.recipe_img);
+      axios.post(`${import.meta.env.VITE_API_URL}/admin/cookbook/add_recipe.php`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then(response => {
+          console.log('保存成功');
+          this.newRecipe.recipe_name = "";
+          this.newRecipe.recipe_people = "";
+          this.newRecipe.recipe_time = "";
+          this.newRecipe.recipe_ingredient = "";
+          this.newRecipe.recipe_info = "";
+          this.newRecipe.recipe_status = "";
+          this.newRecipe.recipe_img = null;
+          this.fetchRecipes();
+          this.showEditModal = false;
+        })
+        .catch(error => {
+          console.error('保存出错：', error);
+        });
+    },
 
     getCurrentDateTime() {
       return new Date().toLocaleString();
     },
     handleFileUpload(event) {
       const file = event.target.files[0];
-      this.newRecipe.recipe_img = file; 
+      this.newRecipe.recipe_img = file;
       const reader = new FileReader();
       reader.readAsDataURL(file);
     },
 
     getImageUrl(paths) {
-      return new URL(`../assets/images/cookbook/${paths}`, import.meta.url).href;
+      return new URL(`${import.meta.env.VITE_IMAGES_BASE_URL}/cookbook/${paths}`).href;
     },
 
 
