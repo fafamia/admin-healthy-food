@@ -25,16 +25,12 @@
                 <label for="exampleFormControlInput1" class="form-label">食譜名稱</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1" v-model="newRecipe.recipe_name">
               </div>
-
-              <label for="exampleFormControlInput2" class="form-label">食譜適用人數</label>
-              <input type="text" class="form-control" id="exampleFormControlInput2" v-model="newRecipe.recipe_people">
-              <label for="exampleFormControlInput3" class="form-label">食譜製作時間</label>
-              <input type="text" class="form-control" id="exampleFormControlInput3" v-model="newRecipe.recipe_time">
-              <label for="form-select">專案群組</label>
-              <select class="form-select" aria-label="Default select example">
-                <option selected></option>
-
-              </select>
+              <label for="exampleFormControlInput2" class="form-label">食譜推薦食材</label>
+                <input type="text" class="form-control" id="exampleFormControlInput2" v-model="newRecipe.recipe_recommend">
+              <label for="exampleFormControlInput3" class="form-label">食譜適用人數</label>
+              <input type="text" class="form-control" id="exampleFormControlInput3" v-model="newRecipe.recipe_people">
+              <label for="exampleFormControlInput4" class="form-label">食譜製作時間</label>
+              <input type="text" class="form-control" id="exampleFormControlInput4" v-model="newRecipe.recipe_time">
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">食譜食材</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
@@ -56,9 +52,9 @@
               <label for="form-select">狀態</label>
 
               <select class="form-select" aria-label="Default select example" v-model="newRecipe.recipe_status">
-                <option selected></option>
+                <option></option>
                 <option value="1">上架</option>
-                <option value="2">下架</option>
+                <option value="2" selected>下架</option>
 
               </select>
 
@@ -95,16 +91,12 @@
                 <input type="text" class="form-control" id="exampleFormControlInput1" v-model="recipe.recipe_name">
 
               </div>
-
-              <label for="exampleFormControlInput2" class="form-label">食譜適用人數</label>
-              <input type="text" class="form-control" id="exampleFormControlInput2" v-model="recipe.recipe_people">
-              <label for="exampleFormControlInput3" class="form-label">食譜製作時間</label>
-              <input type="text" class="form-control" id="exampleFormControlInput3" v-model="recipe.recipe_time">
-              <label for="form-select">專案群組</label>
-              <select class="form-select" aria-label="Default select example">
-                <option selected></option>
-
-              </select>
+              <label for="exampleFormControlInput2" class="form-label">食譜推薦食材</label>
+                <input type="text" class="form-control" id="exampleFormControlInput2" v-model="recipe.recipe_recommend">
+              <label for="exampleFormControlInput3" class="form-label">食譜適用人數</label>
+              <input type="text" class="form-control" id="exampleFormControlInput3" v-model="recipe.recipe_people">
+              <label for="exampleFormControlInput4" class="form-label">食譜製作時間</label>
+              <input type="text" class="form-control" id="exampleFormControlInput4" v-model="recipe.recipe_time">
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">食譜食材</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
@@ -120,15 +112,15 @@
                 <label for="formFile" class="form-label">封面照片</label>
                 <br>
                 <img :src="getImageUrl(recipe.recipe_img)" alt="封面照片" class="img-thumbnail" style="max-width: 200px;">
-                <input class="form-control" type="file" id="formFile" name="recipe_img">
+                <input class="form-control" type="file" id="formFile" name="recipe_img" @change="handleFileUpload">
               </div>
               <h5>建立時間 {{ recipe.recipe_creation_time }}</h5>
 
               <label for="form-select">狀態</label>
               <select class="form-select" aria-label="Default select example" v-model="recipe.recipe_status">
-                <option selected></option>
+                <option></option>
                 <option value="1">上架</option>
-                <option value="2">下架</option>
+                <option value="2" selected>下架</option>
 
               </select>
 
@@ -187,7 +179,7 @@
             <td>{{ recipe.recipe_no }}</td>
             <td>{{ recipe.recipe_name }}</td>
             <td>{{ recipe.recipe_creation_time }}</td>
-            <td>{{ recipe.recipe_status ===0?'上架' :'下架'}}</td>
+            <td>{{ recipe.recipe_status ===1?'上架' :'下架'}}</td>
             <td>
               <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                 data-bs-target="#deleteBackdrop" @click="handleOpenDelete(recipe)"><i
@@ -242,6 +234,7 @@ export default {
       recipe: null,
       newRecipe: {
         recipe_name: '',
+        recipe_recommend:'',
         recipe_people: '',
         recipe_time: '',
         recipe_ingredient: '',
@@ -361,11 +354,13 @@ export default {
       const formData = new FormData();
       formData.append('recipe_no', this.recipe.recipe_no);
       formData.append('recipe_name', this.recipe.recipe_name);
+      formData.append('recipe_recommend', this.recipe.recipe_recommend);
       formData.append('recipe_people', this.recipe.recipe_people);
       formData.append('recipe_time', this.recipe.recipe_time);
       formData.append('recipe_ingredient', this.recipe.recipe_ingredient);
       formData.append('recipe_info', this.recipe.recipe_info);
       formData.append('recipe_status', this.recipe.recipe_status);
+      formData.append('recipe_img', this.newRecipe.recipe_img);
       axios.post(`${import.meta.env.VITE_API_URL}/admin/cookbook/edit_recipe.php`, formData)
         .then(response => {
           this.fetchRecipes();
@@ -381,6 +376,7 @@ export default {
     addRecipe() {
       const formData = new FormData();
       formData.append('recipe_name', this.newRecipe.recipe_name);
+      formData.append('recipe_recommend', this.recipe.recipe_recommend);
       formData.append('recipe_people', this.newRecipe.recipe_people);
       formData.append('recipe_time', this.newRecipe.recipe_time);
       formData.append('recipe_ingredient', this.newRecipe.recipe_ingredient);
@@ -395,6 +391,7 @@ export default {
         .then(response => {
           console.log('保存成功');
           this.newRecipe.recipe_name = "";
+          this.newRecipe.recipe_recommend = "";
           this.newRecipe.recipe_people = "";
           this.newRecipe.recipe_time = "";
           this.newRecipe.recipe_ingredient = "";
