@@ -62,6 +62,45 @@
           </div>
         </div>
       </div>
+      <div class="modal fade" id="updateClass" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">修改資料</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="form-select">分類</label>
+                            <select v-model="currentFaq.faq_class" class="form-select" aria-label="Default select example">
+                                <option v-for="(classItem, index) in faqClasses" :key="index" :value="classItem.value">
+                                    {{ classItem.label }}
+                                </option>
+                            </select>
+                        </div>
+                      <div class="mb-3">
+                          <label for="exampleFormControlTextarea1" class="form-label">問題</label>
+                          <textarea v-model="currentFaq.question" class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
+                      </div>
+                      <div class="mb-3">
+                        <label for="exampleFormControlTextarea2" class="form-label">回答</label>
+                        <textarea v-model="currentFaq.ans" class="form-control" id="exampleFormControlTextarea2" rows="6"></textarea>
+                      </div>
+                      <div class="mb-3">
+                        <label for="exampleFormControlTextarea2" class="form-label">關鍵字</label>
+                        <textarea v-model="currentFaq.key" class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
+                      </div>
+                      <!-- 其他欄位... -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                                @click="updateClassToDB">儲存</button>
+                        </div>
+                    </div>
+                </div>
+      </div>
 
       <table class="table articlesTable table-bordered border-dark">
         <thead>
@@ -89,9 +128,10 @@
             <td>{{ faq.question }}</td>
             <td>{{ faqClasses.find(item => item.value === faq.faq_class)?.label }}</td>
             <td>
-              <button class="btn btn-outline-primary" @click="editFaq(index)">
-                <i class="fa-solid fa-pencil"></i>
-                修改
+              <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                  data-bs-target="#updateClass" @click="updateClass(faq)">
+                  <i class="fa-solid fa-pencil"></i>
+                  修改
               </button>
               <button class="btn btn-outline-primary prodDelete" @click="deleteProd(index)">
                 <i class="fa-solid fa-trash-can"></i>
@@ -154,6 +194,7 @@ export default {
          2: "運送問題",
          3: "食材問題",
       },
+      originalFaqClass: '',
     };
   },
   created(){
@@ -249,6 +290,44 @@ export default {
             .catch(error => {
                 console.error('删除出錯：', error);
             });
+    },
+
+    updateClass(faq) {
+      if (faq && faq.faq_class) {
+        this.currentFaq.faq_class = faq.faq_class;
+        }
+        this.currentFaq.faq_no = faq.faq_no;
+        this.currentFaq.question = faq.question; 
+      },  
+        updateClassToDB() {
+          axios.post(`${import.meta.env.VITE_API_URL}/admin/faq/faqUpdate.php`, {
+            faq_no: this.currentFaq.faq_no,
+            faq_class: this.currentFaq.faq_class,
+            question: this.currentFaq.question,
+            ans: this.currentFaq.ans,
+            key: this.currentFaq.key
+          })
+          .then(response => {
+            if (!response.data.error) {
+              const index = this.faq.findIndex(faq => faq.faq_no === this.currentFaq.faq_no);
+              if (index !== -1) {
+                this.faq[index].faq_class = this.currentFaq.faq_class;  
+                this.faq[index].question = this.currentFaq.question;
+                this.faq[index].ans = this.currentFaq.ans;  
+                this.faq[index].key = this.currentFaq.key;  
+              }
+              this.currentFaq = {
+                faq_no: '',
+                faq_class: '',
+                ans: '',
+                question: '',
+                key: ''
+              };
+            }
+          })
+          .catch(error => {
+              console.error('Error updating faq:', error);
+          });
         },
     },
   };
