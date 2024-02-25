@@ -3,9 +3,11 @@
         <SideBar />
         <div class="groupdetailRight">
             <div class="filterList">
-                <select @change="filterList">
-                    <option v-for="option in prodgroupOptions" :key="option.prodgroup_no" :value="option.prodgroup_name">{{
+                <select @change="filterList($event)">
+                    <template v-for="option in prodgroupOptions"  :key="option.prodgroup_name" :value="option.prodgroup_name">
+                        <option v-if="option.prodgroup_no != 1">{{
                         option.prodgroup_name }}</option>
+                    </template>
                 </select>
             </div>
             <h1>群組明細</h1>
@@ -40,7 +42,7 @@
                                     readonly>
                             </div>
                             <label for="form-select">選擇商品</label>
-                            <select class="form-select" aria-label="Default select example" v-model="product_name">
+                            <select class="form-select" aria-label="Default select example" v-model="product_name" multiple>
                                 <option v-for="option in productOptions" :key="option.product_name"
                                     :value="option.product_name">{{ option.product_name }}</option>
                             </select>
@@ -93,8 +95,8 @@
                         </button>
                     </li>
                     <li v-for="page in totalPages" class="page-item" :key="page">
-                        <button type="button" class="btn btn-outline-primary pageLink gd_btn"
-                            @click="goToPage(page)">{{ page }}</button>
+                        <button type="button" class="btn btn-outline-primary pageLink gd_btn" @click="goToPage(page)">{{
+                            page }}</button>
                     </li>
                     <li class="page-item" :class="{ 'disabled': currentPage === totalPages }">
                         <button class="page-link btn-outline-primary bg-transparent border-0" aria-label="Next"
@@ -135,7 +137,7 @@ export default {
             prodgroupOptions: [],
             productOptions: [],
             props: ['productGroupNo'],
-            filteredGroupdetails: [], // 新增篩選後的數據變量
+            filteredGroupdetails: [],
             isModalShown: true,
             groupDetailPage: 6,
             currentPage: 1,
@@ -150,6 +152,7 @@ export default {
     },
     created() {
         this.fetchData();
+        
     },
     computed: {
         totalPages() {
@@ -158,31 +161,26 @@ export default {
         paginatedGroupdetail() {
             const start = (this.currentPage - 1) * this.groupDetailPage;
             const end = start + this.groupDetailPage;
-            return this.filteredGroupdetails.slice(start, end)
+            return this.filteredGroupdetails = this.groupdetails.slice(start, end)
         }
 
     },
     methods: {
         filterList(e) {
-    let filterType = e.target.value;
-
-    // 如果未選擇或選擇了空白選項，將 filterType 賦值為第一個群組名稱
-    if (!filterType) {
-        filterType = this.prodgroupOptions[0].prodgroup_name; // 假設 prodgroupOptions 是一個包含群組名稱的陣列
-    }
-
-    // 根據 filterType 過濾出符合條件的群組明細數據
-    this.filteredGroupdetails = this.groupdetails.filter(groupdetail => groupdetail.prodgroup_name === filterType);
-    this.currentPage = 1;
-},
-
-
+            let filterType = e.target.value;
+            this.filteredGroupdetails = this.groupdetails.filter(groupdetail => groupdetail.prodgroup_name === filterType);
+            this.currentPage = 1;
+        },
         async fetchData() {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/product/groupDetailsDataGet.php`);
                 this.groupdetails = response.data.prodgroup_details;
                 this.prodgroupOptions = response.data.prodgroup_options;
+                console.log(this.prodgroupOptions)
                 this.productOptions = response.data.product_options;
+                let filterType = this.prodgroupOptions[1]['prodgroup_name'];
+                this.filteredGroupdetails = this.groupdetails.filter(groupdetail => groupdetail.prodgroup_name === filterType);
+            this.currentPage = 1;
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -201,42 +199,52 @@ export default {
 
 
         addGroupDetailToDB() {
-    // 創建 FormData 對象
-    const addgroupDetailForm = new FormData();
-    // 將選擇的多個商品編號以逗號分隔並添加到 FormData 對象中
-    const productNamesString = this.groupDetailForm.product_name.join(',');
-    addgroupDetailForm.append('product_names', productNamesString);
-    // 遍歷 groupDetailForm 對象的鍵值對，並將每個鍵值對添加到 FormData 對象中
-    for (const [key, value] of Object.entries(this.groupDetailForm)) {
-        if (key !== 'product_name') {
-            addgroupDetailForm.append(key, value);
-        }
-    }
-    // 發送 POST 請求到後端
-    axios.post(`${import.meta.env.VITE_API_URL}/admin/product/groupDetailDataAdd.php`, addgroupDetailForm, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
+            // 創建 FormData 對象
+            const addgroupDetailForm = new FormData();
+            // 將其餘數據添加到 FormData 對象中
+            addgroupDetailForm.append('prodgroup_details_no', this.prodgroup_details_no);
+            addgroupDetailForm.append('prodgroup_no', this.prodgroup_no);
+            addgroupDetailForm.append('product_names', this.product_name); // 修改為 product_names
+            addgroupDetailForm.append('prodgroup_name', this.prodgroup_name);
+            addgroupDetailForm.append('prodgroup_sale_price', this.prodgroup_sale_price);
+            // 將商品名稱數組轉換為逗號分隔的字符串並添加到 FormData 對象中
+            const productNamesString = this.product_name.join(',');
+            addgroupDetailForm.append('product_names', productNamesString); // 修改為 product_names
+
+            // 發送 POST 請求到後端
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/product/groupDetailDataAdd.php`, addgroupDetailForm, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+                .then(response => {
+                    if (!response.data.error) {
+
+
+                        this.fetchData();
+
+                        // 清空表單字段
+                        this.prodgroup_no = '';
+                        this.prodgroup_name = '';
+                        this.product_name = ''; // 清空 product_name
+                        this.prodgroup_sale_price = '';
+
+                        // 在此處執行其他操作，例如刷新數據列表
+                        this.isModalShown = false;
+                        // 手動移除背景灰色效果
+                        const modalBackdrop = document.querySelector('.modal-backdrop');
+                        if (modalBackdrop) {
+                            modalBackdrop.remove();
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('添加群組詳細信息時出錯：', error);
+                });
         },
-    })
-    .then(response => {
-        if (!response.data.error) {
-            const newGroupDetail = response.data; // 從伺服器返回新商品細節
-            this.groupdetails.push(newGroupDetail); // 將新商品細節添加到 groupdetails 陣列中
-            // 清空表單字段
-            this.groupDetailForm = {
-                prodgroup_no: '',
-                product_name: [],
-                prodgroup_name: '',
-                prodgroup_sale_price: ''
-            };
-            // 在此處執行其他操作，例如刷新數據列表
-            console.log(response.data);
-        }
-    })
-    .catch(error => {
-        console.error('Error adding groupdetails:', error);
-    });
-},
+
+
+
 
 
 
@@ -248,7 +256,7 @@ export default {
 
 
         deleteProdToDB(index) {
-            const prodgroup_details_no = this.groupdetails[index].prodgroup_details_no; 
+            const prodgroup_details_no = this.groupdetails[index].prodgroup_details_no;
             axios.post(`${import.meta.env.VITE_API_URL}/admin/product/groupDetailDataDelete.php`, {
                 prodgroup_details_no: prodgroup_details_no
             }, {
@@ -288,5 +296,7 @@ export default {
 }
 </script>
 
-<style lang="scss">@import "@/assets/scss/page/_groupdetail.scss";
-@import "@/assets/scss/sidebar.scss";</style>
+<style lang="scss">
+@import "@/assets/scss/page/_groupdetail.scss";
+@import "@/assets/scss/sidebar.scss";
+</style>
