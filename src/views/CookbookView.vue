@@ -125,7 +125,7 @@
               <h5>建立時間 {{ recipe.recipe_creation_time }}</h5>
 
               <label for="form-select">狀態</label>
-              <select class="form-select" aria-label="Default select example" v-model="recipe.status">
+              <select class="form-select" aria-label="Default select example" v-model="recipe.recipe_status">
                 <option selected></option>
                 <option value="1">上架</option>
                 <option value="2">下架</option>
@@ -358,25 +358,17 @@ export default {
     },
     // 在编辑食谱后保存数据到数据库
     saveRecipe() {
-      axios.post(`${import.meta.env.VITE_API_URL}/admin/cookbook/edit_recipe.php`, {
-        recipe_no: this.recipe.recipe_no,
-        recipe_name: this.recipe.recipe_name,
-        recipe_people: this.recipe.recipe_people,
-        recipe_time: this.recipe.recipe_time,
-        recipe_ingredient: this.recipe.recipe_ingredient,
-        recipe_info: this.recipe.recipe_info,
-        recipe_status: this.recipe.recipe_status
-      })
+      const formData = new FormData();
+      formData.append('recipe_no', this.recipe.recipe_no);
+      formData.append('recipe_name', this.recipe.recipe_name);
+      formData.append('recipe_people', this.recipe.recipe_people);
+      formData.append('recipe_time', this.recipe.recipe_time);
+      formData.append('recipe_ingredient', this.recipe.recipe_ingredient);
+      formData.append('recipe_info', this.recipe.recipe_info);
+      formData.append('recipe_status', this.recipe.recipe_status);
+      axios.post(`${import.meta.env.VITE_API_URL}/admin/cookbook/edit_recipe.php`, formData)
         .then(response => {
-          console.log(response.data);
-          // 如果成功保存，更新前端界面以反映修改
-          // 可以重新获取最新的食谱数据或更新前端中的 recipes 数组
-          this.fetchRecipes(); // 重新获取最新的食谱数据
-          // 或者直接更新前端中的 recipes 数组
-          // 找到当前修改的食谱对象在 recipes 数组中的索引
-          const index = this.recipes.findIndex(item => item.recipe_no === this.recipe.recipe_no);
-          // 更新该食谱对象的数据为最新的数据
-          this.recipes.value[index] = this.recipe;
+          this.fetchRecipes();
           // 关闭编辑模态框
           this.showEditModal = false;
         })
