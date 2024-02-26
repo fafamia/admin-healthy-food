@@ -359,6 +359,7 @@ export default {
       })
     },
     updateProd(productNo) {
+      //array.find會比對陣列中的元素，傳回第一個找到的值
       const product = this.products.find(p => p.product_no === productNo);
       if (product) {
         this.prodForm = { ...product };
