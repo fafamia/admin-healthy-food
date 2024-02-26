@@ -23,12 +23,14 @@
                 <label for="exampleFormControlInput1" class="form-label">食譜名稱</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1" v-model="newRecipe.recipe_name">
               </div>
-              <label for="exampleFormControlInput2" class="form-label">食譜推薦食材</label>
-              <input type="text" class="form-control" id="exampleFormControlInput2" v-model="newRecipe.recipe_recommend">
-              <label for="exampleFormControlInput3" class="form-label">食譜適用人數</label>
-              <input type="text" class="form-control" id="exampleFormControlInput3" v-model="newRecipe.recipe_people">
-              <label for="exampleFormControlInput4" class="form-label">食譜製作時間</label>
-              <input type="text" class="form-control" id="exampleFormControlInput4" v-model="newRecipe.recipe_time">
+              <label for="exampleFormControlInput2" class="form-label">食譜簡介</label>
+              <input type="text" class="form-control" id="exampleFormControlInput2" v-model="newRecipe.recipe_text">
+              <label for="exampleFormControlInput3" class="form-label">食譜推薦食材</label>
+              <input type="text" class="form-control" id="exampleFormControlInput3" v-model="newRecipe.recipe_recommend">
+              <label for="exampleFormControlInput4" class="form-label">食譜適用人數</label>
+              <input type="text" class="form-control" id="exampleFormControlInput4" v-model="newRecipe.recipe_people">
+              <label for="exampleFormControlInput5" class="form-label">食譜製作時間</label>
+              <input type="text" class="form-control" id="exampleFormControlInput5" v-model="newRecipe.recipe_time">
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">食譜食材</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
@@ -79,7 +81,7 @@
               <div class="mb-3">
                 <h4>食譜編號 {{ recipe.recipe_no }}</h4>
                 <label for="form-select">分類</label>
-                <select class="form-select" aria-label="Default select example" v-model="newRecipe.recipe_class_no">
+                <select class="form-select" aria-label="Default select example" v-model="recipe.recipe_class_no">
                   <option v-for="recipeClass in recipeClasses" :key="recipeClass.recipe_class_no"
                     :value="recipeClass.recipe_class_no">{{ recipeClass.recipe_class_name }}</option>
                 </select>
@@ -87,12 +89,14 @@
                 <input type="text" class="form-control" id="exampleFormControlInput1" v-model="recipe.recipe_name">
 
               </div>
-              <label for="exampleFormControlInput2" class="form-label">食譜推薦食材</label>
-              <input type="text" class="form-control" id="exampleFormControlInput2" v-model="recipe.recipe_recommend">
-              <label for="exampleFormControlInput3" class="form-label">食譜適用人數</label>
-              <input type="text" class="form-control" id="exampleFormControlInput3" v-model="recipe.recipe_people">
-              <label for="exampleFormControlInput4" class="form-label">食譜製作時間</label>
-              <input type="text" class="form-control" id="exampleFormControlInput4" v-model="recipe.recipe_time">
+              <label for="exampleFormControlInput2" class="form-label">食譜簡介</label>
+              <input type="text" class="form-control" id="exampleFormControlInput2" v-model="recipe.recipe_text">
+              <label for="exampleFormControlInput3" class="form-label">食譜推薦食材</label>
+              <input type="text" class="form-control" id="exampleFormControlInput3" v-model="recipe.recipe_recommend">
+              <label for="exampleFormControlInput4" class="form-label">食譜適用人數</label>
+              <input type="text" class="form-control" id="exampleFormControlInput4" v-model="recipe.recipe_people">
+              <label for="exampleFormControlInput5" class="form-label">食譜製作時間</label>
+              <input type="text" class="form-control" id="exampleFormControlInput5" v-model="recipe.recipe_time">
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">食譜食材</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
@@ -230,6 +234,7 @@ export default {
       recipe: null,
       newRecipe: {
         recipe_name: '',
+        recipe_text: '',
         recipe_recommend: '',
         recipe_people: '',
         recipe_time: '',
@@ -305,17 +310,17 @@ export default {
       this.fetchRecipeOne(recipe.recipe_no)
         .then(data => {
           // 将获取到的数据填充到表单中
-
           this.formOriginal = { ...data };
+          // 此时才设置 recipe 对象
           this.recipe = recipe;
           // 打开编辑模态框
           // this.showEditModal = true;
-
         })
         .catch(error => {
           console.error('Error fetching recipe data:', error);
         });
     },
+
     showModal() {
       this.show = true;
     },
@@ -353,6 +358,7 @@ export default {
       const formData = new FormData();
       formData.append('recipe_no', this.recipe.recipe_no);
       formData.append('recipe_name', this.recipe.recipe_name);
+      formData.append('recipe_text', this.recipe.recipe_text);
       formData.append('recipe_recommend', this.recipe.recipe_recommend);
       formData.append('recipe_people', this.recipe.recipe_people);
       formData.append('recipe_time', this.recipe.recipe_time);
@@ -375,7 +381,8 @@ export default {
     addRecipe() {
       const formData = new FormData();
       formData.append('recipe_name', this.newRecipe.recipe_name);
-      formData.append('recipe_recommend', this.recipe.recipe_recommend);
+      formData.append('recipe_text', this.newRecipe.recipe_text);
+      formData.append('recipe_recommend', this.newRecipe.recipe_recommend);
       formData.append('recipe_people', this.newRecipe.recipe_people);
       formData.append('recipe_time', this.newRecipe.recipe_time);
       formData.append('recipe_ingredient', this.newRecipe.recipe_ingredient);
@@ -390,6 +397,7 @@ export default {
         .then(response => {
           console.log('保存成功');
           this.newRecipe.recipe_name = "";
+          this.newRecipe.recipe_text = "";
           this.newRecipe.recipe_recommend = "";
           this.newRecipe.recipe_people = "";
           this.newRecipe.recipe_time = "";
