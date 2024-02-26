@@ -17,15 +17,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="person in members" :key="person.id">
-                    <td><a type="button" class="member-no" data-bs-toggle="modal" data-bs-target="#memberInfo">
-                            {{ person.id }}
+                <tr v-for="(person, index) in membersData" :key="person.member_no">
+                    <td @click="showMember(person.member_no)"><a type="button" class="member-no" data-bs-toggle="modal"
+                            data-bs-target="#memberInfo">
+                            {{ person.member_no }}
                         </a></td>
-                    <td>{{ person.name }}</td>
-                    <td>{{ person.email }}</td>
-                    <td>{{ person.phone }}</td>
-                    <td>{{ person.status }}</td>
-                    <td>{{ person.date }}</td>
+                    <td>{{ person.member_name }}</td>
+                    <td>{{ person.member_email }}</td>
+                    <td>{{ person.member_tel }}</td>
+                    <td>{{ person.member_status == 1 ? '正常' : '黑名單' }}</td>
+                    <td>{{ person.member_time }}</td>
                 </tr>
             </tbody>
         </table>
@@ -36,23 +37,27 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-start">
-                        <p>編號: 00001</p>
-                        <p>姓名: 王小明</p>
-                        <p>EMAIL: aabbcc@test.com</p>
-                        <p>電話: 0988-123456</p>
-                        <p>生日: 1988-08-08</p>
-                        <p>地址: 桃園市中壢區成功路888號</p>
-                        <p>累計消費金額: 1000</p>
-                        <p>註冊時間: 2023/12/30</p>
-                        <p>會員等級: 一般會員</p>
-                        <p>狀態: <select id="member_status">
-                                <option value="正常">正常</option>
-                                <option value="黑名單">黑名單</option>
+                        <p>編號: {{ member.member_no }}</p>
+                        <p>姓名: {{ member.member_name }}</p>
+                        <p>EMAIL: {{ member.member_email }}</p>
+                        <p>電話: {{ member.member_tel }}</p>
+                        <p>生日: {{ member.member_birth }}</p>
+                        <p>地址: {{ member.member_county
+                        }}{{ member.member_city }}{{ member.member_addr }}</p>
+                        <p>累計消費金額: {{ member.member_total_amount
+                        }}</p>
+                        <p>註冊時間: {{ member.member_time
+                        }}</p>
+                        <p>會員等級: {{ member.member_level
+                        }}</p>
+                        <p>狀態: <select id="member_status" v-model="member.member_status">
+                                <option v-for="(label, value) in statusOptions" :value="value">{{ label }}</option>
                             </select></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">回列表</button>
-                        <button type="button" class="btn btn-primary">儲存</button>
+                        <button type="button" class="btn btn-primary"
+                            @click="updateMemberStatus(member.member_no)">儲存</button>
                     </div>
                 </div>
             </div>
@@ -83,36 +88,48 @@
 
 <script>
 import SideBar from "@/components/SideBar.vue";
+import axios from "axios";
 export default {
     data() {
         return {
-            members: [
-                {
-                    id: '00001',
-                    name: '王小明',
-                    email: 'aabbcc@test.com',
-                    phone: '0988123456',
-                    status: '正常',
-                    date: '2023/12/30'
-                },
-                {
-                    id: '00002',
-                    name: '王小明',
-                    email: 'aabbcc@test.com',
-                    phone: '0988123456',
-                    status: '正常',
-                    date: '2023/12/30'
-                },
-                {
-                    id: '00003',
-                    name: '王小明',
-                    email: 'aabbcc@test.com',
-                    phone: '0988123456',
-                    status: '正常',
-                    date: '2023/12/30'
-                },
-            ]
+            membersData: [],
+            member: {},
+            statusOptions: {
+                '1': '正常',
+                '2': '黑名單',
+            },
         }
+    },
+    mounted() {
+        axios.get(`${import.meta.env.VITE_API_URL}/admin/member/getMember.php`)
+            .then((res) => {
+                console.log(res.data);
+                this.membersData = res.data;
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    },
+    methods: {
+        showMember(memberNo) {
+            const member = this.membersData.find(q => q.member_no === memberNo);
+            this.member = { ...member };
+            console.log(this.member);
+        },
+        updateMemberStatus(memberNo) {
+            console.log('有案到');
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/member/updataMember.php`, {
+                member_no: memberNo,
+                member_status: Number(this.member.member_status)
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    window.location.reload();
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        },
     },
     components: {
         SideBar,
