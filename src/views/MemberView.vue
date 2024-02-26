@@ -103,7 +103,6 @@ export default {
     mounted() {
         axios.get(`${import.meta.env.VITE_API_URL}/admin/member/getMember.php`)
             .then((res) => {
-                console.log(res.data);
                 this.membersData = res.data;
             })
             .catch((err) => {
@@ -114,16 +113,14 @@ export default {
         showMember(memberNo) {
             const member = this.membersData.find(q => q.member_no === memberNo);
             this.member = { ...member };
-            console.log(this.member);
         },
         updateMemberStatus(memberNo) {
-            console.log('有案到');
-            axios.post(`${import.meta.env.VITE_API_URL}/admin/member/updataMember.php`, {
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/member/updateMember.php`, {
                 member_no: memberNo,
                 member_status: Number(this.member.member_status)
             })
                 .then((res) => {
-                    console.log(res.data);
+                    alert(res.data.msg);
                     window.location.reload();
                 })
                 .catch((err) => {
