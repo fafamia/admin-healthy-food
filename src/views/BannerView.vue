@@ -48,7 +48,7 @@
                     <td>{{ banner.banner_title }}</td>
                     <td>
                         <div class="admin_banner_preview">
-                            <img :src="getImageUrl(`banner/${banner.banner_image}`)" alt="">
+                            <img :src="getImageUrl(`${banner.banner_image}`)" alt="">
                         </div>
                     </td>
                     <td>
@@ -101,7 +101,7 @@ export default {
     },
     methods: {
         getImageUrl(paths) {
-            return new URL(`${import.meta.env.VITE_IMAGES_BASE_URL}/home/${paths}`, import.meta.url).href;
+            return new URL(`${import.meta.env.VITE_IMAGES_BASE_URL}/home/banner/${paths}`, import.meta.url).href;
         },
         handleFileUpload(event) {
             const file = event.target.files[0];
