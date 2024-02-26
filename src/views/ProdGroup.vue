@@ -13,17 +13,17 @@
                 <thead>
                     <tr>
                         <th scope="col">
-                            <input type="checkbox" v-model="selectAll" @change="toggleSelect">
+                            <!-- <input type="checkbox" v-model="selectAll" @change="toggleSelect"> -->
                         </th>
                         <th scope="col">群組編號</th>
                         <th scope="col">群組名稱</th>
                         <th scope="col">開始日期</th>
                         <th scope="col">結束日期</th>
                         <th scope="col">
-                            <button class="btn btn-outline-primary" @click="deleteSelected">
+                            <!-- <button class="btn btn-outline-primary" @click="deleteSelected">
                                 <i class="fa-solid fa-trash-can"></i>
                                 刪除
-                            </button>
+                            </button> -->
                         </th>
                     </tr>
                 </thead>
@@ -31,7 +31,7 @@
                     <tr v-for="(prodgroup, index) in prodgroups" :key="index">
                         <td>
                             <input type="checkbox" v-model="prodgroup.checked" :value="prodgroup"
-                            v-if="[2,3,4].indexOf(prodgroup.prodgroup_no)==-1">
+                                v-if="[2, 3, 4].indexOf(prodgroup.prodgroup_no) == -1">
                         </td>
                         <td>{{ prodgroup.prodgroup_no }}</td>
                         <td>{{ prodgroup.prodgroup_name }}</td>
@@ -43,7 +43,8 @@
                                 <i class="fa-solid fa-pencil"></i>
                                 修改
                             </button>
-                            <button v-if="[2,3,4].indexOf(prodgroup.prodgroup_no)==-1" type="button" class="btn btn-outline-primary prodDelete"
+                            <button v-if="[2, 3, 4].indexOf(prodgroup.prodgroup_no) == -1" type="button"
+                                class="btn btn-outline-primary prodDelete"
                                 @click="deleteGroupToDB(prodgroup.prodgroup_no, index)">
                                 <i class="fa-solid fa-trash-can"></i>
                                 刪除
@@ -53,8 +54,8 @@
                 </tbody>
             </table>
 
-            <div class="modal fade" id="addGroup" v-show="isModalShown" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-hidden="true" >
+            <div class="modal fade" id="addGroup" v-show="isModalShown" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -166,12 +167,12 @@ export default {
                         this.prodgroups.push(newGroup);
                         this.clear();
                         // 儲存完畢後，設置 isModalShown 為 false 以關閉彈窗
-                        this.isModalShown = false;
+                        this.isModalShown = !this.isModalShown;
                         // 手動移除背景灰色效果
-      const modalBackdrop = document.querySelector('.modal-backdrop');
-      if (modalBackdrop) {
-        modalBackdrop.remove();
-      }
+                        const modalBackdrop = document.querySelector('.modal-backdrop');
+                        if (modalBackdrop) {
+                            modalBackdrop.remove();
+                        }
                     }
                 })
                 .catch(error => {
@@ -185,7 +186,7 @@ export default {
             this.prodgroup_start = prodgroups.prodgroup_start;
             this.prodgroup_end = prodgroups.prodgroup_end;
         },
-        
+
         updateGroupToDB() {
             axios.post(`${import.meta.env.VITE_API_URL}/admin/product/productGroupDataUpdate.php`, {
                 prodgroup_name: this.prodgroup_name,
@@ -211,10 +212,10 @@ export default {
 
         },
         clear() {
-    this.prodgroup_name = '';
-    this.prodgroup_start = '';
-    this.prodgroup_end = '';
-},
+            this.prodgroup_name = '';
+            this.prodgroup_start = '';
+            this.prodgroup_end = '';
+        },
         async deleteGroupToDB(productGroupNo, index) {
             const confirmed = window.confirm("確定要刪除此商品群組嗎?");
             if (!confirmed) return;

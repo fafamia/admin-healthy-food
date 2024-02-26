@@ -50,4 +50,9 @@
         display: flex;
         justify-content: end;
     }
+
+    table th,
+    table td {
+        background: none !important;
+    }
 }

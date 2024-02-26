@@ -20,47 +20,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr v-for="(item, index) in gameData" :key="index">
                     <td><input type="checkbox" /></td>
-                    <td>00001</td>
-                    <td>何謂「五蔬果」的建議攝取量？</td>
-                    <td>上架</td>
-                    <td><button type="button" class="btn btn-outline-primary me-2"><i
-                                class="fa-solid fa-trash me-1"></i>刪除</button>
-                        <button type="button" class="btn btn-outline-primary"><i
-                                class="fa-solid fa-pen me-1"></i>修改</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" /></td>
-                    <td>00002</td>
-                    <td>BMI是用來評估什麼身體狀態？</td>
-                    <td>上架</td>
-                    <td><button type="button" class="btn btn-outline-primary me-2"><i
-                                class="fa-solid fa-trash me-1"></i>刪除</button>
-                        <button type="button" class="btn btn-outline-primary"><i
-                                class="fa-solid fa-pen me-1"></i>修改</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" /></td>
-                    <td>00003</td>
-                    <td>為何多喝水對健康有益？</td>
-                    <td>下架</td>
-                    <td><button type="button" class="btn btn-outline-primary me-2"><i
-                                class="fa-solid fa-trash me-1"></i>刪除</button>
-                        <button type="button" class="btn btn-outline-primary"><i
-                                class="fa-solid fa-pen me-1"></i>修改</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" /></td>
-                    <td>00004</td>
-                    <td>下列哪種食物不是蛋白質的良好來源？</td>
-                    <td>上架</td>
-                    <td><button type="button" class="btn btn-outline-primary me-2"><i
-                                class="fa-solid fa-trash me-1"></i>刪除</button>
-                        <button type="button" class="btn btn-outline-primary"><i
+                    <td>{{ item.quiz_no }}</td>
+                    <td>{{ item.quiz_name }}</td>
+                    <td>{{ item.quiz_status == 1 ? '上架' : '下架' }}</td>
+                    <td><button type="button" class="btn btn-outline-primary me-2"
+                            @click="deleteGameData(item.quiz_no, index)"><i class="fa-solid fa-trash me-1"></i>刪除</button>
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#updateGameQ" @click="showGame(item.quiz_no)"><i
                                 class="fa-solid fa-pen me-1"></i>修改</button>
                     </td>
                 </tr>
@@ -75,17 +43,22 @@
                     </div>
                     <div class="modal-body text-start">
                         <label for="gameQ">題目:</label>
-                        <input type="text" name="" id="gameQ" class="w-75 mb-3"><br>
+                        <input type="text" v-model="newGame.quiz_name" name="gameTitle" id="gameQ" class="w-75 mb-3"
+                            required><br>
                         <label for="gameAns_a">回答A:</label>
-                        <input type="text" name="" id="gameAns_a" class="w-75 mb-3"><br>
+                        <input type="text" v-model="newGame.option_a" name="gameA" id="gameAns_a" class="w-75 mb-3"
+                            required><br>
                         <label for="gameAns_b">回答B:</label>
-                        <input type="text" name="" id="gameAns_b" class="w-75 mb-3"><br>
+                        <input type="text" v-model="newGame.option_b" name="gameB" id="gameAns_b" class="w-75 mb-3"
+                            required><br>
                         <label for="gameAns_c">回答C:</label>
-                        <input type="text" name="" id="gameAns_c" class="w-75 mb-3"><br>
+                        <input type="text" v-model="newGame.option_c" name="gameC" id="gameAns_c" class="w-75 mb-3"
+                            required><br>
                         <label for="gameAns_d">回答D:</label>
-                        <input type="text" name="" id="gameAns_d" class="w-75 mb-3"><br>
+                        <input type="text" v-model="newGame.option_d" name="gameD" id="gameAns_d" class="w-75 mb-3"
+                            required><br>
                         <label>正確答案:</label>
-                        <select class="w-25 mb-3">
+                        <select class="w-25 mb-3" v-model="newGame.quiz_ans" name="gameAns" required>
                             <option value="a">A</option>
                             <option value="b">B</option>
                             <option value="c">C</option>
@@ -93,16 +66,69 @@
                         </select><br>
 
                         <p>解釋:</p>
-                        <textarea name="" id="" cols="30" rows="10" class="w-100"></textarea>
+                        <textarea v-model="newGame.quiz_ans_info" name="ansInfo" id="" cols="30" rows="10"
+                            class="w-100 mb-3" required></textarea>
+                        <label>上傳圖片</label>
+                        <input type="file" name="gameImg" accept="image/*" class="mb-3" required><br>
                         <label for="">狀態:</label>
-                        <select class="w-25">
-                            <option value="">上架</option>
-                            <option value="">下架</option>
+                        <select v-model="newGame.quiz_status" class="w-25" name="gameStatus" required>
+                            <option value="1">上架</option>
+                            <option value="2">下架</option>
                         </select>
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">確認</button>
+                        <button type="submit" class="btn btn-primary" @click="addNewGame">確認</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="updateGameQ" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">修改題目</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-start">
+                        <label for="gameQ">題目:</label>
+                        <input type="text" v-model="game.quiz_name" name="gameTitle" id="gameQ" class="w-75 mb-3"
+                            required><br>
+                        <label for="gameAns_a">回答A:</label>
+                        <input type="text" v-model="game.option_a" name="gameA" id="gameAns_a" class="w-75 mb-3"
+                            required><br>
+                        <label for="gameAns_b">回答B:</label>
+                        <input type="text" v-model="game.option_b" name="gameB" id="gameAns_b" class="w-75 mb-3"
+                            required><br>
+                        <label for="gameAns_c">回答C:</label>
+                        <input type="text" v-model="game.option_c" name="gameC" id="gameAns_c" class="w-75 mb-3"
+                            required><br>
+                        <label for="gameAns_d">回答D:</label>
+                        <input type="text" v-model="game.option_d" name="gameD" id="gameAns_d" class="w-75 mb-3"
+                            required><br>
+                        <label>正確答案:</label>
+                        <select class="w-25 mb-3" v-model="game.quiz_ans" name="gameAns" required>
+                            <option value="a">A</option>
+                            <option value="b">B</option>
+                            <option value="c">C</option>
+                            <option value="d">D</option>
+                        </select><br>
+
+                        <p>解釋:</p>
+                        <textarea v-model="game.quiz_ans_info" name="ansInfo" id="" cols="30" rows="10" class="w-100 mb-3"
+                            required></textarea>
+                        <label>上傳圖片</label>
+                        <input type="file" name="gameImg" accept="image/*" class="mb-3" required><br>
+                        <label for="">狀態:</label>
+                        <select v-model="game.quiz_status" class="w-25" name="gameStatus" required>
+                            <option value="1">上架</option>
+                            <option value="2">下架</option>
+                        </select>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
+                        <button type="submit" class="btn btn-primary" @click="updateGameData">修改</button>
                     </div>
                 </div>
             </div>
@@ -132,10 +158,123 @@
 </template>
 <script>
 import SideBar from "@/components/SideBar.vue";
+import axios from "axios";
 export default {
     data() {
         return {
+            gameData: [],
+            newGame: {
+                quiz_name: '',
+                option_a: '',
+                option_b: '',
+                option_c: '',
+                option_d: '',
+                quiz_ans: '',
+                quiz_ans_info: '',
+                quiz_photo: '',
+                quiz_status: '',
+            },
+            game: {},
         }
+    },
+    mounted() {
+        axios.get(`${import.meta.env.VITE_API_URL}/admin/game/getGameData.php`)
+            .then((res) => {
+                this.gameData = res.data;
+                console.log(this.gameData);
+            })
+            .catch((err => {
+                console.log(err);
+            }))
+    },
+    methods: {
+        addNewGame() {
+            let formData = new FormData();
+
+            // 計算選擇的答案文本
+            let answerText = '';
+            switch (this.newGame.quiz_ans) {
+                case 'a':
+                    answerText = this.newGame.option_a;
+                    break;
+                case 'b':
+                    answerText = this.newGame.option_b;
+                    break;
+                case 'c':
+                    answerText = this.newGame.option_c;
+                    break;
+                case 'd':
+                    answerText = this.newGame.option_d;
+                    break;
+            }
+
+            // 添加圖片到FormData
+            const fileInput = document.querySelector('input[type="file"]');
+            if (fileInput && fileInput.files[0]) {
+                formData.append("quiz_photo", fileInput.files[0]);
+            }
+
+            // 將newGame物件中的其他屬性也添加到formData中，除了quiz_ans以外
+            Object.keys(this.newGame).forEach(key => {
+                if (key !== 'quiz_ans' && key !== 'quiz_photo') { // 這裡再次確認排除quiz_photo
+                    formData.append(key, this.newGame[key]);
+                }
+            });
+
+            // 最後添加計算後的答案文本到FormData
+            formData.append("quiz_ans", answerText);
+            // 使用axios發送FormData
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/game/addGameData.php`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(res => {
+                    alert('新增成功');
+                    console.log(res.data);
+                    this.gameData = {
+                        quiz_name: '',
+                        option_a: '',
+                        option_b: '',
+                        option_c: '',
+                        option_d: '',
+                        quiz_ans: '',
+                        quiz_ans_info: '',
+                        quiz_photo: '',
+                        quiz_status: '',
+                    }
+                    window.location.reload();
+                })
+                .catch(err => {
+                    alert('新增失敗');
+                    console.log(err);
+                });
+        },
+        deleteGameData(gameNo, index) {
+            if (confirm('您確定要刪除此遊戲題目嗎？')) {
+                axios.post(`${import.meta.env.VITE_API_URL}/admin/game/deleteGameData.php`, { quiz_no: gameNo }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                    .then((res) => {
+                        alert('刪除成功');
+                        console.log(res);
+                        this.gameData.splice(index, 1);
+                        console.log(this.gameData);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            } else {
+                console.log('使用者取消操作');
+            }
+        },
+        showGame(quizNo) {
+            const quiz = this.gameData.find(q => q.quiz_no === quizNo);
+            this.game = { ...quiz };
+            console.log(this.game);
+        },
     },
     components: {
         SideBar,
@@ -143,5 +282,7 @@ export default {
 }
 </script>
 
-<style lang="scss">@import "@/assets/scss/page/game.scss";
-@import "@/assets/scss/sidebar.scss";</style>
+<style lang="scss">
+@import "@/assets/scss/page/game.scss";
+@import "@/assets/scss/sidebar.scss";
+</style>
