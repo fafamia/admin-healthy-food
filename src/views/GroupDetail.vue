@@ -119,14 +119,7 @@ export default {
     data() {
         return {
             selectAll: false,
-            groupdetails: [
-                // { groupdetailNumber: '0001', groupdetailName: '首頁推薦', groupProdNo: '#001、#002' },
-                // { groupdetailNumber: '0002', groupdetailName: 'BMI過輕', groupProdNo: '#001、#002' },
-                // { groupdetailNumber: '0003', groupdetailName: '龍年促銷', groupProdNo: '#001、#002', sales: '折10元' },
-                // { groupdetailNumber: '0004', groupdetailName: '食譜食材推薦', groupProdNo: '#001、#002' },
-
-                // 其他商品數據
-            ],
+            groupdetails: [],
 
             prodgroup_details_no: '',
             prodgroup_no: '',
@@ -141,10 +134,6 @@ export default {
             isModalShown: true,
             groupDetailPage: 6,
             currentPage: 1,
-
-
-
-
         }
     },
     components: {
@@ -178,7 +167,7 @@ export default {
                 this.prodgroupOptions = response.data.prodgroup_options;
                 console.log(this.prodgroupOptions)
                 this.productOptions = response.data.product_options;
-                let filterType = this.prodgroupOptions[1]['prodgroup_name'];
+                let filterType = this.prodgroupOptions[0]['prodgroup_name'];
                 this.filteredGroupdetails = this.groupdetails.filter(groupdetail => groupdetail.prodgroup_name === filterType);
             this.currentPage = 1;
             } catch (error) {
@@ -229,8 +218,7 @@ export default {
                         this.product_name = ''; // 清空 product_name
                         this.prodgroup_sale_price = '';
 
-                        // 在此處執行其他操作，例如刷新數據列表
-                        this.isModalShown = false;
+                        this.isModalShown = !this.isModalShown;
                         // 手動移除背景灰色效果
                         const modalBackdrop = document.querySelector('.modal-backdrop');
                         if (modalBackdrop) {

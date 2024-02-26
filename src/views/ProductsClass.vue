@@ -36,7 +36,8 @@
                                 <i class="fa-solid fa-pencil"></i>
                                 修改
                             </button>
-                            <button type="button"  class="btn btn-outline-primary prodDelete" @click="deleteClassToDB(productclass.product_class_no, index)">
+                            <button type="button" class="btn btn-outline-primary prodDelete"
+                                @click="deleteClassToDB(productclass.product_class_no, index)">
                                 <i class="fa-solid fa-trash-can"></i>
                                 刪除
                             </button>
@@ -45,7 +46,7 @@
                 </tbody>
             </table>
             <div class="modal fade" id="addClass" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                aria-labelledby="staticBackdropLabel" aria-hidden="true" v-show="isModalShown">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -105,6 +106,7 @@ export default {
             prodclass: [],
             product_class_name: '',
             product_class_no: null,
+            isModalShown: true,
 
         }
     },
@@ -134,6 +136,12 @@ export default {
                         this.prodclass.push(newClass);
                         this.product_class_name = '';
                         console.log(this.product_class_name);
+                        this.isModalShown = false;
+                        // 手動移除背景灰色效果
+                        const modalBackdrop = document.querySelector('.modal-backdrop');
+                        if (modalBackdrop) {
+                            modalBackdrop.remove();
+                        }
                     }
                 })
                 .catch(error => {
