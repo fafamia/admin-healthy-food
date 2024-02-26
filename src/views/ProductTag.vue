@@ -170,8 +170,10 @@ export default {
                 });
         },
         toggleAll() {
-            this.paginatedTags.forEach(tag => {
-                tag.checked = this.selectAll;
+        console.log(this.selectAll);
+        this.paginatedTags.forEach(tag => {
+            tag.checked = this.selectAll;
+            console.log(this.selectAll);
             });
         },
         deleteTagToDB(productTagNo, index) {
