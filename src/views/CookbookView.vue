@@ -16,17 +16,15 @@
             <div v-if="newRecipe" class="modal-body">
               <div class="mb-3">
                 <label for="form-select">分類</label>
-                <select class="form-select" aria-label="Default select example">
-                  <option selected></option>
-                  <option value="1">素食</option>
-                  <option value="2">肉類</option>
-                  <option value="3">冷食</option>
+                <select class="form-select" aria-label="Default select example" v-model="newRecipe.recipe_class_no">
+                  <option v-for="recipeClass in recipeClasses" :key="recipeClass.recipe_class_no"
+                    :value="recipeClass.recipe_class_no">{{ recipeClass.recipe_class_name }}</option>
                 </select>
                 <label for="exampleFormControlInput1" class="form-label">食譜名稱</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1" v-model="newRecipe.recipe_name">
               </div>
               <label for="exampleFormControlInput2" class="form-label">食譜推薦食材</label>
-                <input type="text" class="form-control" id="exampleFormControlInput2" v-model="newRecipe.recipe_recommend">
+              <input type="text" class="form-control" id="exampleFormControlInput2" v-model="newRecipe.recipe_recommend">
               <label for="exampleFormControlInput3" class="form-label">食譜適用人數</label>
               <input type="text" class="form-control" id="exampleFormControlInput3" v-model="newRecipe.recipe_people">
               <label for="exampleFormControlInput4" class="form-label">食譜製作時間</label>
@@ -81,18 +79,16 @@
               <div class="mb-3">
                 <h4>食譜編號 {{ recipe.recipe_no }}</h4>
                 <label for="form-select">分類</label>
-                <select class="form-select" aria-label="Default select example">
-                  <option selected></option>
-                  <option value="1">素食</option>
-                  <option value="2">肉類</option>
-                  <option value="3">冷食</option>
+                <select class="form-select" aria-label="Default select example" v-model="newRecipe.recipe_class_no">
+                  <option v-for="recipeClass in recipeClasses" :key="recipeClass.recipe_class_no"
+                    :value="recipeClass.recipe_class_no">{{ recipeClass.recipe_class_name }}</option>
                 </select>
                 <label for="exampleFormControlInput1" class="form-label">食譜名稱</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1" v-model="recipe.recipe_name">
 
               </div>
               <label for="exampleFormControlInput2" class="form-label">食譜推薦食材</label>
-                <input type="text" class="form-control" id="exampleFormControlInput2" v-model="recipe.recipe_recommend">
+              <input type="text" class="form-control" id="exampleFormControlInput2" v-model="recipe.recipe_recommend">
               <label for="exampleFormControlInput3" class="form-label">食譜適用人數</label>
               <input type="text" class="form-control" id="exampleFormControlInput3" v-model="recipe.recipe_people">
               <label for="exampleFormControlInput4" class="form-label">食譜製作時間</label>
@@ -179,7 +175,7 @@
             <td>{{ recipe.recipe_no }}</td>
             <td>{{ recipe.recipe_name }}</td>
             <td>{{ recipe.recipe_creation_time }}</td>
-            <td>{{ recipe.recipe_status ===1?'上架' :'下架'}}</td>
+            <td>{{ recipe.recipe_status === 1 ? '上架' : '下架' }}</td>
             <td>
               <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                 data-bs-target="#deleteBackdrop" @click="handleOpenDelete(recipe)"><i
@@ -234,17 +230,19 @@ export default {
       recipe: null,
       newRecipe: {
         recipe_name: '',
-        recipe_recommend:'',
+        recipe_recommend: '',
         recipe_people: '',
         recipe_time: '',
         recipe_ingredient: '',
         recipe_info: '',
         recipe_status: '',
-        recipe_img: null
+        recipe_img: null,
+        recipe_class_no: '',
       },
       currentDateTime: '',
       selectedFile: null,
       deleteRecipeNo: -1,
+      recipeClasses: []
     };
   },
   created() {
@@ -254,6 +252,7 @@ export default {
     setInterval(() => {
       this.currentDateTime = this.getCurrentDateTime();
     }, 1000);
+    this.fetchRecipeClasses();
 
   },
   computed: {
@@ -324,7 +323,7 @@ export default {
       // php
       let self = this; // 存储 Vue 实例的引用
 
-      return axios.get(`${import.meta.env.VITE_API_URL}/admin/cookbook/admin_cookbook.php?recipe_id=${id}`)
+      return axios.get(`${import.meta.env.VITE_API_URL}/admin/cookbook/get_recipe.php?recipe_id=${id}`)
 
         .then(function (response) {
           console.log('Response data:', response.data);
@@ -340,7 +339,7 @@ export default {
 
 
     fetchRecipes() {
-      axios.get(`${import.meta.env.VITE_API_URL}/admin/cookbook/admin_cookbook.php`)
+      axios.get(`${import.meta.env.VITE_API_URL}/admin/cookbook/get_recipe.php`)
         .then(response => {
           // 将从后端获取到的数据更新到组件的数据中
           this.recipes = response.data;
@@ -419,7 +418,16 @@ export default {
     getImageUrl(paths) {
       return new URL(`${import.meta.env.VITE_IMAGES_BASE_URL}/cookbook/${paths}`).href;
     },
-
+    fetchRecipeClasses() {
+      axios.get(`${import.meta.env.VITE_API_URL}/admin/cookbook/get_recipe_class.php`)
+        .then(response => {
+          // 将从后端获取到的数据更新到组件的数据中
+          this.recipeClasses = response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching recipe classes:', error);
+        });
+    }
 
 
 
