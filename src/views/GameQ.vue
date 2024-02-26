@@ -243,6 +243,7 @@ export default {
                         quiz_photo: '',
                         quiz_status: '',
                     }
+                    window.location.reload();
                 })
                 .catch(err => {
                     alert('新增失敗');
