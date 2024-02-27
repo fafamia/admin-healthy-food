@@ -244,7 +244,7 @@ export default {
     saveFaq() {
       console.log('Current FAQ Class:', this.currentFaq.faq_class);
 
-      // 映射選擇的 faq_class 到對應的值
+     
       const mappedFaqClass = this.faq_class_mapping[this.currentFaq.faq_class];
 
       const formData = new FormData();
@@ -298,8 +298,9 @@ export default {
         }
         this.currentFaq.faq_no = faq.faq_no;
         this.currentFaq.question = faq.question; 
-      },  
-        updateClassToDB() {
+    },
+
+    updateClassToDB() {
           axios.post(`${import.meta.env.VITE_API_URL}/admin/faq/faqUpdate.php`, {
             faq_no: this.currentFaq.faq_no,
             faq_class: this.currentFaq.faq_class,
@@ -328,7 +329,8 @@ export default {
           .catch(error => {
               console.error('Error updating faq:', error);
           });
-        },
+    },
+    
     },
   };
 </script>

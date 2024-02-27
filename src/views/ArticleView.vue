@@ -1,111 +1,134 @@
 <template>
-  <SideBar />
-  <h1>專欄總覽</h1>
-  <div class="article_btn">
-      <button type="button" class="btn btn-outline-primary productAdd" data-bs-toggle="modal"
-      data-bs-target="#staticBackdrop">
-      <i class="fa-solid fa-circle-plus"></i>新增
+  <div>
+    <SideBar />
+    <h1>專欄總覽</h1>
+    <div class="article_btn">
+      <button
+        type="button"
+        class="btn btn-outline-primary productAdd"
+        data-bs-toggle="modal"
+        data-bs-target="#addArticleModal"
+      >
+        <i class="fa-solid fa-circle-plus"></i>新增
       </button>
       <input type="search" class="search" placeholder="搜尋" v-model="searchQuery" />
-  </div> 
-  <div class="articles">  
+    </div>
+    <div class="articles">
+      <!-- 新增文章的 Modal -->
+<div
+  class="modal fade"
+  id="addArticleModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addArticleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addArticleModalLabel">新增資料</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <label for="articleTitle" class="form-label">專欄名稱</label>
+        <input type="text" class="form-control" id="articleTitle" v-model="currentArticle.article_title" />
 
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-      aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">新增資料</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <!-- 待思考如何代入商品流水號 -->
-              <h4>專欄編號 00006</h4>
+        <label for="articleDescription" class="form-label">文章內容</label>
+        <textarea class="form-control" id="articleDescription" v-model="currentArticle.article_description"></textarea>
+
+        <label for="coverPhoto" class="form-label">上傳圖片</label>
+        <input type="file" class="form-control" id="coverPhoto" @change="handleCoverPhotoChange" />
+
+        <label for="content" class="form-label">刊登時間 : </label>
+        <input type="date" id="publishDate" name="publishDate" v-model="currentArticle.publish_date" />
+        <br>
+        <label for="creationTime" class="form-label">建立時間</label>
+        <span id="createDate"> : {{ currentArticle.create_date }}</span><br>
+
+        <label for="articleStatus" class="form-label">狀態</label>
+        <select class="form-control" id="articleStatus" v-model="currentArticle.article_status">
+          <option value="上架">上架</option>
+          <option value="下架">下架</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
+        <button type="button" class="btn btn-primary" @click="saveArticle">儲存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      <!-- 修改文章的 Modal -->
+      <div
+        class="modal fade"
+        id="updateArticleModal"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="updateArticleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateArticleModalLabel">修改資料</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
               <label for="exampleFormControlInput1" class="form-label">專欄名稱</label>
-              <input type="text" class="form-control" id="exampleFormControlInput1">
+              <input type="text" class="form-control" v-model="currentArticle.article_title" />
             </div>
-            <div class="mb-3">
-              <label for="form-select">專欄分類</label>
-              <select class="form-select" aria-label="Default select example">
-                <option selected></option>
-                <option value="1">飲食</option>
-                <option value="2">戶外</option>
-                <option value="3">心理</option>
-              </select>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-primary" @click="updateArticle">儲存修改</button>
             </div>
-            <div class="mb-3">
-              <label for="exampleFormControlTextarea1" class="form-label">專欄簡介</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="formFile" class="form-label">封面照片</label>
-              <input class="form-control" type="file" id="formFile">
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlTextarea2" class="form-label">內文</label>
-              <textarea class="form-control" id="exampleFormControlTextarea2" rows="12"></textarea>
-            </div>
-            <h5>建立時間 2024/01/01</h5>
-            <div class="mb-3">
-            <label for="setday" class="setday">刊登時間</label>
-            <input type="date" id="setday" name="setday">
-          </div>
-            <label for="form-select">狀態</label>
-            <select class="form-select" aria-label="Default select example">
-              <option selected></option>
-              <option value="1">上架</option>
-              <option value="2">下架</option>
-
-            </select>
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
-            <button type="button" class="btn btn-primary">儲存</button>
           </div>
         </div>
       </div>
-    </div>  
-    <table class="table articlesTable table-bordered border-dark" >
-      <thead>
-        <tr>
-          <th scope="col">
-            <input type="checkbox" v-model="selectAll" @change="toggleSelect">
-          </th>
-          <th scope="col">專欄編號</th>
-          <th scope="col">專欄名稱</th>
-          <th scope="col">刊登時間</th>
-          <th scope="col">狀態</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(articles, index) in filteredArticles" :key="index">
-          <td>
-            <input type="checkbox" v-model="selectedArticles" :value="articles">
-          </td>
-          <td>{{ articles.articleNumber }}</td>
-          <td>{{ articles.articleName }}</td>
-          <td>{{ articles.postingTime }}</td>
-          <td>{{ articles.status }}</td>
-          <td>
-            <button class="btn btn-outline-primary">
-              <i class="fa-solid fa-pencil"></i>
-              修改
-            </button>
-            <button class="btn btn-outline-primary prodDelete" @click="deleteProd(index)">
-              <i class="fa-solid fa-trash-can"></i>
-              刪除
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
 
-  </div>
+      <!-- 文章列表 -->
+      <table class="table articlesTable table-bordered border-dark">
+        <thead>
+          <tr>
+            <th scope="col">
+              <input type="checkbox" v-model="selectAll" @change="toggleSelect">
+            </th>
+            <th scope="col">專欄編號</th>
+            <th scope="col">專欄名稱</th>
+            <th scope="col">刊登時間</th>
+            <th scope="col">狀態</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(article, index) in filteredArticles" :key="index">
+            <td>
+              <input type="checkbox" v-model="selectedArticles" :value="article">
+            </td>
+            <td>{{ article.article_no }}</td>
+            <td>{{ article.article_title }}</td>
+            <td>{{ article.creation_time }}</td>
+            <td>{{ article.article_status }}</td>
+            <td>
+              <button class="btn btn-outline-primary" @click="updateArticleModal(article)">
+                <i class="fa-solid fa-pencil"></i>
+                修改
+              </button>
+              <button class="btn btn-outline-primary prodDelete" @click="deleteArticle(index)">
+                <i class="fa-solid fa-trash-can"></i>
+                刪除
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <nav aria-label="Page navigation example">
+    <!-- 分頁 -->
+    <nav aria-label="Page navigation example">
       <ul class="pagination">
         <li class="page-item" @click="currentPage > 1 ? currentPage-- : null">
           <a class="page-link" href="#" aria-label="Previous">
@@ -121,94 +144,171 @@
           </a>
         </li>
       </ul>
-  </nav>
+    </nav>
+  </div>
 </template>
 
 <script>
 import SideBar from "@/components/SideBar.vue";
-import { ref, computed } from 'vue';
-import axios from 'axios';
+import { ref, computed } from "vue";
+import axios from "axios";
 
 export default {
-data() {
-  return {
-    searchQuery: '',
-    selectAll: ref(false),
-    selectedArticles: ref([]),
-    // articles: [],
-    articles: ref([
-      { articleNumber: '00001', articleName: '飲食健康：探索均衡飲食的奧秘', postingTime: '2023-12-31', status: '上架' },
-      { articleNumber: '00002', articleName: '選擇多元食材，追求飲食多樣性', postingTime: '2023-12-01', status: '上架' },
-      { articleNumber: '00003', articleName: '簡單的烹飪，保留食材原味', postingTime: '2023-11-01', status: '上架' },
-      { articleNumber: '00004', articleName: '從產地到產地，池上米的故事', postingTime: '2024-01-01', status: '下架' },
-      { articleNumber: '00005', articleName: '新世代健康飲食指南', postingTime: '2024-01-01', status: '下架' },
-      // 其他文章數據
-    ]),
-    itemsPerPage: 5,
-    currentPage: 1,
-  };
-},
-components: {
-  SideBar,
-},
-computed: {
-  paginatedArticles() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    return this.articles.slice(startIndex, endIndex);
+  data() {
+    return {
+      searchQuery: "",
+      selectAll: ref(false),
+      selectedArticles: ref([]),
+      articles: [],
+      currentArticle: {
+        article_no: "",
+        article_title: "",
+        posting_time: "",
+        status: "",
+        publish_date: new Date().toISOString().split('T')[0], 
+        create_date: new Date().toISOString().split('T')[0], // 格式為 YYYY-MM-DD
+      },
+      itemsPerPage: 5,
+      currentPage: 1,
+    };
   },
-  totalPages() {
-    return Math.ceil(this.articles.length / this.itemsPerPage);
+  components: {
+    SideBar,
   },
-
-  //關鍵字搜尋
-  filteredArticles() {
-    const filtered = this.articles.filter((article) => {
-      return (
-        article.articleName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        article.postingTime.includes(this.searchQuery) ||
-        article.articleNumber.includes(this.searchQuery) ||
-        article.status.includes(this.searchQuery)
-        // 添加其他欄位的搜尋條件
-      );
-    });
-    return filtered;
+  created() {
+    this.fetchArticles();
   },
-},
-methods: {
-  changePage(page) {
-    this.currentPage = page;
-  },
-  deleteProd(index) {
-    const confirmed = window.confirm("確定要刪除此商品嗎?");
-    if (confirmed) {
+  computed: {
+    paginatedArticles() {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      const actualIndex = startIndex + index;
-      this.articles.splice(actualIndex, 1);
-    }
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.articles.slice(startIndex, endIndex);
+    },
+    totalPages() {
+      return Math.ceil(this.articles.length / this.itemsPerPage);
+    },
+    filteredArticles() {
+      const filtered = this.articles.filter((article) => {
+        return (
+          article.article_title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          article.creation_time.includes(this.searchQuery) ||
+          article.article_no.includes(this.searchQuery) ||
+          article.article_status.includes(this.searchQuery)
+        );
+      });
+      return filtered;
+    },
   },
+  methods: {
+    changePage(page) {
+      this.currentPage = page;
+    },
+    deleteArticle(index) {
+      const confirmed = window.confirm("確定要刪除此文章嗎?");
+      if (confirmed) {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const actualIndex = startIndex + index;
+        const articleToDelete = this.articles[actualIndex];
 
-  toggleSelect() {
-    if (this.selectAll) {
-      this.selectedArticles = [...this.articles];
-    } else {
-      this.selectedArticles = [];
-    }
-  },
-  
+        axios
+          .post(`${import.meta.env.VITE_API_URL}/delete_article.php`, {
+            articleToDelete,
+          })
+          .then((response) => {
+            console.log("刪除成功");
+            this.fetchArticles();
+          })
+          .catch((error) => {
+            console.error("刪除出錯：", error);
+          });
+      }
+    },
+    toggleSelect() {
+      if (this.selectAll) {
+        this.selectedArticles = [...this.articles];
+      } else {
+        this.selectedArticles = [];
+      }
+    },
+    handleCoverPhotoChange(event) {
+      // 取得選取的文件
+      const file = event.target.files[0];
+      // 將文件資訊設定到 currentArticle.cover_photo
+      this.currentArticle.cover_photo = file;
+    },
+    saveArticle() {
+      const formData = new FormData();
+      formData.append("article_title", this.currentArticle.article_title);
+      formData.append("article_class", this.currentArticle.article_class);
+      formData.append("article_description", this.currentArticle.article_description);
+      formData.append("cover_photo", this.currentArticle.cover_photo);
+      formData.append("content", this.currentArticle.content);
+      formData.append("creation_time", this.currentArticle.creation_time);
+      formData.append("article_status", this.currentArticle.article_status);
 
-  filteredArticles() {
-    return this.articles.filter(article => {
-      return (
-        article.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        article.content.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    });
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/admin/article/save_article.php`, formData)
+        .then((response) => {
+          console.log("新增成功");
+          this.fetchArticles();
+        })
+        .catch((error) => {
+          console.error("新增出錯：", error);
+        })
+        .finally(() => {
+          this.resetCurrentArticle();
+        });
+    },
+    updateArticle() {
+      const formData = new FormData();
+      formData.append("article_no", this.currentArticle.article_no);
+      formData.append("article_title", this.currentArticle.article_title);
+      formData.append("article_class", this.currentArticle.article_class);
+      formData.append("article_description", this.currentArticle.article_description);
+      formData.append("cover_photo", this.currentArticle.cover_photo);
+      formData.append("content", this.currentArticle.content);
+      formData.append("creation_time", this.currentArticle.creation_time);
+      formData.append("article_status", this.currentArticle.article_status);
+
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/update_article.php`, formData)
+        .then((response) => {
+          console.log("修改成功");
+          this.fetchArticles();
+        })
+        .catch((error) => {
+          console.error("修改出錯：", error);
+        })
+        .finally(() => {
+          this.resetCurrentArticle();
+        });
+    },
+    fetchArticles() {
+      axios
+        .get(`${import.meta.env.VITE_API_URL}/admin/article/articleGet.php`)
+        .then((response) => {
+          this.articles = response.data;
+        })
+        .catch((error) => {
+          console.error("取得文章列表出錯：", error);
+        });
+    },
+    updateArticleModal(article) {
+      this.currentArticle = { ...article };
+      $("#updateArticleModal").modal("show");
+    },
+    resetCurrentArticle() {
+      this.currentArticle = {
+        article_no: "",
+        article_title: "",
+        posting_time: "",
+        status: "",
+      };
+    },
   },
-  
-},
 };
 </script>
+
 
 <style lang="scss">
 @import "@/assets/scss/sidebar.scss";
