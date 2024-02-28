@@ -1,6 +1,5 @@
 .order {
     display: flex;
-
     // height: 100vh;
     .orderRight {
         flex-grow: 1;
@@ -10,9 +9,7 @@
 
         h1 {
             text-align: center;
-
         }
-
         .search {
             height: 37px;
             position: absolute;
@@ -23,25 +20,24 @@
             border: 1px solid $primary;
             border-radius: 10px;
         }
-
         .orderbtn {
             display: block;
             margin-top: 5px;
             width: 87px;
             font-size: 14px;
         }
-
-
-
     }
 
-    .orderRight .pagination {
-        position: fixed;
-        bottom: 5px;
-        right: 20px;
-
-        .page-link {
+    .orderRight {
+        .pagination {
+            position: fixed;
+            bottom: 5px;
+            right: 20px;
+        }
+        .pageLink{
             border-radius: 50%;
+            font-weight: bold;
+            margin:0 4px;
         }
     }
     table th,table td{
