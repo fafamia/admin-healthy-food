@@ -10,18 +10,14 @@
         <table class="table table-hover table-bordered border-dark">
             <thead>
                 <tr>
-                    <th scope="col"><input type="checkbox" /></th>
                     <th scope="col">題目編號</th>
                     <th scope="col">題目名稱</th>
                     <th scope="col">狀態</th>
-                    <th scope="col"><button type="button" class="btn btn-outline-primary"><i
-                                class="fa-solid fa-trash me-1"></i>
-                            刪除</button></th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(item, index) in gameData" :key="index">
-                    <td><input type="checkbox" /></td>
                     <td>{{ item.quiz_no }}</td>
                     <td>{{ item.quiz_name }}</td>
                     <td>{{ item.quiz_status == 1 ? '上架' : '下架' }}</td>
@@ -117,8 +113,10 @@
                         <p>解釋:</p>
                         <textarea v-model="game.quiz_ans_info" name="ansInfo" id="" cols="30" rows="10" class="w-100 mb-3"
                             required></textarea>
+                        <img :src="getImageUrl(game.quiz_photo)" alt="" height="200" class="mb-3"><br>
                         <label>上傳圖片</label>
-                        <input type="file" name="gameImg" accept="image/*" class="mb-3" required><br>
+                        <input type="file" @change="handleFileUpload" name="gameImg" accept="image/*" class="mb-3"
+                            required><br>
                         <label for="">狀態:</label>
                         <select v-model="game.quiz_status" class="w-25" name="gameStatus" required>
                             <option value="1">上架</option>
@@ -128,7 +126,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal">回列表</button>
-                        <button type="submit" class="btn btn-primary" @click="updateGameData">修改</button>
+                        <button type="submit" class="btn btn-primary" @click="updateGame(game.quiz_no)">修改</button>
                     </div>
                 </div>
             </div>
@@ -190,39 +188,18 @@ export default {
     methods: {
         addNewGame() {
             let formData = new FormData();
-
-            // 計算選擇的答案文本
-            let answerText = '';
-            switch (this.newGame.quiz_ans) {
-                case 'a':
-                    answerText = this.newGame.option_a;
-                    break;
-                case 'b':
-                    answerText = this.newGame.option_b;
-                    break;
-                case 'c':
-                    answerText = this.newGame.option_c;
-                    break;
-                case 'd':
-                    answerText = this.newGame.option_d;
-                    break;
-            }
-
             // 添加圖片到FormData
             const fileInput = document.querySelector('input[type="file"]');
             if (fileInput && fileInput.files[0]) {
                 formData.append("quiz_photo", fileInput.files[0]);
             }
 
-            // 將newGame物件中的其他屬性也添加到formData中，除了quiz_ans以外
+            // 將newGame物件中屬性添加到formData中
             Object.keys(this.newGame).forEach(key => {
-                if (key !== 'quiz_ans' && key !== 'quiz_photo') { // 這裡再次確認排除quiz_photo
+                if (key && key) {
                     formData.append(key, this.newGame[key]);
                 }
             });
-
-            // 最後添加計算後的答案文本到FormData
-            formData.append("quiz_ans", answerText);
             // 使用axios發送FormData
             axios.post(`${import.meta.env.VITE_API_URL}/admin/game/addGameData.php`, formData, {
                 headers: {
@@ -231,7 +208,6 @@ export default {
             })
                 .then(res => {
                     alert('新增成功');
-                    console.log(res.data);
                     this.gameData = {
                         quiz_name: '',
                         option_a: '',
@@ -274,6 +250,53 @@ export default {
             const quiz = this.gameData.find(q => q.quiz_no === quizNo);
             this.game = { ...quiz };
             console.log(this.game);
+        },
+        getImageUrl(paths) {
+            return new URL(`${import.meta.env.VITE_IMAGES_BASE_URL}/game/${paths}`, import.meta.url).href;
+        },
+        updateGame(quizNo) {
+            const formData = new FormData();
+            formData.append("quiz_no", quizNo);
+            formData.append("quiz_name", this.game.quiz_name);
+            formData.append("option_a", this.game.option_a);
+            formData.append("option_b", this.game.option_b);
+            formData.append("option_c", this.game.option_c);
+            formData.append("option_d", this.game.option_d);
+            formData.append("quiz_ans", this.game.quiz_ans);
+            formData.append("quiz_ans_info", this.game.quiz_ans_info);
+            // 如果quiz_photo是文件對象，添加到formData
+            if (this.game.quiz_photo && this.game.quiz_photo instanceof File) {
+                formData.append("gameImg", this.game.quiz_photo);
+            }
+            formData.append("quiz_status", this.game.quiz_status);
+
+            axios.post(`${import.meta.env.VITE_API_URL}/admin/game/updateGameData.php`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    alert('修改成功');
+                    this.game = {
+                        quiz_name: '',
+                        option_a: '',
+                        option_b: '',
+                        option_c: '',
+                        option_d: '',
+                        quiz_ans: '',
+                        quiz_ans_info: '',
+                        quiz_photo: '',
+                        quiz_status: '',
+                    }
+                    window.location.reload();
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        },
+        handleFileUpload(event) {
+            this.game.quiz_photo = event.target.files[0];
         },
     },
     components: {
