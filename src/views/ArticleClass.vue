@@ -1,6 +1,6 @@
 <template>
   <SideBar />
-  <h1>專題分類</h1>
+  <h1>專欄分類</h1>
   <div class="articleclass_btn">
     <button
       type="button"
