@@ -29,8 +29,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="staticBackdropLabel">
-                <h4 v-if="!currentFaq.faq_no">新增資料</h4>
-                <h4 v-else>問題編號 {{ currentFaq.faq_no }}</h4>
+                <h4>新增資料</h4>
               </h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -306,6 +305,8 @@ export default {
         }
         this.currentFaq.faq_no = faq.faq_no;
         this.currentFaq.question = faq.question; 
+        this.currentFaq.ans = faq.ans; 
+        this.currentFaq.key = faq.key; 
     },
 
     updateClassToDB() {
@@ -332,6 +333,8 @@ export default {
                 question: '',
                 key: ''
               };
+               // 强制更新组件
+            this.$forceUpdate();
             }
           })
           .catch(error => {
