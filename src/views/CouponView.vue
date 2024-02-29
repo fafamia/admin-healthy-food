@@ -5,7 +5,6 @@
         <div class="coupon_btn mb-2">
             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addCoupon"><i
                     class="fa-solid fa-circle-plus"></i> 新增</button>
-            <input type="search" class="coupon_search" placeholder="搜尋" />
         </div>
         <table class="table table-hover table-bordered border-dark">
             <thead>

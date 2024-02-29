@@ -3,7 +3,8 @@
     <div class="member">
         <h2>會員管理</h2>
         <div class="member_search_area mb-2">
-            <input type="text" class="member_search primary" value="" placeholder="搜尋">
+            <input type="text" class="member_search primary" placeholder="搜尋" v-model="searchMember"
+                @input="filteredMember" />
         </div>
         <table class="table table-hover table-bordered border-dark">
             <thead>
@@ -99,12 +100,14 @@ export default {
             },
             memberPerPage: 6,
             currentPage: 1,
+            searchMember: '',
         }
     },
     mounted() {
         axios.get(`${import.meta.env.VITE_API_URL}/admin/member/getMember.php`)
             .then((res) => {
                 this.membersData = res.data;
+                this.searchOrdData = res.data;
             })
             .catch((err) => {
                 console.log(err);
@@ -152,6 +155,17 @@ export default {
             if (pageNumber >= 1 && pageNumber <= this.totalPages) {
                 this.currentPage = pageNumber;
             }
+        },
+        filteredMember() {
+            this.membersData = this.searchOrdData.filter((member) => {
+                let search = this.searchMember.toLowerCase();
+                let memberNo = `${member.member_no}`;
+                let memberName = `${member.member_name}`.toLowerCase();
+                let memberEmail = `${member.member_email}`.toLowerCase();
+                let memberTel = `${member.member_tel}`;
+                return memberNo.includes(search) || memberName.includes(search) ||
+                    memberEmail.includes(search) || memberTel.includes(search);
+            });
         },
     },
     components: {
