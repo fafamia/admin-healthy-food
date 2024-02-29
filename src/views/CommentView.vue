@@ -12,7 +12,6 @@
         <thead>
           <tr>
             <th scope="col">編號</th>
-            <th scope="col">食譜編號</th>
             <th scope="col">會員編號</th>
             <th scope="col">檢舉留言時間</th>
             <th scope="col">內容</th>
@@ -20,12 +19,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(recipe, index) in recipes" :key="index">
-            <td>{{ recipe.commentNumber }}</td>
-            <td>{{ recipe.recipeNumber }}</td>
-            <td>{{ recipe.memberNumber }}</td>
-            <td>{{ recipe.date }}</td>
-            <td>{{ recipe.content }}</td>
+          <tr v-for="(report, index) in reportFilterByName" :key="index">
+            <td>{{ report.report_no }}</td>
+            <td>{{ report.user_no }}</td>
+            <td>{{ report.report_time }}</td>
+            <td>{{ report.report_info }}</td>
             <td><select v-model="selectedStatus">
                 <option v-bind:value="'未審核'">未審核</option>
                 <option v-bind:value="'保留'">保留</option>
@@ -63,24 +61,45 @@
 
 <script>
 import SideBar from "@/components/SideBar.vue";
+import axios from 'axios';
 
 export default {
   data() {
     return {
-      recipes: [
-        { commentNumber: '01', recipeNumber: '00066', memberNumber: '04048576', date: '2023/12/31', content: '一艷歌呢弟給' },
-        { commentNumber: '02', recipeNumber: '00099', memberNumber: '0101101', date: '2023/12/31', content: '一艷歌呢弟給' },
-        { commentNumber: '03', recipeNumber: '00031', memberNumber: '200202020', date: '2023/12/31', content: '一艷歌呢弟給' },
-        { commentNumber: '04', recipeNumber: '00034', memberNumber: '04040404', date: '2023/12/31', content: '一艷歌呢弟給' }
-
+      report: [
       ],
-      selectedStatus: '未審核'
+      selectedStatus: '未審核',
+      searchKeyword: '',
     };
+  },
+  created(){
+    this.fetchReport()
+  },
+  computed: {
+    reportFilterByName() {
+      if (this.searchKeyword.length === 0) {
+        return this.report
+      }
+      return this.report.filter(v => v?.report_info?.toLowerCase().includes(this.searchKeyword.toLowerCase()))
+    }
+  },
+  methods:{
+    fetchReport() {
+      axios.get(`${import.meta.env.VITE_API_URL}/admin/cookbook/get_report.php`)
+        .then(response => {
+          // 将从后端获取到的数据更新到组件的数据中
+          this.report = response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching report:', error);
+        });
+    },
   },
 
 
   components: {
     SideBar,
+    axios,
   },
 
 };

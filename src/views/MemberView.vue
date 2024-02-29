@@ -3,7 +3,8 @@
     <div class="member">
         <h2>會員管理</h2>
         <div class="member_search_area mb-2">
-            <input type="text" class="member_search primary" value="" placeholder="搜尋">
+            <input type="text" class="member_search primary" placeholder="搜尋" v-model="searchMember"
+                @input="filteredMember" />
         </div>
         <table class="table table-hover table-bordered border-dark">
             <thead>
@@ -17,7 +18,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(person, index) in membersData" :key="person.member_no">
+                <tr v-for="(person, index) in paginatedProds" :key="person.member_no">
                     <td @click="showMember(person.member_no)"><a type="button" class="member-no" data-bs-toggle="modal"
                             data-bs-target="#memberInfo">
                             {{ person.member_no }}
@@ -62,27 +63,26 @@
                 </div>
             </div>
         </div>
-        <div class="page">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous" style="border: none;">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next" style="border: none;">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item" :class="{ 'disabled': currentPage === 1 }">
+                    <button class="page-link btn btn-outline-primary bg-transparent border-0" aria-label="Previous"
+                        @click="prevPage">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+                <li v-for="page in totalPages" class="page-item" :key="page">
+                    <button type="button" class="btn btn-outline-primary pageLink" @click="goToPage(page)">{{ page
+                    }}</button>
+                </li>
+                <li class="page-item" :class="{ 'disabled': currentPage === totalPages }">
+                    <button class="page-link btn-outline-primary bg-transparent border-0" aria-label="Next"
+                        @click="nextPage">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
     </div>
 </template>
 
@@ -98,16 +98,30 @@ export default {
                 '1': '正常',
                 '2': '黑名單',
             },
+            memberPerPage: 6,
+            currentPage: 1,
+            searchMember: '',
         }
     },
     mounted() {
         axios.get(`${import.meta.env.VITE_API_URL}/admin/member/getMember.php`)
             .then((res) => {
                 this.membersData = res.data;
+                this.searchOrdData = res.data;
             })
             .catch((err) => {
                 console.log(err);
             })
+    },
+    computed: {
+        totalPages() {
+            return Math.ceil(this.membersData.length / this.memberPerPage);
+        },
+        paginatedProds() {
+            const start = (this.currentPage - 1) * this.memberPerPage;
+            const end = start + this.memberPerPage;
+            return this.membersData.slice(start, end)
+        }
     },
     methods: {
         showMember(memberNo) {
@@ -126,6 +140,32 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 })
+        },
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage += 1;
+            }
+        },
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage -= 1;
+            }
+        },
+        goToPage(pageNumber) {
+            if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+                this.currentPage = pageNumber;
+            }
+        },
+        filteredMember() {
+            this.membersData = this.searchOrdData.filter((member) => {
+                let search = this.searchMember.toLowerCase();
+                let memberNo = `${member.member_no}`;
+                let memberName = `${member.member_name}`.toLowerCase();
+                let memberEmail = `${member.member_email}`.toLowerCase();
+                let memberTel = `${member.member_tel}`;
+                return memberNo.includes(search) || memberName.includes(search) ||
+                    memberEmail.includes(search) || memberTel.includes(search);
+            });
         },
     },
     components: {

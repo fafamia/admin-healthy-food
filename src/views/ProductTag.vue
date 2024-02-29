@@ -220,7 +220,6 @@ export default {
                 .then(response => {
                     if (!response.data.error) {
                         const index = this.productTags.findIndex(tag => tag.product_tag_no === this.product_tag_no);
-                        console.log(index);
                         if (index !== -1) {
                             this.fetchTagData();
                             this.clearForm();

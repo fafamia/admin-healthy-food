@@ -367,13 +367,16 @@ export default {
     },
     updateProdToDB() {
       const updateProdForm = new FormData();
+      //把prodForm從 object 轉成 array[key,value]的格式
       for (const [key, value] of Object.entries(this.prodForm)) {
         if (key == 'product_img' && typeof value === 'string'){
+          //使用FormData object的method 'appened'把資料送回去
           updateProdForm.append('image',value)
         }else{
           updateProdForm.append(key, value);
         }
       }
+      //axios.post(URL,Data,Headers)
       axios.post(`${import.meta.env.VITE_API_URL}/admin/product/productDataUpdate.php`,
         updateProdForm,
         {
@@ -391,7 +394,7 @@ export default {
           }
         })
         .catch(error => {
-          console.error('Error adding product:', error);
+          console.error('Error updateing product:', error);
         });
     },
     clearForm() {

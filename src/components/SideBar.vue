@@ -1,25 +1,11 @@
 <template>
     <div class="sidebar">
         <nav class="sidebar_nav">
-            <!-- <div> -->
-            <!-- <div v-for="(dropdown, index) in dropdowns" :key="index" class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" role="button" :id="'dropdownMenuLink' + index"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i :class="dropdown.iconClass"></i>
-                        {{ dropdown.label }}
-                    </button>
-
-                    <ul class="dropdown-menu" :aria-labelledby="'dropdownMenuLink' + index">
-                        <li v-for="item in dropdown.items" :key="item.id">
-                            <router-link :to="item.route" class="dropdown-item">{{ item.label }}</router-link>
-                        </li>
-                    </ul>
-                </div>
-            </div> -->
             <ul class="list-unstyled ps-0">
                 <li class="mb-1 dropdown" v-for="(dropdown, index) in dropdowns" :key="index">
                     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
                         :data-bs-target="'#collapse-' + index" :aria-expanded="false">
+                        <!-- <i :class="dropdown.iconClass"></i> -->
                         {{ dropdown.label }}
                     </button>
                     <div class="collapse" :id="'collapse-' + index">
@@ -80,8 +66,8 @@ export default {
                     label: '促銷活動',
                     iconClass: "fa-solid fa-gift",
                     items: [
-                        { id: 1, label: '推薦商品', route: '/productfeature' },
-                        { id: 2, label: '推薦留言', route: '' },
+                        //{ id: 1, label: '推薦商品', route: '/productfeature' },
+                        //{ id: 2, label: '推薦留言', route: '' },
                         { id: 3, label: '推薦專欄', route: '/articlesuggest' }
                     ]
                 },

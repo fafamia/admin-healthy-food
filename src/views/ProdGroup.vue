@@ -31,7 +31,7 @@
                     <tr v-for="(prodgroup, index) in prodgroups" :key="index">
                         <td>
                             <input type="checkbox" v-model="prodgroup.checked" :value="prodgroup"
-                                v-if="[2, 3, 4].indexOf(prodgroup.prodgroup_no) == -1">
+                                v-if="[2, 3, 4,5,6,7].indexOf(prodgroup.prodgroup_no) == -1">
                         </td>
                         <td>{{ prodgroup.prodgroup_no }}</td>
                         <td>{{ prodgroup.prodgroup_name }}</td>
@@ -43,7 +43,7 @@
                                 <i class="fa-solid fa-pencil"></i>
                                 修改
                             </button>
-                            <button v-if="[2, 3, 4].indexOf(prodgroup.prodgroup_no) == -1" type="button"
+                            <button v-if="[2, 3, 4,5,6,7].indexOf(prodgroup.prodgroup_no) == -1" type="button"
                                 class="btn btn-outline-primary prodDelete"
                                 @click="deleteGroupToDB(prodgroup.prodgroup_no, index)">
                                 <i class="fa-solid fa-trash-can"></i>
