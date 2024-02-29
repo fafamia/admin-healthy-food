@@ -126,7 +126,11 @@
             </td>
             <td>{{ faq.faq_no }}</td>
             <td>{{ faq.question }}</td>
-            <td>{{ faqClasses.find(item => item.value === faq.faq_class)?.label }}</td>
+            <!-- <td>{{ faqClasses.find(item => item.value === faq.faq_class)?.label }}</td> -->
+            <td v-if="faq.faq_class==1">付款問題</td>
+            <td v-if="faq.faq_class==2">運送問題</td>
+            <td v-if="faq.faq_class==3">食材問題</td>
+
             <td>
               <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                   data-bs-target="#updateClass" @click="updateClass(faq)">
