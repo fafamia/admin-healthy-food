@@ -8,6 +8,7 @@
         class="btn btn-outline-primary productAdd"
         data-bs-toggle="modal"
         data-bs-target="#staticBackdrop"
+        @click="remove"
       >
         <i class="fa-solid fa-circle-plus"></i>新增
       </button>
@@ -218,6 +219,9 @@ export default {
     },
   },
   methods: {
+    remove(){
+      this.currentFaq.question = ''; 
+    },
     changePage(page) {
       this.currentPage = page;
     },
