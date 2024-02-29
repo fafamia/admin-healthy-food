@@ -41,6 +41,15 @@ h1{
        border-radius: 50%; 
     }
 }
+.pagination {
+    float: right;
+
+    .pageLink {
+        border-radius: 50%;
+        font-weight: bold;
+        margin: 0 4px;
+    }
+}
 table th,table td{
     background: none!important;
 }

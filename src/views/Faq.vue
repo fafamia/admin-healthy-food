@@ -126,7 +126,6 @@
             </td>
             <td>{{ faq.faq_no }}</td>
             <td>{{ faq.question }}</td>
-            <!-- <td>{{ faqClasses.find(item => item.value === faq.faq_class)?.label }}</td> -->
             <td v-if="faq.faq_class==1">付款問題</td>
             <td v-if="faq.faq_class==2">運送問題</td>
             <td v-if="faq.faq_class==3">食材問題</td>
@@ -148,21 +147,24 @@
     </div>
 
     <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item" @click="currentPage > 1 ? currentPage-- : null">
-          <a class="page-link" href="#" aria-label="Previous">
-            <span aria-hidden="true">&lsaquo;</span>
-          </a>
-        </li>
-        <li v-for="page in totalPages" :key="page" class="page-item" :class="{ 'active': page === currentPage }">
-          <a class="page-link" href="#" @click="changePage(page)">{{ page }}</a>
-        </li>
-        <li class="page-item" @click="currentPage < totalPages ? currentPage++ : null">
-          <a class="page-link" href="#" aria-label="Next">
-            <span aria-hidden="true">&rsaquo;</span>
-          </a>
-        </li>
-      </ul>
+            <ul class="pagination">
+                <li class="page-item" :class="{ 'disabled': currentPage === 1 }">
+                    <button class="page-link btn btn-outline-primary bg-transparent border-0" aria-label="Previous"
+                        @click="prevPage">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+                <li v-for="page in totalPages" class="page-item" :key="page">
+                    <button type="button" class="btn btn-outline-primary pageLink" @click="goToPage(page)">{{ page
+                    }}</button>
+                </li>
+                <li class="page-item" :class="{ 'disabled': currentPage === totalPages }">
+                    <button class="page-link btn-outline-primary bg-transparent border-0" aria-label="Next"
+                        @click="nextPage">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            </ul>
     </nav>
   </div>
 </template>
@@ -179,7 +181,7 @@ export default {
       selectAll: ref(false),
       selectedFaq: ref([]),
       faq: [],
-      itemsPerPage: 5,
+      itemsPerPage: 6,
       currentPage: 1,
       currentFaq: {
         faq_no: '',
@@ -209,9 +211,9 @@ export default {
   },
   computed: {
     paginatedFaq() {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      const endIndex = startIndex + this.itemsPerPage;
-      return this.faq.slice(startIndex, endIndex);
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.faq.slice(start, end);
     },
     totalPages() {
       return Math.ceil(this.faq.length / this.itemsPerPage);
@@ -225,7 +227,7 @@ export default {
       this.currentPage = page;
     },
     deleteProd(index) {
-      const confirmed = window.confirm("確定要刪除此商品嗎?");
+      const confirmed = window.confirm("確定要刪除此問答嗎?");
       if (confirmed) {
         const faqToDelete = this.faq[index].faq_no;
         axios.post(`${import.meta.env.VITE_API_URL}/admin/faq/delete_faq.php`, { faqToDelete })
@@ -333,14 +335,27 @@ export default {
                 question: '',
                 key: ''
               };
-               // 强制更新组件
-            this.$forceUpdate();
             }
           })
           .catch(error => {
               console.error('Error updating faq:', error);
           });
     },
+    nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage += 1;
+            }
+        },
+    prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage -= 1;
+            }
+        },
+    goToPage(pageNumber) {
+            if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+                this.currentPage = pageNumber;
+            }
+        },
     
     },
   };

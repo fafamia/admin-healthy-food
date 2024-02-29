@@ -33,7 +33,12 @@
       <div class="modal-body">
         <label for="articleTitle" class="form-label">專欄名稱</label>
         <input type="text" class="form-control" id="articleTitle" v-model="currentArticle.article_title" />
-
+        <label for="articleClass" class="form-label">專欄分類</label>
+      <select class="form-control" id="articleClass" v-model="currentArticle.article_class">
+        <option v-for="category in articleCategories" :key="category.category_no" :value="category.category_no">
+          {{ category.category_name }}
+        </option>
+      </select>
         <label for="articleDescription" class="form-label">文章內容</label>
         <textarea class="form-control" id="articleDescription" v-model="currentArticle.article_description"></textarea>
 
@@ -129,21 +134,24 @@
 
     <!-- 分頁 -->
     <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item" @click="currentPage > 1 ? currentPage-- : null">
-          <a class="page-link" href="#" aria-label="Previous">
-            <span aria-hidden="true">&lsaquo;</span>
-          </a>
-        </li>
-        <li v-for="page in totalPages" :key="page" class="page-item" :class="{ 'active': page === currentPage }">
-          <a class="page-link" href="#" @click="changePage(page)">{{ page }}</a>
-        </li>
-        <li class="page-item" @click="currentPage < totalPages ? currentPage++ : null">
-          <a class="page-link" href="#" aria-label="Next">
-            <span aria-hidden="true">&rsaquo;</span>
-          </a>
-        </li>
-      </ul>
+            <ul class="pagination">
+                <li class="page-item" :class="{ 'disabled': currentPage === 1 }">
+                    <button class="page-link btn btn-outline-primary bg-transparent border-0" aria-label="Previous"
+                        @click="prevPage">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+                <li v-for="page in totalPages" class="page-item" :key="page">
+                    <button type="button" class="btn btn-outline-primary pageLink" @click="goToPage(page)">{{ page
+                    }}</button>
+                </li>
+                <li class="page-item" :class="{ 'disabled': currentPage === totalPages }">
+                    <button class="page-link btn-outline-primary bg-transparent border-0" aria-label="Next"
+                        @click="nextPage">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            </ul>
     </nav>
   </div>
 </template>
@@ -160,13 +168,18 @@ export default {
       selectAll: ref(false),
       selectedArticles: ref([]),
       articles: [],
+      articleCategories: [], 
       currentArticle: {
         article_no: "",
         article_title: "",
-        posting_time: "",
-        status: "",
+        article_class: "", 
+        article_description: "",
+        cover_photo: null,  
+        content: "",  
+        creation_time: "",  
         publish_date: new Date().toISOString().split('T')[0], 
-        create_date: new Date().toISOString().split('T')[0], // 格式為 YYYY-MM-DD
+        create_date: new Date().toISOString().split('T')[0],
+        article_status: "",
       },
       itemsPerPage: 5,
       currentPage: 1,
@@ -176,13 +189,14 @@ export default {
     SideBar,
   },
   created() {
+    this.fetchArticleCategories();
     this.fetchArticles();
   },
   computed: {
     paginatedArticles() {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      const endIndex = startIndex + this.itemsPerPage;
-      return this.articles.slice(startIndex, endIndex);
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.articles.slice(start, end);
     },
     totalPages() {
       return Math.ceil(this.articles.length / this.itemsPerPage);
@@ -239,12 +253,14 @@ export default {
     saveArticle() {
       const formData = new FormData();
       formData.append("article_title", this.currentArticle.article_title);
-      formData.append("article_class", this.currentArticle.article_class);
+      formData.append("article_class", this.currentArticle.article_class);  // 這裡加入 article_class
       formData.append("article_description", this.currentArticle.article_description);
-      formData.append("cover_photo", this.currentArticle.cover_photo);
-      formData.append("content", this.currentArticle.content);
-      formData.append("creation_time", this.currentArticle.creation_time);
+      formData.append("content", this.currentArticle.content);  // 這裡加入 content
+      formData.append("creation_time", this.currentArticle.creation_time);  // 這裡加入 creation_time
       formData.append("article_status", this.currentArticle.article_status);
+
+      // 將文件單獨添加到 FormData
+      formData.append("cover_photo", this.currentArticle.cover_photo);
 
       axios
         .post(`${import.meta.env.VITE_API_URL}/admin/article/save_article.php`, formData)
@@ -304,6 +320,31 @@ export default {
         posting_time: "",
         status: "",
       };
+    },
+    fetchArticleCategories() {
+      axios
+        .get(`${import.meta.env.VITE_API_URL}/admin/article/fetch_article_classes.php`)
+        .then((response) => {
+          this.articleCategories = response.data;
+        })
+        .catch((error) => {
+          console.error("取得專欄分類出錯：", error);
+        });
+    },
+    nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage += 1;
+            }
+    },
+    prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage -= 1;
+            }
+    },
+    goToPage(pageNumber) {
+            if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+                this.currentPage = pageNumber;
+            }
     },
   },
 };
