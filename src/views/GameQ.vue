@@ -17,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in gameData" :key="index">
+                <tr v-for="(item, index) in paginatedProds" :key="index">
                     <td>{{ item.quiz_no }}</td>
                     <td>{{ item.quiz_name }}</td>
                     <td>{{ item.quiz_status == 1 ? '上架' : '下架' }}</td>
@@ -131,27 +131,26 @@
                 </div>
             </div>
         </div>
-        <div class="page">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous" style="border: none;">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next" style="border: none;">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item" :class="{ 'disabled': currentPage === 1 }">
+                    <button class="page-link btn btn-outline-primary bg-transparent border-0" aria-label="Previous"
+                        @click="prevPage">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+                <li v-for="page in totalPages" class="page-item" :key="page">
+                    <button type="button" class="btn btn-outline-primary pageLink" @click="goToPage(page)">{{ page
+                    }}</button>
+                </li>
+                <li class="page-item" :class="{ 'disabled': currentPage === totalPages }">
+                    <button class="page-link btn-outline-primary bg-transparent border-0" aria-label="Next"
+                        @click="nextPage">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
     </div>
 </template>
 <script>
@@ -173,19 +172,34 @@ export default {
                 quiz_status: '',
             },
             game: {},
+            gamePerPage: 6,
+            currentPage: 1,
         }
     },
     mounted() {
-        axios.get(`${import.meta.env.VITE_API_URL}/admin/game/getGameData.php`)
-            .then((res) => {
-                this.gameData = res.data;
-                console.log(this.gameData);
-            })
-            .catch((err => {
-                console.log(err);
-            }))
+        this.getGame();
+    },
+    computed: {
+        totalPages() {
+            return Math.ceil(this.gameData.length / this.gamePerPage);
+        },
+        paginatedProds() {
+            const start = (this.currentPage - 1) * this.gamePerPage;
+            const end = start + this.gamePerPage;
+            return this.gameData.slice(start, end)
+        }
     },
     methods: {
+        getGame() {
+            axios.get(`${import.meta.env.VITE_API_URL}/admin/game/getGameData.php`)
+                .then((res) => {
+                    this.gameData = res.data;
+                    console.log(this.gameData);
+                })
+                .catch((err => {
+                    console.log(err);
+                }))
+        },
         addNewGame() {
             let formData = new FormData();
             // 添加圖片到FormData
@@ -276,7 +290,6 @@ export default {
                 },
             })
                 .then((res) => {
-                    console.log(res.data);
                     alert('修改成功');
                     this.game = {
                         quiz_name: '',
@@ -297,6 +310,21 @@ export default {
         },
         handleFileUpload(event) {
             this.game.quiz_photo = event.target.files[0];
+        },
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage += 1;
+            }
+        },
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage -= 1;
+            }
+        },
+        goToPage(pageNumber) {
+            if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+                this.currentPage = pageNumber;
+            }
         },
     },
     components: {
