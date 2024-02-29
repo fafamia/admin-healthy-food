@@ -78,7 +78,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="updateClassName" class="form-label">Class名稱</label>
+                                <label for="updateClassName" class="form-label">分類名稱</label>
                                 <input type="text" class="form-control" id="updateClassName" v-model="product_class_name">
                             </div>
                         </div>
