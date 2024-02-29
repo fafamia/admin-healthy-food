@@ -19,7 +19,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(coupon, index) in couponData" :key="coupon.coupon_no">
+                <tr v-for="(coupon, index) in paginatedProds" :key="coupon.coupon_no">
                     <td>{{ coupon.coupon_no }}</td>
                     <td>{{ coupon.ans_num }}</td>
                     <td>{{ coupon.coupon_value }}元</td>
@@ -93,27 +93,26 @@
                 </div>
             </div>
         </div>
-        <div class="page">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous" style="border: none;">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next" style="border: none;">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item" :class="{ 'disabled': currentPage === 1 }">
+                    <button class="page-link btn btn-outline-primary bg-transparent border-0" aria-label="Previous"
+                        @click="prevPage">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+                <li v-for="page in totalPages" class="page-item" :key="page">
+                    <button type="button" class="btn btn-outline-primary pageLink" @click="goToPage(page)">{{ page
+                    }}</button>
+                </li>
+                <li class="page-item" :class="{ 'disabled': currentPage === totalPages }">
+                    <button class="page-link btn-outline-primary bg-transparent border-0" aria-label="Next"
+                        @click="nextPage">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
     </div>
 </template>
 <script>
@@ -131,21 +130,35 @@ export default {
                 coupon_status: '',
             },
             coupon: {},
+            couponPerPage: 6,
+            currentPage: 1,
         }
     },
     mounted() {
-        axios.get(`${import.meta.env.VITE_API_URL}/admin/coupon/getCoupon.php`)
-            .then((res) => {
-                this.couponData = res.data;
-                console.log(this.couponData);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
+        this.getCoupon();
+    },
+    computed: {
+        totalPages() {
+            return Math.ceil(this.couponData.length / this.couponPerPage);
+        },
+        paginatedProds() {
+            const start = (this.currentPage - 1) * this.couponPerPage;
+            const end = start + this.couponPerPage;
+            return this.couponData.slice(start, end)
+        }
     },
     methods: {
+        getCoupon() {
+            axios.get(`${import.meta.env.VITE_API_URL}/admin/coupon/getCoupon.php`)
+                .then((res) => {
+                    this.couponData = res.data;
+                    console.log(this.couponData);
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        },
         addCoupon() {
-            console.log(this.newCoupon);
             axios.post(`${import.meta.env.VITE_API_URL}/admin/coupon/addCoupon.php`, this.newCoupon)
                 .then(res => {
                     alert(res.data.msg);
@@ -194,6 +207,21 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 })
+        },
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage += 1;
+            }
+        },
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage -= 1;
+            }
+        },
+        goToPage(pageNumber) {
+            if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+                this.currentPage = pageNumber;
+            }
         },
     },
     components: {

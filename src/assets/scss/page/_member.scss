@@ -36,19 +36,14 @@
         }
     }
 
-    .page-link {
-        border-radius: 50%;
-        border: 1px solid $primary;
-        font-weight: bold;
-        background: none;
-        margin-right: 8px;
-    }
+    .pagination {
+        float: right;
 
-
-
-    .page {
-        display: flex;
-        justify-content: end;
+        .pageLink {
+            border-radius: 50%;
+            font-weight: bold;
+            margin: 0 4px;
+        }
     }
 
     table th,
