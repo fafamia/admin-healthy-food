@@ -3,7 +3,7 @@
         <SideBar />
         <div class="orderRight">
             <h1>訂單總覽</h1>
-            <input type="search" class="search" placeholder="搜尋" v-model="searchQuery" />
+            <input type="text" class="search" placeholder="搜尋" v-model="searchOrder" @input="filteredOrders" />
             <table class="table table-hover table-bordered border-dark">
                 <thead>
                     <tr>
@@ -186,8 +186,7 @@ export default {
             displayOrderDetails: [],
             OrdersPerPage: 4,
             currentPage: 1,
-
-            searchQuery: '',
+            searchOrder: '',
         };
     },
     components: {
@@ -197,14 +196,6 @@ export default {
         this.fetchOrderToDB();
     },
     computed: {
-        // filteredOrders() {
-        //     const query = this.searchQuery.trim().toLowerCase();
-        //     if (query === '') {
-        //         return this.orders;
-        //     } else {
-        //         return this.orders.filter(order => order.orderNumber.includes(query));
-        //     }
-        // },
         totalPages() {
             return Math.ceil(this.orders.length / this.OrdersPerPage);
         },
@@ -220,6 +211,7 @@ export default {
             axios.get(`${import.meta.env.VITE_API_URL}/admin/order/orderDataGet.php`)
                 .then(response => {
                     this.orders = response.data.orderRows;
+                    this.searchOrdData = response.data.orderRows;
                 })
                 .catch(error => {
                     console.error('訂單錯誤:', error);
@@ -272,7 +264,13 @@ export default {
                 this.currentPage = pageNumber;
             }
         },
-
+        filteredOrders() {
+        this.orders = this.searchOrdData.filter((order)=>{
+            let ordNo = `${order.ord_no}`;
+            let search = this.searchOrder;
+            return ordNo.includes(search);
+        })
+        },
     },
 };
 
