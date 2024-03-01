@@ -247,19 +247,31 @@ export default {
     handleCoverPhotoChange(event) {
       // 取得選取的文件
       const file = event.target.files[0];
+
       // 將文件資訊設定到 currentArticle.cover_photo
       this.currentArticle.cover_photo = file;
     },
     saveArticle() {
       const formData = new FormData();
       formData.append("article_title", this.currentArticle.article_title);
-      formData.append("article_class", this.currentArticle.article_class);  // 這裡加入 article_class
-      formData.append("article_description", this.currentArticle.article_description);
-      formData.append("content", this.currentArticle.content);  // 這裡加入 content
-      formData.append("creation_time", this.currentArticle.creation_time);  // 這裡加入 creation_time
-      formData.append("article_status", this.currentArticle.article_status);
+      formData.append("article_class", this.currentArticle.article_class);
+      formData.append("article_description", this.currentArticle.article_description || "");
+      formData.append("content", this.currentArticle.article_description || "");
 
-      // 將文件單獨添加到 FormData
+      // 取得當下時間
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+
+      // 生成 creation_time
+      this.currentArticle.creation_time = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${hours}:${minutes}`;
+
+      // 生成 content
+      this.currentArticle.content = this.generateContent();
+
+      formData.append("publish_date", this.currentArticle.publish_date);
+      formData.append("creation_time", this.currentArticle.creation_time);
+      formData.append("article_status", this.currentArticle.article_status);
       formData.append("cover_photo", this.currentArticle.cover_photo);
 
       axios
@@ -275,6 +287,15 @@ export default {
           this.resetCurrentArticle();
         });
     },
+
+    generateContent() {
+        const selectedDate = new Date(this.currentArticle.publish_date);
+        const year = selectedDate.getFullYear();
+        const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+        const day = selectedDate.getDate().toString().padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    },
     updateArticle() {
       const formData = new FormData();
       formData.append("article_no", this.currentArticle.article_no);
@@ -283,6 +304,7 @@ export default {
       formData.append("article_description", this.currentArticle.article_description);
       formData.append("cover_photo", this.currentArticle.cover_photo);
       formData.append("content", this.currentArticle.content);
+      
       formData.append("creation_time", this.currentArticle.creation_time);
       formData.append("article_status", this.currentArticle.article_status);
 
@@ -317,8 +339,8 @@ export default {
       this.currentArticle = {
         article_no: "",
         article_title: "",
-        posting_time: "",
-        status: "",
+        creation_time: "",
+        article_status: "",
       };
     },
     fetchArticleCategories() {
