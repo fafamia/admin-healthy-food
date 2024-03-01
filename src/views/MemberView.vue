@@ -98,7 +98,7 @@ export default {
                 '1': '正常',
                 '2': '黑名單',
             },
-            memberPerPage: 6,
+            memberPerPage: 15,
             currentPage: 1,
             searchMember: '',
         }
