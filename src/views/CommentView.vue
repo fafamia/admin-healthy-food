@@ -13,8 +13,10 @@
           <tr>
             <th scope="col">編號</th>
             <th scope="col">會員編號</th>
+            <th scope="col">留言編號</th>
             <th scope="col">檢舉留言時間</th>
-            <th scope="col">內容</th>
+            <th scope="col">留言內容</th>
+            <th scope="col">檢舉內容</th>
             <th scope="col">狀態</th>
           </tr>
         </thead>
@@ -22,13 +24,14 @@
           <tr v-for="(report, index) in reportFilterByName" :key="index">
             <td>{{ report.report_no }}</td>
             <td>{{ report.user_no }}</td>
+            <td>{{ report.comment_no }}</td>
             <td>{{ report.report_time }}</td>
+            <td>{{ report.comment_info }}</td>
             <td>{{ report.report_info }}</td>
-            <td><select v-model="selectedStatus">
-                <option v-bind:value="'未審核'">未審核</option>
-                <option v-bind:value="'保留'">保留</option>
-                <option v-bind:value="'刪除'">刪除</option>
-              </select>
+            <td>
+              <button @click="toggleCommentStatus(report)" class="btn btn-primary">
+                {{ report.comment_status === 0 ? '上架' : '下架' }}
+              </button>
             </td>
 
           </tr>
@@ -68,11 +71,14 @@ export default {
     return {
       report: [
       ],
-      selectedStatus: '未審核',
+      selectedStatus: '',
+      comment: {
+        status: ''
+      },
       searchKeyword: '',
     };
   },
-  created(){
+  created() {
     this.fetchReport()
   },
   computed: {
@@ -83,7 +89,11 @@ export default {
       return this.report.filter(v => v?.report_info?.toLowerCase().includes(this.searchKeyword.toLowerCase()))
     }
   },
-  methods:{
+  mounted() {
+    this.comment.status = '未審核';
+    this.selectedStatus = this.comment.status;
+  },
+  methods: {
     fetchReport() {
       axios.get(`${import.meta.env.VITE_API_URL}/admin/cookbook/get_report.php`)
         .then(response => {
@@ -93,6 +103,22 @@ export default {
         .catch(error => {
           console.error('Error fetching report:', error);
         });
+    },
+    toggleCommentStatus(report) {
+      // 根据当前状态切换为相反的状态
+      report.comment_status = report.comment_status === 0 ? 1 : 0;
+
+      // 发送更新后的状态到后端保存
+      axios.post(`${import.meta.env.VITE_API_URL}/admin/cookbook/update_comment_status.php`, {
+        comment_no: report.comment_no,
+        comment_status: report.comment_status
+      })
+      .then(response => {
+        console.log('评论状态更新成功');
+      })
+      .catch(error => {
+        console.error('更新评论状态时出错：', error);
+      });
     },
   },
 
