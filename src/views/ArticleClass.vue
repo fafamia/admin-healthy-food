@@ -55,6 +55,7 @@
               type="button"
               class="btn btn-primary"
               @click="saveNewArticleClass"
+              :disabled="isSaving"
             >
               儲存
             </button>
@@ -186,6 +187,7 @@ export default {
       faq_class_name: '',
       question_class: '',
       selectedArticleClass: null,
+      isSaving: false,
     };
   },
   components: {
@@ -204,6 +206,11 @@ export default {
     },
 
     saveNewArticleClass() {
+      if (this.isSaving) {
+      return; 
+    }
+      this.isSaving = true;
+
       const data = {
         category_name: this.faq_class_name,
       };
@@ -220,7 +227,10 @@ export default {
         })
         .catch((error) => {
           console.error('新增失敗：', error);
-        });
+        })
+        .finally(() => {
+      this.isSaving = false;
+    });
     },
 
     updateClassToDB() {
