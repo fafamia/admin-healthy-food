@@ -179,7 +179,7 @@
             <td>{{ recipe.recipe_no }}</td>
             <td>{{ recipe.recipe_name }}</td>
             <td>{{ recipe.recipe_creation_time }}</td>
-            <td>{{ recipe.recipe_status === 1 ? '下架' : '上架' }}</td>
+            <td>{{ recipe.recipe_status === 1 ? '上架' : '下架' }}</td>
             <td>
               <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                 data-bs-target="#deleteBackdrop" @click="handleOpenDelete(recipe)"><i
